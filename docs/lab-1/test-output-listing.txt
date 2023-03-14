@@ -1,0 +1,49 @@
+################################ random input #########################################
+#--------------------------------------------------------# 
+# Your are welcome in System of Linear Equations solver. #
+#--------------------------------------------------------#
+Please input your matrix dimension:
+( 1 ? n ? 20 )
+ n=
+Please, input your (n?n) values of matrix by rows of n elements separated with single space:
+NOTE. floating point is dot ","
+
+Thank you for your matrix.
+Input your values of right the system right part in one row separated with single space:
+
+Result of calculating vector 'x':
+[-3.0277951234457885,
+ 6.397433026161394,
+ -4.518432532993963]
+
+Vector of deviance 'r':
+[-0.7342930611502309,
+ 0.5561207721540378,
+ -0.22871575190109894]
+
+################################### docs print #########################################
+
+DESCRIPTION
+    Utility for solving System of Liner Algebraic Equations
+
+SYNOPSIS 
+    solve [FLAG [PARAM]] 
+    
+FLAG
+    -h, --help          Prints help doc of utility;
+    
+    --file      [path]  Receives `path` to the input file, works in not interactive mode;
+    
+    --random    [n]     Receives number of matrix dimensions `n`;
+
+################################# input file path #####################################
+
+Result of calculating vector 'x':
+[2.6645352591003756E-16,
+ -0.9999999999999997,
+ 0.9999999999999999]
+
+Vector of deviance 'r':
+[0.0,
+ -1.400999999999999,
+ 0.0019999999999988916]
