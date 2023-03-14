@@ -11,4 +11,11 @@ class Test {
         main(arrayOf("--random", "3"))
     }
 
+    @Test
+    fun `docs print`(){
+        main(arrayOf("--help"))
+    }
+
+
+
 }

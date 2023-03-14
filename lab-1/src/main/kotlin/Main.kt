@@ -1,8 +1,22 @@
+import util.*
 import java.io.FileInputStream
 import java.util.*
-import kotlin.math.absoluteValue
-import kotlin.random.Random
 import kotlin.system.exitProcess
+
+const val docs: String = """
+DESCRIPTION
+    Utility for solving System of Liner Algebraic Equations
+
+SYNOPSIS 
+    solve [FLAG [PARAM]] 
+    
+FLAG
+    -h, --help          Prints help doc of utility;
+    
+    --file      [path]  Receives `path` to the input file, works in not interactive mode;
+    
+    --random    [n]     Receives number of matrix dimensions `n`;
+"""
 
 fun main(args: Array<String>) {
     try {
@@ -36,19 +50,15 @@ fun main(args: Array<String>) {
                 }
 
                 "-h", "--help" -> {
-                    println(
-                        """
-                    TODO: Docs
-                """.trimIndent()
-                    )
+                    println(docs)
                     return
                 }
 
                 else -> throw IllegalArgumentException("Illegal option used. See '-h' flag.")
             }
         }
-        input = if (isInteractive)
-            Scanner(System.`in`)
+
+        input = if (isInteractive) Scanner(System.`in`)
         else {
             Scanner(FileInputStream(args[1])).useLocale(Locale.FRANCE)
         }
@@ -70,7 +80,6 @@ fun main(args: Array<String>) {
             print(" n=")
         }
 
-
         if (!isRandom) {
             n = input.nextIntOrNull() ?: run {
                 println("'n' value mustn't be empty")
@@ -89,6 +98,7 @@ fun main(args: Array<String>) {
 
 
         if (isInteractive) {
+            printSep()
             println(
                 """
         Please, input your (n×n) values of matrix by rows of n elements separated with single space:
@@ -101,7 +111,6 @@ fun main(args: Array<String>) {
         val vector = DoubleArray(n)
 
         try {
-
             for (i in 0 until n) {
                 for (j in 0 until n) {
                     matrix[i][j] = input.nextDoubleOrNull(isRandom) ?: run {
@@ -113,6 +122,7 @@ fun main(args: Array<String>) {
             debug(matrix.pretty())
 
             if (isInteractive) {
+                printSep()
                 println(
                     """
             Thank you for your matrix.
@@ -131,6 +141,7 @@ fun main(args: Array<String>) {
 
         } catch (e: Exception) {
             if (isInteractive) {
+                printSep()
                 println("Wrong input! Be careful!")
                 println("Reason: ${e.message}.")
                 return
@@ -139,17 +150,16 @@ fun main(args: Array<String>) {
             }
         }
 
-        val x = matrix.solveSLE(vector) ?: run {
+        val x = matrix.solveSLE(vector, logMiddleResults = false) ?: run {
             return
         }
 
-        if (isInteractive) {
-            println(
-                """
-        Result of calculations vector 'x':
+        printSep()
+        println(
+            """
+        Result of calculating vector 'x':
     """.trimIndent()
-            )
-        }
+        )
         println(x.pretty())
 
         val r = DoubleArray(n) {
@@ -158,156 +168,17 @@ fun main(args: Array<String>) {
             }
         }
 
-        if (isInteractive) {
-            println(
-                """
-            Vector of deviance:
+        printSep()
+        println(
+            """
+            Vector of deviance 'r':
         """.trimIndent()
-            )
-        }
+        )
         println(r.pretty())
+
     } catch (e: Exception) {
+        printSep()
         println("Error appeared: ${e.message}")
         exitProcess(-1)
     }
 }
-
-fun debug(any: Any?) {
-    return
-    println("[DEBUG] $any")
-}
-
-fun Scanner.nextIntOrNull(isRandom: Boolean = false): Int? = if (isRandom) {
-    Random.nextInt()
-} else {
-    try {
-        this.nextInt()
-    } catch (e: Exception) {
-        null
-    }
-}
-
-fun Scanner.nextDoubleOrNull(isRandom: Boolean = false): Double? = if (isRandom) {
-    Random.nextDouble()
-} else {
-    try {
-        this.nextDouble()
-    } catch (e: Exception) {
-        null
-    }
-}
-
-fun Double.approx(double: Double): Boolean {
-    return (this - double).absoluteValue < 1e-6
-}
-
-/**
- * extension function on matrix that stands for elements of system of linear equations.
- */
-@OptIn(ExperimentalStdlibApi::class)
-fun List<DoubleArray>.solveSLE(b: DoubleArray): DoubleArray? {
-    val a = this
-    val dim = a.size // matrix must be square unless we can slice square matrix from it
-    assert(a.all { dim == it.size })
-    assert(b.size == dim)
-
-    val xs = DoubleArray(dim) { 0.0 }
-    val tmp = a.copy().toMutableList()
-
-    fun log(i: Int = -1, str: String = "") {
-        return
-        debug(">>>>>> $str $i  >>>>>>")
-        debug(tmp.pretty())
-        debug("### b:")
-        debug(b.pretty())
-        debug("### xs:")
-        debug(xs.pretty())
-        debug("<<<<<< $str $i  <<<<<<\n")
-    }
-    log()
-
-    var nMutations = 0;
-
-    // Forward
-    for (x in 0..<dim - 1) {
-        // swap rows
-        if (tmp.mutateMatrixWithVector(vector = b, start = x)) {
-            nMutations++
-        }
-        log(x, "forward")
-
-        for (nextRow in x + 1..<dim) {
-            val mul = -tmp[nextRow][x] / tmp[x][x]
-            for (i in 0..<dim) {
-                tmp[nextRow][i] += tmp[x][i] * mul
-            }
-            b[nextRow] += b[x] * mul
-
-            tmp[nextRow][x] = 0.0 //must be 0
-        }
-        log(x, "forward")
-    }
-
-    println("Triangle matrix:")
-    println(tmp.pretty())
-
-    println("Det(Matrix)=")
-    var det: Double = if (nMutations % 2 == 0) {
-        1.0
-    } else {
-        -1.0
-    }
-    for (i in 0..<dim) {
-        det *= tmp[i][i]
-    }
-    println(det)
-
-    if (det.approx(0.0)) {
-        println("Approximately zero determinant stands for 0 or ∞ solutions")
-        return null
-    }
-
-    //Backward
-    for (x in xs.indices.reversed()) {
-        var tmpSum: Double = 0.0
-        for (i in x + 1..xs.lastIndex) {
-            tmpSum += tmp[x][i] * xs[i]
-        }
-        xs[x] = (b[x] - tmpSum) / tmp[x][x]
-        log(x, "backward")
-    }
-    return xs
-}
-
-
-/**
- * Mute matrix to get greater element at first position
- */
-@OptIn(ExperimentalStdlibApi::class)
-fun MutableList<DoubleArray>.mutateMatrixWithVector(vector: DoubleArray, start: Int): Boolean {
-    var mutated = false
-    var greatest: Int = start
-    for (i in start..<this.size) {
-        if (this[i][start].absoluteValue > this[greatest][start].absoluteValue) {
-            greatest = i
-            mutated = true
-        }
-    }
-    if (mutated) {
-        this[start] = this[greatest].also { this[greatest] = this[start] }
-        vector[start] = vector[greatest].also { vector[greatest] = vector[start] }
-    }
-    return mutated
-}
-
-fun List<DoubleArray>.pretty(): String = this.joinToString(
-    prefix = "[", postfix = "]", separator = ",\n "
-) { row ->
-    row.joinToString(
-        prefix = "[", postfix = "]", separator = ",\t"
-    ) { el -> el.toString() }
-}
-
-fun DoubleArray.pretty() = this.joinToString(prefix = "[", separator = ",\n ", postfix = "]") { it.toString() }
-
-inline fun List<DoubleArray>.copy() = this.map { it.clone() }
