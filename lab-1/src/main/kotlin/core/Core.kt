@@ -1,7 +1,8 @@
-import util.copy
-import util.debug
-import util.pretty
-import util.printSep
+package core
+
+import out.debug
+import out.pretty
+import out.printSep
 import kotlin.math.absoluteValue
 
 fun Double.approx(double: Double): Boolean {
@@ -12,14 +13,14 @@ fun Double.approx(double: Double): Boolean {
  * extension function on matrix that stands for elements of system of linear equations.
  */
 @OptIn(ExperimentalStdlibApi::class)
-fun List<DoubleArray>.solveSLE(b: DoubleArray, logMiddleResults: Boolean = false): DoubleArray? {
-    val a = this
+fun Matrix.solveSLE(b: DoubleArray, logMiddleResults: Boolean = false): DoubleArray? {
+    val a = elements
     val dim = a.size // matrix must be square unless we can slice square matrix from it
     assert(a.all { dim == it.size })
     assert(b.size == dim)
 
     val xs = DoubleArray(dim) { 0.0 }
-    val tmp = a.copy().toMutableList()
+    val tmp = a.copy().toMutableMatrix()
 
     fun log(i: Int = -1, str: String = "") {
         return
@@ -44,13 +45,13 @@ fun List<DoubleArray>.solveSLE(b: DoubleArray, logMiddleResults: Boolean = false
         log(x, "forward")
 
         for (nextRow in x + 1..<dim) {
-            val mul = -tmp[nextRow][x] / tmp[x][x]
+            val mul = -tmp.elements[nextRow][x] / tmp.elements[x][x]
             for (i in 0..<dim) {
-                tmp[nextRow][i] += tmp[x][i] * mul
+                tmp.elements[nextRow][i] += tmp.elements[x][i] * mul
             }
             b[nextRow] += b[x] * mul
 
-            tmp[nextRow][x] = 0.0 //must be 0
+            tmp.elements[nextRow][x] = 0.0 //must be 0
         }
         log(x, "forward")
     }
@@ -66,7 +67,7 @@ fun List<DoubleArray>.solveSLE(b: DoubleArray, logMiddleResults: Boolean = false
         -1.0
     }
     for (i in 0..<dim) {
-        det *= tmp[i][i]
+        det *= tmp.elements[i][i]
     }
     if (logMiddleResults) {
         printSep()
@@ -83,9 +84,9 @@ fun List<DoubleArray>.solveSLE(b: DoubleArray, logMiddleResults: Boolean = false
     for (x in xs.indices.reversed()) {
         var tmpSum: Double = 0.0
         for (i in x + 1..xs.lastIndex) {
-            tmpSum += tmp[x][i] * xs[i]
+            tmpSum += tmp.elements[x][i] * xs[i]
         }
-        xs[x] = (b[x] - tmpSum) / tmp[x][x]
+        xs[x] = (b[x] - tmpSum) / tmp.elements[x][x]
         log(x, "backward")
     }
     return xs
@@ -96,17 +97,17 @@ fun List<DoubleArray>.solveSLE(b: DoubleArray, logMiddleResults: Boolean = false
  * Mute matrix to get greater element at first position
  */
 @OptIn(ExperimentalStdlibApi::class)
-fun MutableList<DoubleArray>.mutateMatrixWithVector(vector: DoubleArray, start: Int): Boolean {
+private fun MutableMatrix.mutateMatrixWithVector(vector: DoubleArray, start: Int): Boolean {
     var mutated = false
     var greatest: Int = start
-    for (i in start..<this.size) {
-        if (this[i][start].absoluteValue > this[greatest][start].absoluteValue) {
+    for (i in start..<elements.size) {
+        if (elements[i][start].absoluteValue > elements[greatest][start].absoluteValue) {
             greatest = i
             mutated = true
         }
     }
     if (mutated) {
-        this[start] = this[greatest].also { this[greatest] = this[start] }
+        elements[start] = elements[greatest].also { elements[greatest] = elements[start] }
         vector[start] = vector[greatest].also { vector[greatest] = vector[start] }
     }
     return mutated

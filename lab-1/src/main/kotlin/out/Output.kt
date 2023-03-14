@@ -1,4 +1,6 @@
-package util
+package out
+
+import core.Matrix
 
 fun List<DoubleArray>.pretty(): String = this.joinToString(
     prefix = "[", postfix = "]", separator = ",\n "
@@ -8,6 +10,7 @@ fun List<DoubleArray>.pretty(): String = this.joinToString(
     ) { el -> el.toString() }
 }
 
-fun DoubleArray.pretty() = this.joinToString(prefix = "[", separator = ",\n ", postfix = "]") { it.toString() }
+fun DoubleArray.pretty() = joinToString(prefix = "[", separator = ",\n ", postfix = "]") { it.toString() }
+fun Matrix.pretty() = elements.pretty()
 
 fun printSep() = run { println("") }

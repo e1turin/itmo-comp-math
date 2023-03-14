@@ -1,4 +1,10 @@
-import util.*
+import core.solveSLE
+import core.toMutableMatrix
+import `in`.nextDoubleOrNull
+import `in`.nextIntOrNull
+import out.debug
+import out.pretty
+import out.printSep
 import java.io.FileInputStream
 import java.util.*
 import kotlin.system.exitProcess
@@ -107,13 +113,13 @@ fun main(args: Array<String>) {
             )
         }
 
-        val matrix = MutableList(n) { DoubleArray(n) }
+        val matrix = MutableList(n) { DoubleArray(n) }.toMutableMatrix()
         val vector = DoubleArray(n)
 
         try {
             for (i in 0 until n) {
                 for (j in 0 until n) {
-                    matrix[i][j] = input.nextDoubleOrNull(isRandom) ?: run {
+                    matrix.elements[i][j] = input.nextDoubleOrNull(isRandom) ?: run {
                         throw IllegalArgumentException("Illegal value")
                     }
                 }
@@ -163,7 +169,7 @@ fun main(args: Array<String>) {
         println(x.pretty())
 
         val r = DoubleArray(n) {
-            vector[it] - matrix[it].foldIndexed(0.0) { idx, acc, d ->
+            vector[it] - matrix.elements[it].foldIndexed(0.0) { idx, acc, d ->
                 acc + d * x[idx]
             }
         }
