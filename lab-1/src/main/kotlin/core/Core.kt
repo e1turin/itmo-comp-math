@@ -1,6 +1,5 @@
 package core
 
-import out.debug
 import out.pretty
 import out.printSep
 import kotlin.math.absoluteValue
@@ -14,25 +13,12 @@ fun Double.approx(double: Double): Boolean {
  */
 @OptIn(ExperimentalStdlibApi::class)
 fun Matrix.solveSLE(b: DoubleArray, logMiddleResults: Boolean = false): DoubleArray? {
-    val a = elements
-    val dim = a.size // matrix must be square unless we can slice square matrix from it
-    assert(a.all { dim == it.size })
+    val dim = elements.size // matrix must be square unless we can slice square matrix from it
+    assert(elements.all { dim == it.size })
     assert(b.size == dim)
 
     val xs = DoubleArray(dim) { 0.0 }
-    val tmp = a.copy().toMutableMatrix()
-
-    fun log(i: Int = -1, str: String = "") {
-        return
-        debug(">>>>>> $str $i  >>>>>>")
-        debug(tmp.pretty())
-        debug("### b:")
-        debug(b.pretty())
-        debug("### xs:")
-        debug(xs.pretty())
-        debug("<<<<<< $str $i  <<<<<<\n")
-    }
-    log()
+    val tmp = elements.copy().toMutableMatrix()
 
     var nMutations = 0;
 
@@ -42,7 +28,6 @@ fun Matrix.solveSLE(b: DoubleArray, logMiddleResults: Boolean = false): DoubleAr
         if (tmp.mutateMatrixWithVector(vector = b, start = x)) {
             nMutations++
         }
-        log(x, "forward")
 
         for (nextRow in x + 1..<dim) {
             val mul = -tmp.elements[nextRow][x] / tmp.elements[x][x]
@@ -53,7 +38,6 @@ fun Matrix.solveSLE(b: DoubleArray, logMiddleResults: Boolean = false): DoubleAr
 
             tmp.elements[nextRow][x] = 0.0 //must be 0
         }
-        log(x, "forward")
     }
 
     if (logMiddleResults) {
@@ -87,11 +71,9 @@ fun Matrix.solveSLE(b: DoubleArray, logMiddleResults: Boolean = false): DoubleAr
             tmpSum += tmp.elements[x][i] * xs[i]
         }
         xs[x] = (b[x] - tmpSum) / tmp.elements[x][x]
-        log(x, "backward")
     }
     return xs
 }
-
 
 /**
  * Mute matrix to get greater element at first position
