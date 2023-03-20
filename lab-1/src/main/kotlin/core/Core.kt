@@ -1,7 +1,7 @@
 package core
 
-import out.pretty
-import out.printSep
+import output.pretty
+import output.printSep
 import kotlin.math.absoluteValue
 
 fun Double.approx(double: Double): Boolean {
@@ -9,24 +9,23 @@ fun Double.approx(double: Double): Boolean {
 }
 
 /**
- * extension function on matrix that stands for elements of system of linear equations.
+ * extension function on matrix to solve system of linear equations described by this and vector `b`.
  */
 @OptIn(ExperimentalStdlibApi::class)
 fun Matrix.solveSLE(b: DoubleArray, logMiddleResults: Boolean = false): DoubleArray? {
     val dim = elements.size // matrix must be square unless we can slice square matrix from it
-    assert(elements.all { dim == it.size })
-    assert(b.size == dim)
+    assert(elements.all { dim == it.size }) { "Matrix dimensions mismatch (not square matrix)" }
+    assert(b.size == dim) { "Matrix and vector dimensions mismatch (must have same number of rows)" }
 
     val xs = DoubleArray(dim) { 0.0 }
     val tmp = elements.copy().toMutableMatrix()
 
-    var nMutations = 0;
+    var nRowSwaps = 0
 
     // Forward
     for (x in 0..<dim - 1) {
-        // swap rows
         if (tmp.mutateMatrixWithVector(vector = b, start = x)) {
-            nMutations++
+            nRowSwaps++
         }
 
         for (nextRow in x + 1..<dim) {
@@ -36,41 +35,45 @@ fun Matrix.solveSLE(b: DoubleArray, logMiddleResults: Boolean = false): DoubleAr
             }
             b[nextRow] += b[x] * mul
 
-            tmp.elements[nextRow][x] = 0.0 //must be 0 because of math
+            tmp.elements[nextRow][x] = 0.0 // must be 0 because of math
         }
     }
 
     if (logMiddleResults) {
+        printSep()
         println("Triangle matrix:")
         println(tmp.pretty())
+        printSep()
+        println("Modified b:")
+        println(b.pretty())
     }
 
-    var det: Double = if (nMutations % 2 == 0) {
+    val det: Double = if (nRowSwaps % 2 == 0) {
         1.0
     } else {
         -1.0
-    } * tmp.elements.foldIndexed(1.0) { idx, acc, d ->
-        acc * d[idx]
+    } * tmp.elements.foldIndexed(1.0) { ii, acc, a ->
+        acc * a[ii]
     }
     if (logMiddleResults) {
         printSep()
-        println("Det(Matrix)=")
-        println(det)
+        println("Det(Matrix)=$det")
     }
 
     if (det.approx(0.0)) {
-        println("Approximately zero determinant stands for 0 or ∞ solutions")
+        println("Approximately zero determinant stands for 0 or infinite number of solutions")
         return null
     }
 
-    //Backward
+    // Backward
     for (x in xs.indices.reversed()) {
-        var tmpSum: Double = 0.0
+        var tmpSum = 0.0
         for (i in x + 1..xs.lastIndex) {
             tmpSum += tmp.elements[x][i] * xs[i]
         }
         xs[x] = (b[x] - tmpSum) / tmp.elements[x][x]
     }
+
     return xs
 }
 

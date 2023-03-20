@@ -1,17 +1,19 @@
 import core.solveSLE
 import core.toMutableMatrix
-import `in`.nextDoubleOrNull
-import `in`.nextIntOrNull
-import out.debug
-import out.pretty
-import out.printSep
+import input.nextDoubleOrNull
+import input.nextIntOrNull
+import output.pretty
+import output.printSep
 import java.io.FileInputStream
+import java.io.IOException
 import java.util.*
 import kotlin.system.exitProcess
 
 const val docs: String = """
 DESCRIPTION
     Utility for solving System of Liner Algebraic Equations
+    
+    NOTE: floating point is comma (",")
 
 SYNOPSIS 
     solve [FLAG [PARAM]] 
@@ -26,24 +28,22 @@ FLAG
 
 fun main(args: Array<String>) {
     try {
-
         val input: Scanner
-        var isInteractive: Boolean = true
-        var isRandom: Boolean = false
-        var n: Int = 0
+        var isInteractive = true
+        var isRandom = false
+        var n = 0
 
         if (args.isNotEmpty()) {
             when (args[0]) {
                 "--random" -> {
                     if (args.size >= 2) {
                         isRandom = true
-                        isInteractive = true
                         n = args[1].toIntOrNull() ?: run {
-                            println("'n' value mustn't be empty")
-                            return
+                            throw IllegalArgumentException("Invalid n input value")
                         }
+                        if (n <= 0 || 20 < n) throw IllegalArgumentException("'n' value must me in [1..20]")
                     } else {
-                        throw IllegalArgumentException("Used '-f' option but no value specified")
+                        throw IllegalArgumentException("Used '--random' option but no dimension value specified")
                     }
                 }
 
@@ -51,7 +51,7 @@ fun main(args: Array<String>) {
                     if (args.size >= 2 && args[1].isNotEmpty()) {
                         isInteractive = false
                     } else {
-                        throw IllegalArgumentException("Used '-f' option but no value specified")
+                        throw IllegalArgumentException("Used '--file' option but no value specified")
                     }
                 }
 
@@ -60,128 +60,106 @@ fun main(args: Array<String>) {
                     return
                 }
 
-                else -> throw IllegalArgumentException("Illegal option used. See '-h' flag.")
+                else -> throw IllegalArgumentException("Illegal option is given. Use '-h' for help.")
             }
         }
 
-        input = if (isInteractive) Scanner(System.`in`)
-        else {
-            Scanner(FileInputStream(args[1])).useLocale(Locale.FRANCE)
+        input = if (isInteractive) {
+            Scanner(System.`in`)
+        } else {
+            Scanner(FileInputStream(args[1]))
+        }.also {
+            it.useLocale(Locale.FRANCE)
         }
 
         if (isInteractive) {
             println(
                 """
-      #--------------------------------------------------------# 
-      # Your are welcome in System of Linear Equations solver. #
-      #--------------------------------------------------------#
-    """.trimIndent()
+                #--------------------------------------------------------# 
+                # Your are welcome in System of Linear Equations solver. #
+                #--------------------------------------------------------#
+                """.trimIndent()
             )
             println(
                 """
-        Please input your matrix dimension:
-        ( 1 ≤ n ≤ 20 )
-    """.trimIndent()
+                Please input your matrix dimension:
+                ( 0 < n < 21 )
+                """.trimIndent()
             )
             print(" n=")
         }
 
         if (!isRandom) {
-            n = input.nextIntOrNull() ?: run {
-                println("'n' value mustn't be empty")
-                return
-            }
+            n = input.nextIntOrNull() ?: throw IOException("Illegal value")
+        } else {
+            print(" $n")
         }
 
-        if (n <= 0 || n > 20) {
-            if (isInteractive) {
-                println("'n' value must me in [1..20]")
-                return
-            } else {
-                throw IllegalArgumentException("'n' value must me in [1..20]")
-            }
-        }
+        if (n <= 0 || 20 < n) throw IllegalArgumentException("'n' value must me in [1..20]")
 
 
         if (isInteractive) {
             printSep()
             println(
                 """
-        Please, input your (n×n) values of matrix by rows of n elements separated with single space:
-        NOTE. floating point is dot ","
-    """.trimIndent()
+                Please, input your (n x n) values of matrix by rows of n elements separated with single space:
+                """.trimIndent()
             )
         }
 
         val matrix = MutableList(n) { DoubleArray(n) }.toMutableMatrix()
         val vector = DoubleArray(n)
 
-        try {
-            for (i in 0 until n) {
-                for (j in 0 until n) {
-                    matrix.elements[i][j] = input.nextDoubleOrNull(isRandom) ?: run {
-                        throw IllegalArgumentException("Illegal value")
-                    }
-                }
-            }
-
-            debug(matrix.pretty())
-
-            if (isInteractive) {
-                printSep()
-                println(
-                    """
-            Thank you for your matrix.
-            Input your values of right the system right part in one row separated with single space:
-        """.trimIndent()
-                )
-            }
-
-            for (i in 0 until n) {
-                vector[i] = input.nextDoubleOrNull(isRandom) ?: run {
-                    throw IllegalArgumentException("Illegal value")
-                }
-            }
-
-            debug(vector.pretty())
-
-        } catch (e: Exception) {
-            if (isInteractive) {
-                printSep()
-                println("Wrong input! Be careful!")
-                println("Reason: ${e.message}.")
-                return
-            } else {
-                throw e
+        for (i in 0 until n) {
+            for (j in 0 until n) {
+                matrix.elements[i][j] =
+                    input.nextDoubleOrNull(isRandom) ?: throw IOException("Illegal value")
             }
         }
 
-        val x = matrix.solveSLE(vector, logMiddleResults = false) ?: run {
-            return
+
+        if (isInteractive) {
+            printSep()
+            println("Thank you for your matrix:")
+            println(matrix.pretty())
+            printSep()
+            println(
+                """
+                Next step is input values of your system's right-hand part in one row separated with single space:
+                """.trimIndent()
+            )
         }
+
+        for (i in 0 until n) {
+            vector[i] = input.nextDoubleOrNull(isRandom) ?: throw IOException("Illegal value")
+        }
+
+
+        if (isInteractive) {
+            printSep()
+            println("Thank you for your vector:")
+            println(vector.pretty())
+        }
+
+        val x =
+            matrix.solveSLE(vector, logMiddleResults = true) ?: throw ArithmeticException("System could not be solved")
 
         printSep()
-        println(
-            """
-        Result of calculating vector 'x':
-    """.trimIndent()
-        )
+        println("Result of calculating vector 'x':")
         println(x.pretty())
 
-        val r = DoubleArray(n) {
-            vector[it] - matrix.elements[it].foldIndexed(0.0) { idx, acc, d ->
-                acc + d * x[idx]
+        val r = DoubleArray(n) { i ->
+            vector[i] - matrix.elements[i].foldIndexed(0.0) { j, acc, aij ->
+                acc + aij * x[j]
             }
         }
 
         printSep()
-        println(
-            """
-            Vector of deviance 'r':
-        """.trimIndent()
-        )
+        println("Vector of deviance 'r':")
         println(r.pretty())
 
+    } catch (e: ArithmeticException) {
+        println("Arithmetic error appeared: ${e.message}")
     } catch (e: Exception) {
         printSep()
         println("Error appeared: ${e.message}")

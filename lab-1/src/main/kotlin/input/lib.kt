@@ -1,4 +1,4 @@
-package `in`
+package input
 
 import java.util.*
 import kotlin.random.Random
