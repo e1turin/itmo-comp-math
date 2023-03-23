@@ -1,0 +1,99 @@
+package core
+
+import output.pretty
+import output.printSep
+import kotlin.math.absoluteValue
+
+fun Double.approx(double: Double): Boolean {
+    return (this - double).absoluteValue < 1e-6
+}
+
+/**
+ * extension function on matrix to solve system of linear equations described by this and vector `b`.
+ */
+@OptIn(ExperimentalStdlibApi::class)
+fun Matrix.solveSLE(b: DoubleArray, logMiddleResults: Boolean = false): DoubleArray? {
+    val dim = elements.size // matrix must be square unless we can slice square matrix from it
+    assert(elements.all { dim == it.size }) { "Matrix dimensions mismatch (not square matrix)" }
+    assert(b.size == dim) { "Matrix and vector dimensions mismatch (must have same number of rows)" }
+
+    val xs = DoubleArray(dim) { 0.0 }
+    val tmp = elements.copy().toMutableMatrix()
+
+    var nRowSwaps = 0
+
+    // Forward
+    for (x in 0..<dim - 1) {
+        if (tmp.mutateMatrixWithVector(vector = b, start = x)) {
+            nRowSwaps++
+        }
+
+        for (nextRow in x + 1..<dim) {
+            val mul = -tmp.elements[nextRow][x] / tmp.elements[x][x]
+            for (i in 0..<dim) {
+                tmp.elements[nextRow][i] += tmp.elements[x][i] * mul
+            }
+            b[nextRow] += b[x] * mul
+
+            tmp.elements[nextRow][x] = 0.0 // must be 0 because of math
+        }
+    }
+
+    if (logMiddleResults) {
+        printSep()
+        println("Triangle matrix:")
+        println(tmp.pretty())
+        printSep()
+        println("Modified b:")
+        println(b.pretty())
+    }
+
+    val det: Double = if (nRowSwaps % 2 == 0) {
+        1.0
+    } else {
+        -1.0
+    } * tmp.elements.foldIndexed(1.0) { ii, acc, a ->
+        acc * a[ii]
+    }
+    if (logMiddleResults) {
+        printSep()
+        println("Det(Matrix)=$det")
+    }
+
+    if (det.approx(0.0)) {
+        println("Approximately zero determinant stands for 0 or infinite number of solutions")
+        return null
+    }
+
+    // Backward
+    for (x in xs.indices.reversed()) {
+        var tmpSum = 0.0
+        for (i in x + 1..xs.lastIndex) {
+            tmpSum += tmp.elements[x][i] * xs[i]
+        }
+        xs[x] = (b[x] - tmpSum) / tmp.elements[x][x]
+    }
+
+    return xs
+}
+
+/**
+ * Mute matrix to get greater element at first position
+ */
+@OptIn(ExperimentalStdlibApi::class)
+private fun MutableMatrix.mutateMatrixWithVector(vector: DoubleArray, start: Int): Boolean {
+    var mutated = false
+    var greatest: Int = start
+    for (i in start..<elements.size) {
+        if (elements[i][start].absoluteValue > elements[greatest][start].absoluteValue) {
+            greatest = i
+            mutated = true
+        }
+    }
+    if (mutated) {
+        elements[start] = elements[greatest].also { elements[greatest] = elements[start] }
+        vector[start] = vector[greatest].also { vector[greatest] = vector[start] }
+    }
+    return mutated
+}
+
