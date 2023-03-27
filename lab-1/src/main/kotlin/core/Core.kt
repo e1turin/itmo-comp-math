@@ -2,6 +2,7 @@ package core
 
 import output.pretty
 import output.printSep
+import java.util.*
 import kotlin.math.absoluteValue
 
 fun Double.approx(double: Double): Boolean {
@@ -57,7 +58,11 @@ fun Matrix.solveSLE(b: DoubleArray, logMiddleResults: Boolean = false): DoubleAr
     }
     if (logMiddleResults) {
         printSep()
-        println("Det(Matrix)=$det")
+        println(
+            String.format(
+                locale = Locale.FRANCE, format = "det(Matrix)= %.6f", det
+            )
+        )
     }
 
     if (det.approx(0.0)) {

@@ -11,9 +11,10 @@ import kotlin.system.exitProcess
 
 const val docs: String = """
 DESCRIPTION
-    Utility for solving System of Liner Algebraic Equations
+    Utility for solving System of Liner Algebraic Equations. 
+    'Illegal value' error arises on incorrect input format.
     
-    NOTE: floating point is comma (",")
+    NOTE: floating point-separator is comma (",")
 
 SYNOPSIS 
     solve [FLAG [PARAM]] 
@@ -142,7 +143,7 @@ fun main(args: Array<String>) {
         }
 
         val x =
-            matrix.solveSLE(vector, logMiddleResults = true) ?: throw ArithmeticException("System could not be solved")
+            matrix.solveSLE(vector.clone(), logMiddleResults = true) ?: throw ArithmeticException("System could not be solved")
 
         printSep()
         println("Result of calculating vector 'x':")

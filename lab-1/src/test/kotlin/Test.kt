@@ -10,7 +10,7 @@ class Test {
     @Test
     fun `input data by random dim=3`() {
         println("####### input data by random #######")
-        main(arrayOf("--random", "3"))
+        main(arrayOf("--random", "20"))
     }
 
     @Test
