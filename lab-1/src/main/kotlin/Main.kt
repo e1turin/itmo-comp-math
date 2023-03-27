@@ -1,3 +1,4 @@
+import core.calculateDeviance
 import core.solveSLE
 import core.toMutableMatrix
 import input.nextDoubleOrNull
@@ -11,9 +12,10 @@ import kotlin.system.exitProcess
 
 const val docs: String = """
 DESCRIPTION
-    Utility for solving System of Liner Algebraic Equations
+    Utility for solving System of Liner Algebraic Equations. 
+    'Illegal value' error arises on incorrect input format.
     
-    NOTE: floating point is comma (",")
+    NOTE: decimal-separator is comma (",").
 
 SYNOPSIS 
     solve [FLAG [PARAM]] 
@@ -39,7 +41,7 @@ fun main(args: Array<String>) {
                     if (args.size >= 2) {
                         isRandom = true
                         n = args[1].toIntOrNull() ?: run {
-                            throw IllegalArgumentException("Invalid n input value")
+                            throw IllegalArgumentException("Invalid n parameter input value")
                         }
                         if (n <= 0 || 20 < n) throw IllegalArgumentException("'n' value must me in [1..20]")
                     } else {
@@ -90,7 +92,7 @@ fun main(args: Array<String>) {
         }
 
         if (!isRandom) {
-            n = input.nextIntOrNull() ?: throw IOException("Illegal value")
+            n = input.nextIntOrNull() ?: throw IOException("Illegal value of dimension value")
         } else {
             print(" $n")
         }
@@ -113,7 +115,7 @@ fun main(args: Array<String>) {
         for (i in 0 until n) {
             for (j in 0 until n) {
                 matrix.elements[i][j] =
-                    input.nextDoubleOrNull(isRandom) ?: throw IOException("Illegal value")
+                    input.nextDoubleOrNull(isRandom) ?: throw IOException("Illegal value among matrix elements")
             }
         }
 
@@ -131,7 +133,7 @@ fun main(args: Array<String>) {
         }
 
         for (i in 0 until n) {
-            vector[i] = input.nextDoubleOrNull(isRandom) ?: throw IOException("Illegal value")
+            vector[i] = input.nextDoubleOrNull(isRandom) ?: throw IOException("Illegal value among vector elements")
         }
 
 
@@ -141,18 +143,14 @@ fun main(args: Array<String>) {
             println(vector.pretty())
         }
 
-        val x =
-            matrix.solveSLE(vector, logMiddleResults = true) ?: throw ArithmeticException("System could not be solved")
+        val x = matrix.solveSLE(vector.clone(), logMiddleResults = true)
+            ?: throw ArithmeticException("System could not be solved")
 
         printSep()
         println("Result of calculating vector 'x':")
         println(x.pretty())
 
-        val r = DoubleArray(n) { i ->
-            vector[i] - matrix.elements[i].foldIndexed(0.0) { j, acc, aij ->
-                acc + aij * x[j]
-            }
-        }
+        val r = matrix.calculateDeviance(vector, x)
 
         printSep()
         println("Vector of deviance 'r':")

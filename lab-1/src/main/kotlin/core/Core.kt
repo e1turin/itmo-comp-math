@@ -2,6 +2,7 @@ package core
 
 import output.pretty
 import output.printSep
+import java.util.*
 import kotlin.math.absoluteValue
 
 fun Double.approx(double: Double): Boolean {
@@ -57,7 +58,11 @@ fun Matrix.solveSLE(b: DoubleArray, logMiddleResults: Boolean = false): DoubleAr
     }
     if (logMiddleResults) {
         printSep()
-        println("Det(Matrix)=$det")
+        println(
+            String.format(
+                locale = Locale.FRANCE, format = "det(Matrix)= %.6f", det
+            )
+        )
     }
 
     if (det.approx(0.0)) {
@@ -75,6 +80,17 @@ fun Matrix.solveSLE(b: DoubleArray, logMiddleResults: Boolean = false): DoubleAr
     }
 
     return xs
+}
+
+/**
+ * Method for calculating vector of deviance ('r')
+ * @param [vector] is vector of right-hand part of matrix with dimension 'n'
+ * @param [solution] is vector of parameters with dimension 'n'
+ */
+fun Matrix.calculateDeviance(vector: DoubleArray, solution: DoubleArray) = DoubleArray(vector.size) { i ->
+    vector[i] - elements[i].foldIndexed(0.0) { j, acc, aij ->
+        acc + aij * solution[j]
+    }
 }
 
 /**
