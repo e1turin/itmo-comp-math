@@ -7,33 +7,48 @@ import kotlin.math.abs
 import kotlin.math.max
 
 class SimpleIterationSolvingMethod(
-    private val devianceFunction: (Double) -> Double,
+    private val approximationFunction: (Double) -> Double,
 ) : SolvingMethod<Double> {
 
     override fun nextApproximation(current: Double): Double {
-        return devianceFunction(current)
+        return approximationFunction(current)
     }
 
     companion object {
-        fun devianceFunctionFrom(
+        fun approximationFunctionFrom(
             range: ClosedRange<Double>,
             function: (Double) -> Double,
             derivative: (Double) -> Double = function.derivative,
             stepToCheck: Double = 1e-2
         ): Pair<(Double) -> Double, (Double) -> Double> {
+            val lambda = -1 / maxAbsDerivativeValue(
+                range, stepToCheck, derivative
+            )
+
+            return Pair({ x: Double -> x + lambda * function(x) },  // phi(x)
+                { x: Double -> 1 + lambda * derivative(x) }         // d(phi(x))/dx
+            )
+        }
+
+        fun testConvergenceCondition(
+            range: ClosedRange<Double>, stepToCheck: Double = 1e-2, derivative: (Double) -> Double
+        ): Boolean {
+            return maxAbsDerivativeValue(range, stepToCheck, derivative) < 1
+        }
+
+        private fun maxAbsDerivativeValue(
+            range: ClosedRange<Double>, stepToCheck: Double = 1e-2, derivative: (Double) -> Double
+        ): Double {
             var maxAbsDerivativeValue = 1.0
 
             for (x in range step stepToCheck) {
                 maxAbsDerivativeValue = max(maxAbsDerivativeValue, abs(derivative(x)))
             }
 
-            val lambda = -1 / maxAbsDerivativeValue
-
-            return Pair(
-                { x: Double -> x + lambda * function(x) },
-                { x: Double -> 1 + lambda * derivative(x) }
-            )
+            return maxAbsDerivativeValue
         }
     }
+
+
 
 }
