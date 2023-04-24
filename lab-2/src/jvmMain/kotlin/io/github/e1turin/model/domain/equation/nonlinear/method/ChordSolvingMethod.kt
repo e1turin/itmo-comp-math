@@ -4,7 +4,7 @@ import io.github.e1turin.model.domain.equation.SolvingMethod
 
 
 class ChordSolvingMethod(
-    val function: (Double) -> Double
+    private val function: (Double) -> Double
 ) : SolvingMethod<ClosedRange<Double>> {
 
     override fun nextApproximation(current: ClosedRange<Double>): ClosedRange<Double> {
