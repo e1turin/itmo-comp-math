@@ -11,7 +11,7 @@ import androidx.compose.ui.unit.dp
 import io.github.e1turin.output.view.entities.graph.model.Gu
 
 @Composable
-fun Graph(
+fun FunctionGraph(
     functionRange: ClosedRange<Gu>,
     step: Gu = 1.gu,
     density: Float = -1f,
