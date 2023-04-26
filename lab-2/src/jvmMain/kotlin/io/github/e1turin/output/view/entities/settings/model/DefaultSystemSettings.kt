@@ -1,0 +1,13 @@
+package io.github.e1turin.output.view.entities.settings.model
+
+import com.arkivanov.decompose.value.MutableValue
+import com.arkivanov.decompose.value.Value
+
+object DefaultSystemSettings : DefaultSettings, SystemSettings {
+    override val data: Value<Data> = MutableValue(Data())
+    override val isCompleted: Boolean = false
+
+    override fun onSystemSelect(system: List<(List<Double>) -> Double>) {}
+
+    class Data : Settings.Data()
+}

@@ -23,6 +23,8 @@ kotlin {
         val jvmMain by getting {
             dependencies {
                 implementation(compose.desktop.currentOs)
+                implementation("com.arkivanov.decompose:decompose:2.0.0-alpha-02")
+                implementation("com.arkivanov.decompose:extensions-compose-jetbrains:2.0.0-alpha-02")
             }
         }
         val jvmTest by getting
