@@ -17,7 +17,7 @@ fun GraphDrawing() {
 
     Row(modifier = Modifier.padding(5.dp)) {
         FunctionGraph(
-            functionRange = settings.functionRangeStart.gu..settings.functionRangeEnd.gu,
+            inspectingRange = settings.functionRangeStart.gu..settings.functionRangeEnd.gu,
             step = settings.graphGridStep.gu,
             density = settings.graphDensity.toFloat(),
         ) { x -> function(x) }
