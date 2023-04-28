@@ -7,7 +7,7 @@ import io.github.e1turin.output.view.pages.main.model.MainPage
 
 @Composable
 fun MainActivity() {
-    MainPageUI(
+    MainPage(
         modifier = Modifier.fillMaxSize(),
         model = MainPage()
     )

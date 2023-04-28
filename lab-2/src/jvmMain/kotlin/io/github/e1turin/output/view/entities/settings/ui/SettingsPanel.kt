@@ -26,7 +26,7 @@ fun SettingsPanel(
         contentAlignment = Alignment.TopStart
     ) {
         when (model) {
-            is NewtonSettings -> NewtonProperties(model)
+            is NewtonEquationSettings -> NewtonProperties(model)
             is SystemSimpleIterationSettings -> SystemSimpleIterationProperties(model)
             //TODO: another methods
 
@@ -42,7 +42,7 @@ fun SettingsPanel(
 }
 
 @Composable
-internal fun NewtonProperties(settings: NewtonSettings) {
+internal fun NewtonProperties(settings: NewtonEquationSettings) {
     val data = settings.data.subscribeAsState()
 
     Text("Newton Settings")

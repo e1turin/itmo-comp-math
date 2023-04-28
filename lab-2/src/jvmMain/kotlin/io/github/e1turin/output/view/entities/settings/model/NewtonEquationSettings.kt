@@ -5,10 +5,10 @@ import com.arkivanov.decompose.value.Value
 import io.github.e1turin.output.view.shared.lib.decompose.mutate
 
 
-class NewtonSettings : EquationSettings {
+class NewtonEquationSettings : EquationSettings {
     private val _data = MutableValue(
         NewtonData(
-            range = 0.0..0.0,
+            range = -3.0..3.0,
             initialValue = 0.0
         )
     )

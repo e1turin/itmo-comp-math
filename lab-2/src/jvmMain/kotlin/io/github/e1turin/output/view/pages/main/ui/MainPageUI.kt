@@ -4,7 +4,6 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.material.Button
 import androidx.compose.material.Text
 import androidx.compose.runtime.*
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.arkivanov.decompose.extensions.compose.jetbrains.subscribeAsState
@@ -15,7 +14,7 @@ import io.github.e1turin.output.view.entities.task.ui.TaskSelection
 import io.github.e1turin.output.view.pages.main.model.MainPage
 
 @Composable
-fun MainPageUI(
+fun MainPage(
     modifier: Modifier = Modifier,
     model: MainPage
 ) {
@@ -37,9 +36,14 @@ fun MainPageUI(
                     modifier = Modifier.weight(1F),
                 ) {
                     if (isReady && settings.isCompleted) {
-                        Plot(model = settings)
+                        Plot(
+                            modifier = Modifier
+                                .fillMaxSize()
+                            ,
+                            model = settings
+                        )
                     } else {
-//                        isReady = false                 //XXX: Subtle moment
+                        isReady = false
                         SamplePicker(
                             modifier = Modifier.fillMaxSize(),
                             model = settings

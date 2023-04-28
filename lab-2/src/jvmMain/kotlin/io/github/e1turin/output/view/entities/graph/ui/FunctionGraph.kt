@@ -12,13 +12,14 @@ import io.github.e1turin.output.view.entities.graph.model.Gu
 
 @Composable
 fun FunctionGraph(
-    functionRange: ClosedRange<Gu>,
+    modifier: Modifier = Modifier,
+    inspectingRange: ClosedRange<Gu>,
     step: Gu = 1.gu,
     density: Float = -1f,
     function: (Float) -> Float,
 ) {
     Canvas(
-        modifier = Modifier.size(600.dp, 600.dp).clipToBounds(),
+        modifier = modifier.clipToBounds(),
     ) {
         val maxGraphWidthInUnits = 20f
 
@@ -33,7 +34,7 @@ fun FunctionGraph(
             drawAxes()
 
             drawFunctionGraph(
-                range = functionRange,
+                range = inspectingRange,
                 step = (step / 10),
                 strokeWidth = 3f,
                 color = Color.Cyan,
