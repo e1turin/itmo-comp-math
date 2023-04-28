@@ -15,13 +15,13 @@ fun FunctionGraph(
     modifier: Modifier = Modifier,
     inspectingRange: ClosedRange<Gu>,
     step: Gu = 1.gu,
-    density: Float = -1f,
+    density: Float = -1F,
     function: (Float) -> Float,
 ) {
     Canvas(
         modifier = modifier.clipToBounds(),
     ) {
-        val maxGraphWidthInUnits = 20f
+        val maxGraphWidthInUnits = 20F
 
         val graphDensity: Float = if (density > 0)
             density
@@ -36,7 +36,7 @@ fun FunctionGraph(
             drawFunctionGraph(
                 range = inspectingRange,
                 step = (step / 10),
-                strokeWidth = 3f,
+                strokeWidth = 5F,
                 color = Color.Cyan,
                 function = function
             )
