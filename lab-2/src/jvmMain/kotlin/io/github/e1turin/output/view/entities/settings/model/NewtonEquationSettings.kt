@@ -23,8 +23,8 @@ class NewtonEquationSettings : EquationSettings {
     fun onRangeChange(range: ClosedRange<Double>): Unit =
         _data.mutate { copy(range = range) }
 
-    fun onInitialValueChange(range: ClosedRange<Double>): Unit =
-        _data.mutate { copy(range = range) }
+    fun onInitialValueChange(initialValue: Double): Unit =
+        _data.mutate { copy(initialValue = initialValue) }
 
     data class NewtonData(
         val function: ((Double) -> Double)? = null,
