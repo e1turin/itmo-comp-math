@@ -1,7 +1,6 @@
 package io.github.e1turin.output.view.entities.settings.ui
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Text
@@ -12,6 +11,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.arkivanov.decompose.extensions.compose.jetbrains.subscribeAsState
 import io.github.e1turin.output.view.entities.settings.model.*
+import io.github.e1turin.output.view.entities.settings.ui.method.equation.NewtonSettingsForm
 
 @Composable
 fun SettingsPanel(
@@ -20,13 +20,13 @@ fun SettingsPanel(
 ) {
     Box(
         modifier = modifier
-//            .fillMaxHeight()
-            .background(Color.LightGray, shape = RoundedCornerShape(10.dp))
-            .border(1.dp, Color.Black, shape = RoundedCornerShape(10.dp)),
+            .background(Color.LightGray, RoundedCornerShape(10.dp))
+//            .border(1.dp, Color.Black, RoundedCornerShape(10.dp))
+        ,
         contentAlignment = Alignment.TopStart
     ) {
         when (model) {
-            is NewtonEquationSettings -> NewtonProperties(model)
+            is NewtonEquationSettings -> NewtonSettingsForm(modifier = Modifier, settings = model)
             is SystemSimpleIterationSettings -> SystemSimpleIterationProperties(model)
             //TODO: another methods
 
@@ -41,12 +41,6 @@ fun SettingsPanel(
     }
 }
 
-@Composable
-internal fun NewtonProperties(settings: NewtonEquationSettings) {
-    val data = settings.data.subscribeAsState()
-
-    Text("Newton Settings")
-}
 
 @Composable
 internal fun SystemSimpleIterationProperties(settings: SystemSimpleIterationSettings) {
