@@ -14,11 +14,11 @@ class SystemSimpleIterationSettings : SystemSettings {
     )
     override val data: Value<SystemSimpleIterationData> = _data
 
-    override val isCompleted: Boolean
-        get() = data.value.system != null
+    val _isCompleted = MutableValue(false)
+    override val isCompleted: Value<Boolean> = _isCompleted
 
     override fun onSystemSelect(system: List<(List<Double>) -> Double>): Unit =
-        _data.mutate { copy(system = system) }
+        _data.mutate { copy(system = system) }.also { _isCompleted.mutate { true } }
 
     fun onRangeChange(range: ClosedRange<Double>): Unit =
         _data.mutate { copy(range = range) }

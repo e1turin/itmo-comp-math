@@ -5,7 +5,7 @@ import com.arkivanov.decompose.value.Value
 
 object DefaultSystemSettings : DefaultSettings, SystemSettings {
     override val data: Value<Data> = MutableValue(Data())
-    override val isCompleted: Boolean = false
+    override val isCompleted: Value<Boolean> = MutableValue(false)
 
     override fun onSystemSelect(system: List<(List<Double>) -> Double>) {}
 

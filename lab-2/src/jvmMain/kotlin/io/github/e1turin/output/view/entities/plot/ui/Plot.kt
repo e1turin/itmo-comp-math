@@ -1,11 +1,11 @@
-package io.github.e1turin.output.view.entities.graph.ui
+package io.github.e1turin.output.view.entities.plot.ui
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import io.github.e1turin.output.view.entities.graph.ui.method.NewtonMethodPlot
+import io.github.e1turin.output.view.entities.plot.ui.method.NewtonMethodPlot
 import io.github.e1turin.output.view.entities.settings.model.*
 
 @Composable

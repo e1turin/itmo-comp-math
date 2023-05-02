@@ -4,7 +4,12 @@ import com.arkivanov.decompose.value.Value
 
 sealed interface Settings {
     val data: Value<Data>
-    val isCompleted: Boolean
+    val isCompleted: Value<Boolean>
 
     abstract class Data
+
+    data class Translation(
+        val offsetX: Double,
+        val offsetY: Double
+    )
 }

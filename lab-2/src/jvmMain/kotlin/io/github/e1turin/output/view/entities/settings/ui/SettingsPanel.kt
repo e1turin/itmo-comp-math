@@ -2,6 +2,7 @@ package io.github.e1turin.output.view.entities.settings.ui
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
@@ -21,8 +22,7 @@ fun SettingsPanel(
     Box(
         modifier = modifier
             .background(Color.LightGray, RoundedCornerShape(10.dp))
-//            .border(1.dp, Color.Black, RoundedCornerShape(10.dp))
-        ,
+            .padding(10.dp),
         contentAlignment = Alignment.TopStart
     ) {
         when (model) {
@@ -30,7 +30,7 @@ fun SettingsPanel(
             is SystemSimpleIterationSettings -> SystemSimpleIterationProperties(model)
             //TODO: another methods
 
-            is DefaultSettings -> {
+            is DefaultSettings -> Box(contentAlignment = Alignment.Center) {
                 Text("Select a task first")
             }
 

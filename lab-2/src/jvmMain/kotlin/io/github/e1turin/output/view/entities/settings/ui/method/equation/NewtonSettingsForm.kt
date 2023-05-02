@@ -1,18 +1,16 @@
 package io.github.e1turin.output.view.entities.settings.ui.method.equation
 
+import androidx.compose.desktop.ui.tooling.preview.Preview
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.ExperimentalMaterialApi
-import androidx.compose.material.RangeSlider
-import androidx.compose.material.Text
-import androidx.compose.material.TextField
+import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.arkivanov.decompose.extensions.compose.jetbrains.subscribeAsState
 import io.github.e1turin.output.view.entities.settings.model.NewtonEquationSettings
-import io.github.e1turin.output.view.shared.lib.compose.toDoubleRange
-import io.github.e1turin.output.view.shared.lib.compose.toFloatRange
+import io.github.e1turin.output.view.shared.lib.std.*
+import io.github.e1turin.output.view.shared.ui.range.RangePicker
 
 
 @OptIn(ExperimentalMaterialApi::class)
@@ -51,6 +49,25 @@ internal fun NewtonSettingsForm(
 
         Property(title = "Inspecting range") {
             Column {
+                RangePicker(
+                    range = range,
+                    onMoveLeft = {
+                        range = range.slideToLowestBy(.1F)
+                        settings.onRangeChange(range.toDoubleRange())
+                    },
+                    onMoveRight = {
+                        range = range.slideToHighestBy(.1F)
+                        settings.onRangeChange(range.toDoubleRange())
+                    },
+                    onShrink = {
+                        range = range.shrinkBy(.1F)
+                        settings.onRangeChange(range.toDoubleRange())
+                    },
+                    onStretch = {
+                        range = range.stretchBy(.1F)
+                        settings.onRangeChange(range.toDoubleRange())
+                    },
+                )
                 RangeSlider(
                     modifier = Modifier,
                     value = range,
@@ -62,15 +79,57 @@ internal fun NewtonSettingsForm(
                         settings.onRangeChange(range.toDoubleRange())
                     }
                 )
-                Text("start: ${range.start}")
-                Text("end: ${range.endInclusive}")
+                Text("start: ${range.start.pretty()}")
+                Text("end:   ${range.endInclusive.pretty()}")
             }
 
+        }
+
+        Property(title = "scale") {
+            Column {
+                Slider(
+                    modifier = Modifier,
+                    value = data.scale.toFloat(),
+                    valueRange = 0F..500F,
+                    onValueChange = {
+                        settings.onScaleValueChange(it.toDouble())
+                    }
+                )
+                Text("scale: ${data.scale}")
+            }
+        }
+
+        Property(title = "translate x") {
+            Column {
+                Slider(
+                    modifier = Modifier,
+                    value = data.translate.offsetX.toFloat(),
+                    valueRange = range,
+                    onValueChange = {
+                        settings.onTranslateXChange(it.toDouble())
+                    }
+                )
+            }
+        }
+
+        Property(title = "translate y") {
+            Column {
+                Slider(
+                    modifier = Modifier,
+                    value = data.translate.offsetY.toFloat(),
+                    valueRange = range,
+                    onValueChange = {
+                        settings.onTranslateYChange(it.toDouble())
+                    }
+                )
+            }
         }
 
     }
 
 }
+
+
 
 @Composable
 private fun Property(title: String, content: @Composable () -> Unit) {

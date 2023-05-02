@@ -7,7 +7,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.arkivanov.decompose.extensions.compose.jetbrains.subscribeAsState
-import io.github.e1turin.output.view.entities.graph.ui.Plot
+import io.github.e1turin.output.view.entities.plot.ui.Plot
 import io.github.e1turin.output.view.entities.settings.ui.SamplePicker
 import io.github.e1turin.output.view.entities.settings.ui.SettingsPanel
 import io.github.e1turin.output.view.entities.task.ui.TaskSelection
@@ -19,6 +19,7 @@ fun MainPage(
     model: MainPage
 ) {
     val settings by model.task.settings.subscribeAsState()
+    val isCompleted by settings.isCompleted.subscribeAsState()
     var isReady by remember { mutableStateOf(false) }
 
     Box(
@@ -35,7 +36,7 @@ fun MainPage(
                 Box(
                     modifier = Modifier.weight(1F),
                 ) {
-                    if (isReady && settings.isCompleted) {
+                    if (isReady && isCompleted) {
                         Plot(
                             modifier = Modifier
                                 .fillMaxSize()
@@ -67,6 +68,7 @@ fun MainPage(
                             .wrapContentSize()
 //                            .weight(1F)
                         ,
+                        enabled = isCompleted,
                         onClick = { isReady = true }) {
                         Text("Ready")
                     }

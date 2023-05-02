@@ -1,4 +1,4 @@
-package io.github.e1turin.output.view.entities.graph.model
+package io.github.e1turin.output.view.entities.plot.model
 
 import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.Stable

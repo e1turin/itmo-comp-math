@@ -1,10 +1,11 @@
-package io.github.e1turin.output.view.entities.graph.ui
+package io.github.e1turin.output.view.entities.plot.ui
 
 import androidx.compose.runtime.Stable
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.drawscope.DrawScope
-import io.github.e1turin.output.view.entities.graph.model.Gu
+import androidx.compose.ui.text.ExperimentalTextApi
+import io.github.e1turin.output.view.entities.plot.model.Gu
 import kotlin.math.max
 import kotlin.math.roundToInt
 
@@ -53,6 +54,7 @@ class GraphContext(val density: Float = 1f) {
                 color = Color.Black,
                 strokeWidth = 1f
             )
+
             drawLine(
                 start = Offset(x = .0f, y = center.y + offset.px),
                 end = Offset(x = size.width, y = center.y + offset.px),
@@ -67,6 +69,7 @@ class GraphContext(val density: Float = 1f) {
                 color = Color.Black,
                 strokeWidth = 1f
             )
+
             drawLine(
                 start = Offset(x = center.x + offset.px, y = .0f),
                 end = Offset(x = center.x + offset.px, y = size.height),
@@ -77,13 +80,15 @@ class GraphContext(val density: Float = 1f) {
 
     }
 
-    fun DrawScope.drawAxes(width: Float = 5f) {
+    @OptIn(ExperimentalTextApi::class)
+    fun DrawScope.drawAxes(thickness: Float = 5f) {
+
         // horizontal
         drawLine(
             start = Offset(x = 0.0f, y = center.y),
             end = Offset(x = size.width, y = center.y),
             color = Color.Black,
-            strokeWidth = width
+            strokeWidth = thickness
         )
 
         // vertical
@@ -91,7 +96,7 @@ class GraphContext(val density: Float = 1f) {
             start = Offset(x = center.x, y = 0.0f),
             end = Offset(x = center.x, y = size.height),
             color = Color.Black,
-            strokeWidth = width
+            strokeWidth = thickness
         )
     }
 }
