@@ -11,10 +11,49 @@ import androidx.compose.ui.graphics.drawscope.scale
 import androidx.compose.ui.graphics.drawscope.withTransform
 import io.github.e1turin.output.view.entities.plot.model.Gu
 import io.github.e1turin.output.view.entities.settings.model.Settings
+import io.github.e1turin.output.view.shared.lib.std.length
 import kotlin.math.max
 import kotlin.math.roundToInt
 
 
+@Composable
+fun FunctionPlot(
+    modifier: Modifier = Modifier,
+    inspectingRange: ClosedFloatingPointRange<Float>,
+    step: Float = 0.01F,
+    function: (Float) -> Float
+) {
+    val padding = 40F
+
+    Canvas(modifier = modifier.clipToBounds()) {
+        val zoneWidth: Float = size.width - 2 * padding
+        val scale = zoneWidth / inspectingRange.length //coefficient to multiply Graph Units and get pixels
+
+        val iterations = (inspectingRange.length / step).toInt() + 1
+
+        var current = inspectingRange.start
+
+        drawCircle(Color.Red, 10F, Offset(0F, 0F))
+
+        repeat(iterations) {
+            val next = current + step
+
+            drawLine(
+                Color.Blue,
+                start = Offset(
+                    x = (current - inspectingRange.start) * scale + padding,
+                    y = center.y - function(current) * scale
+                ),
+                end = Offset(
+                    x = (next - inspectingRange.start) * scale + padding,
+                    y = center.y - function(next) * scale
+                )
+            )
+
+            current = next
+        }
+    }
+}
 
 @Composable
 fun FunctionPlot1(

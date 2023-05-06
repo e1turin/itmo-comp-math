@@ -68,23 +68,24 @@ internal fun NewtonSettingsForm(
                         settings.onRangeChange(range.toDoubleRange())
                     },
                 )
-                RangeSlider(
-                    modifier = Modifier,
-                    value = range,
-                    onValueChange = { newRange: ClosedFloatingPointRange<Float> ->
-                        range = newRange
-                    },
-                    valueRange = boundsOfInspection,
-                    onValueChangeFinished = {
-                        settings.onRangeChange(range.toDoubleRange())
-                    }
-                )
-                Text("start: ${range.start.pretty()}")
-                Text("end:   ${range.endInclusive.pretty()}")
+//                RangeSlider(
+//                    modifier = Modifier,
+//                    value = range,
+//                    onValueChange = { newRange: ClosedFloatingPointRange<Float> ->
+//                        range = newRange
+//                    },
+//                    valueRange = boundsOfInspection,
+//                    onValueChangeFinished = {
+//                        settings.onRangeChange(range.toDoubleRange())
+//                    }
+//                )
+//                Text("start: ${range.start.pretty()}")
+//                Text("end:   ${range.endInclusive.pretty()}")
             }
 
         }
 
+/*
         Property(title = "scale") {
             Column {
                 Slider(
@@ -98,32 +99,32 @@ internal fun NewtonSettingsForm(
                 Text("scale: ${data.scale}")
             }
         }
-
-        Property(title = "translate x") {
-            Column {
-                Slider(
-                    modifier = Modifier,
-                    value = data.translate.offsetX.toFloat(),
-                    valueRange = range,
-                    onValueChange = {
-                        settings.onTranslateXChange(it.toDouble())
-                    }
-                )
-            }
-        }
-
-        Property(title = "translate y") {
-            Column {
-                Slider(
-                    modifier = Modifier,
-                    value = data.translate.offsetY.toFloat(),
-                    valueRange = range,
-                    onValueChange = {
-                        settings.onTranslateYChange(it.toDouble())
-                    }
-                )
-            }
-        }
+*/
+//        Property(title = "translate x") {
+//            Column {
+//                Slider(
+//                    modifier = Modifier,
+//                    value = data.translate.offsetX.toFloat(),
+//                    valueRange = range,
+//                    onValueChange = {
+//                        settings.onTranslateXChange(it.toDouble())
+//                    }
+//                )
+//            }
+//        }
+//
+//        Property(title = "translate y") {
+//            Column {
+//                Slider(
+//                    modifier = Modifier,
+//                    value = data.translate.offsetY.toFloat(),
+//                    valueRange = range,
+//                    onValueChange = {
+//                        settings.onTranslateYChange(it.toDouble())
+//                    }
+//                )
+//            }
+//        }
 
     }
 
