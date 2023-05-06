@@ -1,5 +1,8 @@
 package io.github.e1turin.output.view.shared.lib.std
 
+val ClosedRange<Float>.length: Float get() = endInclusive - start
+val ClosedRange<Double>.length: Double get() = endInclusive - start
+
 fun ClosedRange<Double>.toFloatRange(): ClosedFloatingPointRange<Float> =
     start.toFloat()..endInclusive.toFloat()
 
