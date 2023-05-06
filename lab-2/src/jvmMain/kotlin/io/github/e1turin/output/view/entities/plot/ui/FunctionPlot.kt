@@ -14,8 +14,10 @@ import io.github.e1turin.output.view.entities.settings.model.Settings
 import kotlin.math.max
 import kotlin.math.roundToInt
 
+
+
 @Composable
-fun FunctionPlot(
+fun FunctionPlot1(
     modifier: Modifier = Modifier,
     inspectingRange: ClosedRange<Gu>,
     step: Gu = 1.gu,
