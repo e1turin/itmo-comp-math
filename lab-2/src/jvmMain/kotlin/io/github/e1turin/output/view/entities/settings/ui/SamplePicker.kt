@@ -15,6 +15,7 @@ import io.github.e1turin.output.view.entities.settings.model.EquationSettings
 import io.github.e1turin.output.view.entities.settings.model.Settings
 import io.github.e1turin.output.view.entities.settings.model.SystemSettings
 import kotlin.math.pow
+import kotlin.math.sin
 
 @Composable
 fun SamplePicker(
@@ -47,9 +48,9 @@ private fun EquationPicker(
         modifier = modifier,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Selection(description = "x² + 2x + 1 = 0") {
+        Selection(description = "x^3/4") {
             settings.onEquationSelect { x ->
-                x.pow(2.0) + 2 * x + 1
+                x.pow(3.0)/4
             }
         }
             .also { Spacer(Modifier.size(10.dp)) }
@@ -61,9 +62,9 @@ private fun EquationPicker(
         }
             .also { Spacer(Modifier.size(10.dp)) }
 
-        Selection(description = "x² + 2x + 1 = 0") {
+        Selection(description = "sin(x)") {
             settings.onEquationSelect { x ->
-                x.pow(2.0) + 2 * x + 1
+                sin(x)
             }
         }
     }
