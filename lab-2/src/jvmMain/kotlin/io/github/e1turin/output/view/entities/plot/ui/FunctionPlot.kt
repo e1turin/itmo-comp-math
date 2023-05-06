@@ -7,12 +7,26 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clipToBounds
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.drawscope.drawIntoCanvas
 import androidx.compose.ui.graphics.drawscope.scale
 import androidx.compose.ui.graphics.drawscope.withTransform
+import androidx.compose.ui.graphics.nativeCanvas
+import androidx.compose.ui.graphics.toArgb
+import androidx.compose.ui.text.ExperimentalTextApi
+import androidx.compose.ui.text.rememberTextMeasurer
 import io.github.e1turin.output.view.entities.plot.model.Gu
 import io.github.e1turin.output.view.entities.settings.model.Settings
 import io.github.e1turin.output.view.shared.lib.std.length
+import io.github.e1turin.output.view.shared.lib.std.pretty
+import org.jetbrains.skia.Font
+import org.jetbrains.skia.Paint
+import org.jetbrains.skia.Typeface
 import kotlin.math.*
+
+internal fun Color.toPaint(): Paint = Paint().apply {
+    isAntiAlias = true
+    color = toArgb()
+}
 
 
 @Composable
@@ -22,10 +36,10 @@ fun FunctionPlot(
     step: Float = 0.01F,
     function: (Float) -> Float
 ) {
-    val padding = 40F
+    val padding = 80F
 
     Canvas(modifier = modifier.clipToBounds()) {
-        val zoneWidth: Float = size.width - 2 * padding
+        val zoneWidth: Float = size.width - padding
         val scale = zoneWidth / inspectingRange.length //coefficient to multiply Graph Units and get pixels
 
         //function
@@ -41,73 +55,122 @@ fun FunctionPlot(
                     Color.Blue,
                     start = Offset(
                         x = (current - inspectingRange.start) * scale + padding,
-                        y = center.y - function(current) * scale
+                        y = center.y - function(current) * scale - padding / 2
                     ),
                     end = Offset(
                         x = (next - inspectingRange.start) * scale + padding,
-                        y = center.y - function(next) * scale
-                    )
+                        y = center.y - function(next) * scale - padding / 2
+                    ),
+                    strokeWidth = 2F
                 )
 
                 current = next
             }
         }
 
-        val power = log(inspectingRange.length, 10F)
-        val rawGridStep = 10F.pow(floor(power).toInt() - 1)
-        val gridStep = rawGridStep * scale
-        println("$rawGridStep $gridStep")
+        //grid + vertical axes step
+        //TODO: fix labels
+        run {
+            val power = log(inspectingRange.length, 10F)
+            val rawGridStep = 10F.pow(floor(power).toInt() - 1)
+            val gridStep = rawGridStep * scale
+            println("[FunctionPlot.kt]$rawGridStep $gridStep")
 
-        val verticalLines = (zoneWidth / gridStep).toInt()
-        var currentVertical = padding + ceil(inspectingRange.start / rawGridStep) * gridStep - inspectingRange.start * scale
+            val verticalLines = (zoneWidth / gridStep).toInt() + 1
+            var currentVertical =
+                padding + ceil(inspectingRange.start / rawGridStep) * gridStep - inspectingRange.start * scale
 
-        repeat(verticalLines) {
-            drawLine(
-                Color.DarkGray,
-                start = Offset(
-                    x = currentVertical ,
-                    y = 0F,
-                ),
-                end = Offset(
-                    x = currentVertical ,
-                    y = size.height,
+
+            repeat(verticalLines) {
+                drawLine(
+                    Color.DarkGray,
+                    start = Offset(
+                        x = currentVertical,
+                        y = 0F,
+                    ),
+                    end = Offset(
+                        x = currentVertical,
+                        y = size.height - padding,
+                    )
                 )
-            )
 
-            currentVertical += gridStep
+                currentVertical += gridStep
+            }
+
+            val horizontalLines = ((size.height - padding) / gridStep).toInt() / 2
+            var currentHorizontalOffset = gridStep
+
+            repeat(horizontalLines) {
+                drawLine(
+                    Color.DarkGray,
+                    start = Offset(
+                        x = padding,
+                        y = center.y + currentHorizontalOffset - padding / 2,
+                    ),
+                    end = Offset(
+                        x = size.width,
+                        y = center.y + currentHorizontalOffset - padding / 2,
+                    )
+                )
+
+                drawIntoCanvas { canvas ->
+                    canvas.nativeCanvas.drawString(
+                        s = (+currentHorizontalOffset / gridStep).pretty(),
+                        x = 10F,
+                        y = center.y - currentHorizontalOffset - padding / 2,
+                        font = Font(Typeface.makeDefault(), 10F),
+                        paint = Color.Black.toPaint()
+                    )
+                }
+
+                drawLine(
+                    Color.DarkGray,
+                    start = Offset(
+                        x = padding,
+                        y = center.y - currentHorizontalOffset - padding / 2,
+                    ),
+                    end = Offset(
+                        x = size.width,
+                        y = center.y - currentHorizontalOffset - padding / 2,
+                    )
+                )
+
+                drawIntoCanvas { canvas ->
+                    canvas.nativeCanvas.drawString(
+                        s = (-currentHorizontalOffset / gridStep).pretty(),
+                        x = 10F,
+                        y = center.y + currentHorizontalOffset - padding / 2,
+                        font = Font(Typeface.makeDefault(), 10F),
+                        paint = Color.Black.toPaint()
+                    )
+                }
+
+                currentHorizontalOffset += gridStep
+            }.also {
+                drawLine(
+                    Color.DarkGray,
+                    start = Offset(
+                        x = padding,
+                        y = center.y - padding / 2,
+                    ),
+                    end = Offset(
+                        x = size.width,
+                        y = center.y - padding / 2
+                    ),
+                    strokeWidth = 3F
+                )
+
+                drawIntoCanvas { canvas ->
+                    canvas.nativeCanvas.drawString(
+                        s = 0F.pretty(),
+                        x = 10F,
+                        y = center.y - padding / 2,
+                        font = Font(Typeface.makeDefault(), 10F),
+                        paint = Color.Black.toPaint()
+                    )
+                }
+            }
         }
-
-        val horizontalLines = (size.height / gridStep).toInt() / 2
-        var currentHorizontalOffset = 0F
-
-        repeat(horizontalLines) {
-            drawLine(
-                Color.DarkGray,
-                start = Offset(
-                    x = padding,
-                    y = center.y + currentHorizontalOffset,
-                ),
-                end = Offset(
-                    x = size.width,
-                    y = center.y + currentHorizontalOffset,
-                )
-            )
-
-            drawLine(
-                Color.DarkGray,
-                start = Offset(
-                    x = padding,
-                    y = center.y - currentHorizontalOffset,
-                ),
-                end = Offset(
-                    x = size.width,
-                    y = center.y - currentHorizontalOffset,
-                )
-            )
-
-            currentHorizontalOffset += gridStep
-        }
-
 
     }
 }
