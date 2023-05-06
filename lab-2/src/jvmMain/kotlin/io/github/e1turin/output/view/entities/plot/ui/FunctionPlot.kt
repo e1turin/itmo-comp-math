@@ -12,8 +12,7 @@ import androidx.compose.ui.graphics.drawscope.withTransform
 import io.github.e1turin.output.view.entities.plot.model.Gu
 import io.github.e1turin.output.view.entities.settings.model.Settings
 import io.github.e1turin.output.view.shared.lib.std.length
-import kotlin.math.max
-import kotlin.math.roundToInt
+import kotlin.math.*
 
 
 @Composable
@@ -29,29 +28,87 @@ fun FunctionPlot(
         val zoneWidth: Float = size.width - 2 * padding
         val scale = zoneWidth / inspectingRange.length //coefficient to multiply Graph Units and get pixels
 
-        val iterations = (inspectingRange.length / step).toInt() + 1
+        //function
+        run {
+            val points = (inspectingRange.length / step).toInt() + 1
 
-        var current = inspectingRange.start
+            var current = inspectingRange.start
 
-        drawCircle(Color.Red, 10F, Offset(0F, 0F))
+            repeat(points) {
+                val next = current + step
 
-        repeat(iterations) {
-            val next = current + step
+                drawLine(
+                    Color.Blue,
+                    start = Offset(
+                        x = (current - inspectingRange.start) * scale + padding,
+                        y = center.y - function(current) * scale
+                    ),
+                    end = Offset(
+                        x = (next - inspectingRange.start) * scale + padding,
+                        y = center.y - function(next) * scale
+                    )
+                )
 
+                current = next
+            }
+        }
+
+        val power = log(inspectingRange.length, 10F)
+        val rawGridStep = 10F.pow(floor(power).toInt() - 1)
+        val gridStep = rawGridStep * scale
+        println("$rawGridStep $gridStep")
+
+        val verticalLines = (zoneWidth / gridStep).toInt()
+        var currentVertical = padding + ceil(inspectingRange.start / rawGridStep) * gridStep - inspectingRange.start * scale
+
+        repeat(verticalLines) {
             drawLine(
-                Color.Blue,
+                Color.DarkGray,
                 start = Offset(
-                    x = (current - inspectingRange.start) * scale + padding,
-                    y = center.y - function(current) * scale
+                    x = currentVertical ,
+                    y = 0F,
                 ),
                 end = Offset(
-                    x = (next - inspectingRange.start) * scale + padding,
-                    y = center.y - function(next) * scale
+                    x = currentVertical ,
+                    y = size.height,
                 )
             )
 
-            current = next
+            currentVertical += gridStep
         }
+
+        val horizontalLines = (size.height / gridStep).toInt() / 2
+        var currentHorizontalOffset = 0F
+
+        repeat(horizontalLines) {
+            drawLine(
+                Color.DarkGray,
+                start = Offset(
+                    x = padding,
+                    y = center.y + currentHorizontalOffset,
+                ),
+                end = Offset(
+                    x = size.width,
+                    y = center.y + currentHorizontalOffset,
+                )
+            )
+
+            drawLine(
+                Color.DarkGray,
+                start = Offset(
+                    x = padding,
+                    y = center.y - currentHorizontalOffset,
+                ),
+                end = Offset(
+                    x = size.width,
+                    y = center.y - currentHorizontalOffset,
+                )
+            )
+
+            currentHorizontalOffset += gridStep
+        }
+
+
     }
 }
 
