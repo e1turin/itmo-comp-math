@@ -52,19 +52,21 @@ internal fun NewtonSettingsForm(
                 RangePicker(
                     range = range,
                     onMoveLeft = {
-                        range = range.slideToLowestBy(.1F)
+                        range = range.slideToLowestBy(0.1F)
                         settings.onRangeChange(range.toDoubleRange())
                     },
                     onMoveRight = {
-                        range = range.slideToHighestBy(.1F)
+                        range = range.slideToHighestBy(0.1F)
                         settings.onRangeChange(range.toDoubleRange())
                     },
                     onShrink = {
-                        range = range.shrinkBy(.1F)
-                        settings.onRangeChange(range.toDoubleRange())
+                        if (range.length > 0.2F) {
+                            range = range.shrinkBy(0.1F)
+                            settings.onRangeChange(range.toDoubleRange())
+                        }
                     },
                     onStretch = {
-                        range = range.stretchBy(.1F)
+                        range = range.stretchBy(0.1F)
                         settings.onRangeChange(range.toDoubleRange())
                     },
                 )
