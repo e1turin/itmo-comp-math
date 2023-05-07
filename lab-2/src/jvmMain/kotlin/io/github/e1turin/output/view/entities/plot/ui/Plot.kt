@@ -6,6 +6,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import io.github.e1turin.output.view.entities.plot.ui.method.NewtonMethodPlot
+import io.github.e1turin.output.view.entities.plot.ui.method.SystemSimpleIterationMethodPlot
 import io.github.e1turin.output.view.entities.settings.model.*
 
 @Composable
@@ -44,7 +45,8 @@ private fun SystemPlot(
     settings: SystemSettings
 ) {
     when (settings) {
-        is SystemSimpleIterationSettings -> TODO()
+        is SystemSimpleIterationSettings -> SystemSimpleIterationMethodPlot(modifier = modifier, settings = settings)
+
         DefaultSystemSettings -> {/* impossible way due to usage contract */
         }
     }
