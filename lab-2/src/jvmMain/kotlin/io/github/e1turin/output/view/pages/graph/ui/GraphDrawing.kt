@@ -8,7 +8,7 @@ import androidx.compose.ui.unit.dp
 import io.github.e1turin.output.view.entities.form.model.Settings
 import io.github.e1turin.output.view.entities.form.ui.SettingsPanel
 import io.github.e1turin.output.view.entities.plot.ui.FunctionPlot1
-import io.github.e1turin.output.view.entities.plot.ui.gu
+import io.github.e1turin.output.view.shared.lib.plot.gu
 
 @Composable
 fun GraphDrawing() {

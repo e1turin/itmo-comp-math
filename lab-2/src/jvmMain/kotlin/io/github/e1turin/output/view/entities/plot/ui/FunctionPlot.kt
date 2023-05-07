@@ -2,7 +2,6 @@ package io.github.e1turin.output.view.entities.plot.ui
 
 import androidx.compose.foundation.Canvas
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.Stable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clipToBounds
 import androidx.compose.ui.geometry.Offset
@@ -11,22 +10,16 @@ import androidx.compose.ui.graphics.drawscope.drawIntoCanvas
 import androidx.compose.ui.graphics.drawscope.scale
 import androidx.compose.ui.graphics.drawscope.withTransform
 import androidx.compose.ui.graphics.nativeCanvas
-import androidx.compose.ui.graphics.toArgb
-import androidx.compose.ui.text.ExperimentalTextApi
-import androidx.compose.ui.text.rememberTextMeasurer
 import io.github.e1turin.output.view.entities.plot.model.Gu
 import io.github.e1turin.output.view.entities.settings.model.Settings
+import io.github.e1turin.output.view.shared.lib.compose.toPaint
+import io.github.e1turin.output.view.shared.lib.plot.gu
 import io.github.e1turin.output.view.shared.lib.std.length
 import io.github.e1turin.output.view.shared.lib.std.pretty
 import org.jetbrains.skia.Font
-import org.jetbrains.skia.Paint
 import org.jetbrains.skia.Typeface
 import kotlin.math.*
 
-internal fun Color.toPaint(): Paint = Paint().apply {
-    isAntiAlias = true
-    color = toArgb()
-}
 
 
 @Composable
@@ -72,15 +65,24 @@ fun FunctionPlot(
         //TODO: fix labels
         run {
             val power = log(inspectingRange.length, 10F)
-            val rawGridStep = 10F.pow(floor(power).toInt() - 1)
-            val gridStep = rawGridStep * scale
-            println("[FunctionPlot.kt]$rawGridStep $gridStep")
+            val actualGridStep = 10F.pow(floor(power).toInt() - 1)
+            val gridStep = actualGridStep * scale
+            println("[FunctionPlot.kt]$actualGridStep $gridStep")
 
             val verticalLines = (zoneWidth / gridStep).toInt() + 1
+            val actualFirstVertical = ceil(inspectingRange.start / actualGridStep) * actualGridStep
             var currentVertical =
-                padding + ceil(inspectingRange.start / rawGridStep) * gridStep - inspectingRange.start * scale
+                padding + (actualFirstVertical - inspectingRange.start) * scale
 
-
+            drawIntoCanvas { canvas ->
+                canvas.nativeCanvas.drawString(
+                    s = actualFirstVertical.pretty(),
+                    x = currentVertical,
+                    y = size.height - padding + 15F,
+                    font = Font(Typeface.makeDefault(), 10F),
+                    paint = Color.Black.toPaint()
+                )
+            }
             repeat(verticalLines) {
                 drawLine(
                     Color.DarkGray,
@@ -115,7 +117,7 @@ fun FunctionPlot(
 
                 drawIntoCanvas { canvas ->
                     canvas.nativeCanvas.drawString(
-                        s = (+currentHorizontalOffset / gridStep).pretty(),
+                        s = (+actualGridStep * (it + 1)).pretty(),
                         x = 10F,
                         y = center.y - currentHorizontalOffset - padding / 2,
                         font = Font(Typeface.makeDefault(), 10F),
@@ -137,7 +139,7 @@ fun FunctionPlot(
 
                 drawIntoCanvas { canvas ->
                     canvas.nativeCanvas.drawString(
-                        s = (-currentHorizontalOffset / gridStep).pretty(),
+                        s = (-actualGridStep * (it + 1)).pretty(),
                         x = 10F,
                         y = center.y + currentHorizontalOffset - padding / 2,
                         font = Font(Typeface.makeDefault(), 10F),
@@ -315,13 +317,4 @@ fun SimpleFunctionPlot(
 
 }
 
-
-@Stable
-inline val Float.gu: Gu get() = Gu(this)
-
-@Stable
-inline val Double.gu: Gu get() = Gu(this.toFloat())
-
-@Stable
-inline val Int.gu: Gu get() = Gu(this.toFloat())
 

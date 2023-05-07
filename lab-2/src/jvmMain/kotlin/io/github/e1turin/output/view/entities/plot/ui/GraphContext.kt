@@ -6,6 +6,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.text.ExperimentalTextApi
 import io.github.e1turin.output.view.entities.plot.model.Gu
+import io.github.e1turin.output.view.shared.lib.plot.gu
 import kotlin.math.max
 import kotlin.math.roundToInt
 
