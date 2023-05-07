@@ -50,7 +50,7 @@ private fun EquationPicker(
     ) {
         Selection(description = "x^3/4") {
             settings.onEquationSelect { x ->
-                x.pow(3.0)/4
+                x.pow(3.0) / 4
             }
         }
             .also { Spacer(Modifier.size(10.dp)) }
@@ -78,7 +78,7 @@ private fun SystemPicker(
         modifier = modifier,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Selection("{x² + 2x + 1 = 0,\n x² + 2x + 1 = 0}") {
+        Selection("{ x + 2y + 1 = 0,\n 2x - y + 1 = 0 }") {
             settings.onSystemSelect(
                 listOf(
                     { x -> x[0] + 2 * x[1] + 1 },
@@ -88,11 +88,11 @@ private fun SystemPicker(
         }
             .also { Spacer(Modifier.size(10.dp)) }
 
-        Selection("{x² + 2x + 1 = 0,\n x² + 2x + 1 = 0}") {
+        Selection("{x + y = 0,\n x - y = 0}") {
             settings.onSystemSelect(
                 listOf(
-                    { x -> x[0] + 2 * x[1] + 1 },
-                    { x -> 2 * x[0] - x[1] },
+                    { arg -> arg[0] + arg[1] },
+                    { arg -> arg[0] - arg[1] }
                 )
             )
         }

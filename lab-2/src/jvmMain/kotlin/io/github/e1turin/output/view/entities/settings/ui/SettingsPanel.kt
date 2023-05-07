@@ -10,9 +10,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import com.arkivanov.decompose.extensions.compose.jetbrains.subscribeAsState
 import io.github.e1turin.output.view.entities.settings.model.*
 import io.github.e1turin.output.view.entities.settings.ui.method.equation.NewtonSettingsForm
+import io.github.e1turin.output.view.entities.settings.ui.method.system.SystemSimpleIterationForm
 
 @Composable
 fun SettingsPanel(
@@ -27,7 +27,7 @@ fun SettingsPanel(
     ) {
         when (model) {
             is NewtonEquationSettings -> NewtonSettingsForm(modifier = Modifier, settings = model)
-            is SystemSimpleIterationSettings -> SystemSimpleIterationProperties(model)
+            is SystemSimpleIterationSettings -> SystemSimpleIterationForm(modifier = Modifier, settings = model)
             //TODO: another methods
 
             is DefaultSettings -> Box(contentAlignment = Alignment.Center) {
@@ -39,12 +39,4 @@ fun SettingsPanel(
 
         }
     }
-}
-
-
-@Composable
-internal fun SystemSimpleIterationProperties(settings: SystemSimpleIterationSettings) {
-    val data = settings.data.subscribeAsState()
-
-    Text("System Simple Iteration Settings")
 }
