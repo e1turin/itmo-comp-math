@@ -8,7 +8,7 @@ import io.github.e1turin.output.view.shared.lib.decompose.mutate
 class SystemSimpleIterationSettings : SystemSettings {
     private val _data = MutableValue(
         SystemSimpleIterationData(
-            range = 0.0..0.0,
+            range = -3.0..3.0,
             initialValue = 0.0
         )
     )
