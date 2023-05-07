@@ -20,3 +20,23 @@ fun ClosedRange<Float>.shrinkBy(step: Float): ClosedFloatingPointRange<Float> =
 
 fun ClosedRange<Float>.stretchBy(step: Float): ClosedFloatingPointRange<Float> =
     (start - step)..(endInclusive + step)
+
+inline infix fun ClosedRange<Float>.unsteadyStep(step: Float) = object : Iterator<Float> {
+    private var current = start
+
+    override fun hasNext(): Boolean =
+        current + step <= endInclusive
+
+    override fun next(): Float =
+        current.also { current += step }
+}
+
+inline infix fun ClosedRange<Double>.unsteadyStep(step: Double) = object : Iterator<Double> {
+    private var current = start
+
+    override fun hasNext(): Boolean =
+        current + step <= endInclusive
+
+    override fun next(): Double =
+        current.also { current += step }
+}
