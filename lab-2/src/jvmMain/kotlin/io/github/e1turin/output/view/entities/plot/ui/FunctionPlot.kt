@@ -62,7 +62,6 @@ fun FunctionPlot(
         }
 
         //grid + vertical axes step
-        //TODO: fix labels
         run {
             val power = log(inspectingRange.length, 10F)
             val actualGridStep = 10F.pow(floor(power).toInt() - 1)
