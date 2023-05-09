@@ -72,6 +72,7 @@ fun FunctionPlot2D(
             var currentVertical =
                 padding + (actualFirstVertical - inspectingRange.start) * scale
 
+            // first vertical line coordinate
             drawIntoCanvas { canvas ->
                 canvas.nativeCanvas.drawString(
                     s = actualFirstVertical.pretty(),
@@ -81,6 +82,7 @@ fun FunctionPlot2D(
                     paint = Color.Black.toPaint()
                 )
             }
+
             repeat(verticalLines) {
                 drawLine(
                     Color.DarkGray,
@@ -96,11 +98,26 @@ fun FunctionPlot2D(
 
                 currentVertical += gridStep
             }
+            // 'x=0' axis
+            if (actualFirstVertical * (actualFirstVertical + verticalLines * actualGridStep) < 0)
+                drawLine(
+                    Color.DarkGray,
+                    start = Offset(
+                        x = padding - inspectingRange.start * scale,
+                        y = 0F,
+                    ),
+                    end = Offset(
+                        x = padding - inspectingRange.start * scale,
+                        y = size.height - padding,
+                    ),
+                    strokeWidth = 3F
+                )
 
             val horizontalLines = ((size.height - padding) / gridStep).toInt() / 2
             var currentHorizontalOffset = gridStep
 
             repeat(horizontalLines) {
+                // lower 'y=0' axis
                 drawLine(
                     Color.DarkGray,
                     start = Offset(
@@ -123,6 +140,7 @@ fun FunctionPlot2D(
                     )
                 }
 
+                // higher 'y=0' axis
                 drawLine(
                     Color.DarkGray,
                     start = Offset(
@@ -146,30 +164,31 @@ fun FunctionPlot2D(
                 }
 
                 currentHorizontalOffset += gridStep
-            }.also {
-                drawLine(
-                    Color.DarkGray,
-                    start = Offset(
-                        x = padding,
-                        y = center.y - padding / 2,
-                    ),
-                    end = Offset(
-                        x = size.width,
-                        y = center.y - padding / 2
-                    ),
-                    strokeWidth = 3F
-                )
-
-                drawIntoCanvas { canvas ->
-                    canvas.nativeCanvas.drawString(
-                        s = 0F.pretty(),
-                        x = 10F,
-                        y = center.y - padding / 2,
-                        font = Font(Typeface.makeDefault(), 10F),
-                        paint = Color.Black.toPaint()
-                    )
-                }
             }
+            // 'y=0' axis
+            drawLine(
+                Color.DarkGray,
+                start = Offset(
+                    x = padding,
+                    y = center.y - padding / 2,
+                ),
+                end = Offset(
+                    x = size.width,
+                    y = center.y - padding / 2
+                ),
+                strokeWidth = 3F
+            )
+
+            drawIntoCanvas { canvas ->
+                canvas.nativeCanvas.drawString(
+                    s = 0F.pretty(),
+                    x = 10F,
+                    y = center.y - padding / 2,
+                    font = Font(Typeface.makeDefault(), 10F),
+                    paint = Color.Black.toPaint()
+                )
+            }
+
         }
 
     }

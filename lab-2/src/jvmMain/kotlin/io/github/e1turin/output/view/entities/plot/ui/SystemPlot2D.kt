@@ -119,6 +119,20 @@ fun SystemPlot2D(
 
                 currentVertical += gridStep
             }
+            // 'x=0' axis
+            if (actualFirstVertical * (actualFirstVertical + verticalLines * actualGridStep) < 0)
+                drawLine(
+                    Color.DarkGray,
+                    start = Offset(
+                        x = padding - inspectingRange.start * scale,
+                        y = 0F,
+                    ),
+                    end = Offset(
+                        x = padding - inspectingRange.start * scale,
+                        y = size.height - padding,
+                    ),
+                    strokeWidth = 3F
+                )
 
             val horizontalLines = ((size.height - padding) / gridStep).toInt() / 2
             var currentHorizontalOffset = gridStep
