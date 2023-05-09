@@ -89,7 +89,6 @@ fun SystemPlot2D(
             val power = log(inspectingRange.length, 10F)
             val actualGridStep = 10F.pow(floor(power).toInt() - 1)
             val gridStep = actualGridStep * scale
-            println("[FunctionPlot.kt]$actualGridStep $gridStep")
 
             val verticalLines = (zoneWidth / gridStep).toInt() + 1
             val actualFirstVertical = ceil(inspectingRange.start / actualGridStep) * actualGridStep
