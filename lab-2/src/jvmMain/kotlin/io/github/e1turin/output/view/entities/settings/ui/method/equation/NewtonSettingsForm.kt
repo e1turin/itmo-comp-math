@@ -2,6 +2,7 @@ package io.github.e1turin.output.view.entities.settings.ui.method.equation
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material.TextField
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -41,7 +42,7 @@ internal fun NewtonSettingsForm(
                     range = boundsOfInspection
                     settings.onRangeChange(range.toDoubleRange())
                 },
-                modifier = Modifier,
+                modifier = Modifier.fillMaxWidth(),
                 maxLines = 1
             )
         }

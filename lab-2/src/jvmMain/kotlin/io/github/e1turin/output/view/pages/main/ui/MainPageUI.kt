@@ -54,20 +54,20 @@ fun MainPage(
                     .also { Spacer(Modifier.size(20.dp)) }
 
                 Column(
-                    modifier = Modifier.weight(1F)
+                    modifier = Modifier.width(500.dp).padding(10.dp)
                 ) {
                     SettingsPanel(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .weight(1F), model = settings.also { println("[ui/MainPageUI.kt]${it}") }
+                            .weight(1F),
+                        model = settings.also { println("[ui/MainPageUI.kt]${it}") }
                     )
                         .also { Spacer(Modifier.size(5.dp)) }
 
                     Button(
                         modifier = Modifier
                             .wrapContentSize()
-//                            .weight(1F)
-                        ,
+                            .fillMaxWidth(),
                         enabled = isCompleted,
                         onClick = { isReady = true }) {
                         Text("Ready")
