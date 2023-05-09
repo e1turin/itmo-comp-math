@@ -88,11 +88,11 @@ private fun SystemPicker(
         }
             .also { Spacer(Modifier.size(10.dp)) }
 
-        Selection("{x + y = 0,\n x - y = 0}") {
+        Selection("{x[0]^3.0 - 3*x[0] + x[1]^2.0 - 3},\n{x[0]^2.0 - x[1]^2.0/4 - 1}") {
             settings.onSystemSelect(
                 listOf(
-                    { arg -> arg[0] + arg[1] },
-                    { arg -> arg[0] - arg[1] }
+                    { x -> x[0].pow(3.0) - 3 * x[0] + x[1].pow(2.0) - 3 },
+                    { x -> x[0].pow(2.0) - x[1].pow(2.0)/4 - 1 }
                 )
             )
         }
