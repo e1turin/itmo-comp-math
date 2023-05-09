@@ -10,7 +10,7 @@ import io.github.e1turin.output.view.app.App
 fun main() = application {
     Window(
         onCloseRequest = ::exitApplication,
-        state = rememberWindowState(width = 1200.dp, height = 800.dp)
+        state = rememberWindowState(width = 1200.dp, height = 800.dp),
     ) {
         App()
     }

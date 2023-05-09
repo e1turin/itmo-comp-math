@@ -1,16 +1,20 @@
 package io.github.e1turin.output.view.pages.main.ui
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Button
 import androidx.compose.material.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.arkivanov.decompose.extensions.compose.jetbrains.subscribeAsState
 import io.github.e1turin.output.view.entities.plot.ui.Plot
 import io.github.e1turin.output.view.entities.settings.ui.SamplePicker
 import io.github.e1turin.output.view.entities.settings.ui.SettingsPanel
 import io.github.e1turin.output.view.entities.task.ui.TaskSelection
+import io.github.e1turin.output.view.features.solution.ui.SolutionPanel
 import io.github.e1turin.output.view.pages.main.model.MainPage
 
 @Composable
@@ -59,10 +63,21 @@ fun MainPage(
                     SettingsPanel(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .weight(1F),
+                            .weight(1F)
+                        ,
                         model = settings.also { println("[ui/MainPageUI.kt]${it}") }
                     )
                         .also { Spacer(Modifier.size(5.dp)) }
+
+                    if (isReady && isCompleted)
+                        SolutionPanel(
+                            modifier = Modifier
+                                .background(Color.LightGray, RoundedCornerShape(10.dp))
+                                .height(200.dp)
+                                .fillMaxWidth()
+                                .padding(10.dp)
+                        )
+                            .also { Spacer(Modifier.size(5.dp)) }
 
                     Button(
                         modifier = Modifier
