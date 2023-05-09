@@ -1,4 +1,4 @@
-package io.github.e1turin.output.view.features.solution.ui
+package io.github.e1turin.output.view.features.present_solution.ui
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.material.Text

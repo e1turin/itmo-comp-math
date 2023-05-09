@@ -13,7 +13,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.drawscope.drawIntoCanvas
 import androidx.compose.ui.graphics.nativeCanvas
 import androidx.compose.ui.unit.dp
-import io.github.e1turin.output.view.entities.form.ui.padding
 import io.github.e1turin.output.view.shared.lib.compose.toPaint
 import io.github.e1turin.output.view.shared.lib.std.approx
 import io.github.e1turin.output.view.shared.lib.std.length

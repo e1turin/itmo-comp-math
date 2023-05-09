@@ -1,4 +1,4 @@
-package io.github.e1turin.output.view.entities.task.ui
+package io.github.e1turin.output.view.features.select_task.ui
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable

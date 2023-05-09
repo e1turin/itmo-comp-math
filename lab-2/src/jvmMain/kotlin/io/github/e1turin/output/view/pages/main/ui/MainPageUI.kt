@@ -10,11 +10,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.arkivanov.decompose.extensions.compose.jetbrains.subscribeAsState
-import io.github.e1turin.output.view.entities.plot.ui.Plot
-import io.github.e1turin.output.view.entities.settings.ui.SamplePicker
-import io.github.e1turin.output.view.entities.settings.ui.SettingsPanel
-import io.github.e1turin.output.view.entities.task.ui.TaskSelection
-import io.github.e1turin.output.view.features.solution.ui.SolutionPanel
+import io.github.e1turin.output.view.features.draw_plot.ui.Plot
+import io.github.e1turin.output.view.features.pick_sample.ui.SamplePicker
+import io.github.e1turin.output.view.features.select_settings.ui.SettingsPanel
+import io.github.e1turin.output.view.features.select_task.ui.TaskSelection
+import io.github.e1turin.output.view.features.present_solution.ui.SolutionPanel
 import io.github.e1turin.output.view.pages.main.model.MainPage
 
 @Composable

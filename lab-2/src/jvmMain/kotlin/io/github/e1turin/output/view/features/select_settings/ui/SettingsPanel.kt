@@ -1,4 +1,4 @@
-package io.github.e1turin.output.view.entities.settings.ui
+package io.github.e1turin.output.view.features.select_settings.ui
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box

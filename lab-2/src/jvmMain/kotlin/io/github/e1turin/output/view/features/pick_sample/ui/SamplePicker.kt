@@ -1,4 +1,4 @@
-package io.github.e1turin.output.view.entities.settings.ui
+package io.github.e1turin.output.view.features.pick_sample.ui
 
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
