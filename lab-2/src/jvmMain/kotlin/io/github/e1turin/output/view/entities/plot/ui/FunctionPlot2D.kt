@@ -23,7 +23,7 @@ import kotlin.math.*
 
 
 @Composable
-fun FunctionPlot(
+fun FunctionPlot2D(
     modifier: Modifier = Modifier,
     inspectingRange: ClosedFloatingPointRange<Float>,
     step: Float = 0.01F,
