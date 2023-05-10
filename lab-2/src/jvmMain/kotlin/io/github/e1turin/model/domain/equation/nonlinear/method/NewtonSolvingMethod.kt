@@ -2,8 +2,10 @@ package io.github.e1turin.model.domain.equation.nonlinear.method
 
 import io.github.e1turin.model.domain.equation.SolvingMethod
 import io.github.e1turin.model.util.derivative
+import kotlin.jvm.Throws
 
-class NewtonSolvingMethod(
+
+class NewtonSolvingMethod @Throws(IllegalArgumentException::class) constructor(
     range: ClosedRange<Double>,
     private val function: (Double) -> Double,
     private val derivative: (Double) -> Double = function.derivative
@@ -21,6 +23,7 @@ class NewtonSolvingMethod(
         }
     }
 
+    @Throws(IllegalStateException::class)
     override fun nextApproximation(current: Double): Double {
         val tan = derivative(current)
 
@@ -34,6 +37,7 @@ class NewtonSolvingMethod(
     }
 
     companion object {
+        @Throws(IllegalArgumentException::class)
         fun initialApproximation(
             range: ClosedRange<Double>,
             function: (Double) -> Double,
