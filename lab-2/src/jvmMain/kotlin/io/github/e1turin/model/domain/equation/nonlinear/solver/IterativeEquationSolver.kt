@@ -14,6 +14,7 @@ class IterativeEquationSolver(
 
         do {
             approximation = method.nextApproximation(approximation)
+//            check(approximation.isFinite()) { "Non finite value while an iteration" }
         } while (!stopCondition(approximation))
 
         return approximation
