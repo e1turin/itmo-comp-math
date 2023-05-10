@@ -9,7 +9,6 @@ import io.github.e1turin.output.view.pages.main.ui.MainActivity
 @Preview
 fun App() {
     MaterialTheme {
-//        GraphDrawing()
         MainActivity()
     }
 }
