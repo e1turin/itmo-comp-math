@@ -14,6 +14,7 @@ import io.github.e1turin.output.view.entities.settings.model.DefaultSettings
 import io.github.e1turin.output.view.entities.settings.model.EquationSettings
 import io.github.e1turin.output.view.entities.settings.model.Settings
 import io.github.e1turin.output.view.entities.settings.model.SystemSettings
+import kotlin.math.log
 import kotlin.math.pow
 import kotlin.math.sin
 
@@ -48,16 +49,16 @@ private fun EquationPicker(
         modifier = modifier,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Selection(description = "x^3/4") {
+        Selection(description = "x^4/10 - 2") {
             settings.onEquationSelect { x ->
-                x.pow(3.0) / 4
+                x.pow(4.0) / 10 - 2
             }
         }
             .also { Spacer(Modifier.size(10.dp)) }
 
-        Selection(description = "x² + 2x + 1 = 0") {
+        Selection(description = "ln(x)") {
             settings.onEquationSelect { x ->
-                x.pow(2.0) + 2 * x + 1
+                log(x, 2.71)
             }
         }
             .also { Spacer(Modifier.size(10.dp)) }
@@ -92,7 +93,7 @@ private fun SystemPicker(
             settings.onSystemSelect(
                 listOf(
                     { x -> x[0].pow(3.0) - 3 * x[0] + x[1].pow(2.0) - 3 },
-                    { x -> x[0].pow(2.0) - x[1].pow(2.0)/4 - 1 }
+                    { x -> x[0].pow(2.0) - x[1].pow(2.0) / 4 - 1 }
                 )
             )
         }
