@@ -46,7 +46,9 @@ fun NewtonSolvingMethodSolutionPresenter(
             initialApproximation = initialValue,
             stopCondition = { eps: Double -> abs(eps) < 0.001 || ++step < 10000 }
         )
+
         val solution = solver.solve(data.function!!)
+
         SolvingResult.Number(solution)
     } catch (e: Exception) {
         SolvingResult.Error(e)
