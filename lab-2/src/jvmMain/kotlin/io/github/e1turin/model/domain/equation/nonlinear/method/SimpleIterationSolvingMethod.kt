@@ -17,9 +17,9 @@ class SimpleIterationSolvingMethod(
     companion object {
         fun approximationFunctionFrom(
             range: ClosedRange<Double>,
+            stepToCheck: Double = 1e-2,
             function: (Double) -> Double,
             derivative: (Double) -> Double = function.derivative,
-            stepToCheck: Double = 1e-2
         ): Pair<(Double) -> Double, (Double) -> Double> {
             val lambda = -1 / maxAbsDerivativeValue(
                 range, stepToCheck, derivative
