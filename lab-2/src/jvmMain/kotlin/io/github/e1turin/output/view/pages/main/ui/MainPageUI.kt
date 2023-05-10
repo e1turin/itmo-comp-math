@@ -75,7 +75,8 @@ fun MainPage(
                                 .background(Color.LightGray, RoundedCornerShape(10.dp))
                                 .height(200.dp)
                                 .fillMaxWidth()
-                                .padding(10.dp)
+                                .padding(10.dp),
+                            settings = settings
                         )
                             .also { Spacer(Modifier.size(5.dp)) }
 
