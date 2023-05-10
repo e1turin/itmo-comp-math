@@ -5,3 +5,6 @@ fun Float.pretty(): String =
 
 fun Double.pretty(): String =
     String.format("%.04f", this)
+
+fun ClosedRange<Double>.pretty(): String =
+    "[ ${start.pretty()} .. ${endInclusive.pretty()} ]"
