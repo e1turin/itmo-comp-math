@@ -6,5 +6,8 @@ fun Float.pretty(): String =
 fun Double.pretty(): String =
     String.format("%.04f", this)
 
-fun ClosedRange<Double>.pretty(): String =
+fun ClosedRange<Double>.prettyRange(): String =
     "[ ${start.pretty()} .. ${endInclusive.pretty()} ]"
+
+fun List<Double>.prettyVector(): String =
+    joinToString(prefix = "[", separator = " ", postfix = "]") { it.pretty() }
