@@ -13,9 +13,14 @@ import com.arkivanov.decompose.extensions.compose.jetbrains.subscribeAsState
 import io.github.e1turin.model.domain.equation.nonlinear.method.NewtonSolvingMethod
 import io.github.e1turin.model.domain.equation.nonlinear.solver.IterativeEquationSolver
 import io.github.e1turin.output.view.entities.settings.model.NewtonEquationSettings
-import io.github.e1turin.output.view.features.present_solution.model.SolvingResult
 import io.github.e1turin.output.view.shared.lib.std.pretty
 import kotlin.math.abs
+
+
+private sealed interface NewtonSolvingResult {
+    data class Error(val exception: java.lang.Exception) : NewtonSolvingResult
+    data class Number(val realNumber: Double) : NewtonSolvingResult
+}
 
 @Composable
 fun NewtonEquationSolution(
@@ -26,7 +31,7 @@ fun NewtonEquationSolution(
 
     var initialValue: Double = data.initialValue
 
-    val solvingResult: SolvingResult = try {
+    val solvingResult: NewtonSolvingResult = try {
         val method = NewtonSolvingMethod(
             range = data.range,
             function = data.function!!,
@@ -49,15 +54,14 @@ fun NewtonEquationSolution(
 
         val solution = solver.solve(data.function!!)
 
-        SolvingResult.Number(solution)
+        NewtonSolvingResult.Number(solution)
     } catch (e: Exception) {
-        SolvingResult.Error(e)
+        NewtonSolvingResult.Error(e)
     }
 
     val outputText: String = when (solvingResult) {
-        is SolvingResult.Error -> "⚠ " + (solvingResult.exception.message ?: "Error appeared while computing solution")
-        is SolvingResult.Number -> "x= " + solvingResult.realNumber.pretty()
-        is SolvingResult.Range -> "range: " + solvingResult.range.pretty()
+        is NewtonSolvingResult.Error -> "⚠ " + (solvingResult.exception.message ?: "Error appeared while computing solution")
+        is NewtonSolvingResult.Number -> "x= " + solvingResult.realNumber.pretty()
     }
 
 
