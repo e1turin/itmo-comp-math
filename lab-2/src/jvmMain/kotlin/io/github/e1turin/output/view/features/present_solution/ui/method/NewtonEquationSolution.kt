@@ -14,6 +14,7 @@ import io.github.e1turin.model.domain.equation.nonlinear.method.NewtonSolvingMet
 import io.github.e1turin.model.domain.equation.nonlinear.solver.IterativeEquationSolver
 import io.github.e1turin.output.view.entities.settings.model.NewtonEquationSettings
 import io.github.e1turin.output.view.features.present_solution.model.SolvingResult
+import io.github.e1turin.output.view.features.present_solution.model.toResultString
 import io.github.e1turin.output.view.shared.lib.std.pretty
 import kotlin.math.abs
 
@@ -54,12 +55,7 @@ fun NewtonEquationSolution(
         SolvingResult.Error(e)
     }
 
-    val outputText: String = when (solvingResult) {
-        is SolvingResult.Error -> "⚠ " + (solvingResult.exception.message ?: "Error appeared while computing solution")
-        is SolvingResult.Number -> "x= " + solvingResult.realNumber.pretty()
-        is SolvingResult.Range -> "range: " + solvingResult.range.pretty()
-    }
-
+    val outputText: String = solvingResult.toResultString()
 
     SelectionContainer {
         Column(modifier = modifier) {
