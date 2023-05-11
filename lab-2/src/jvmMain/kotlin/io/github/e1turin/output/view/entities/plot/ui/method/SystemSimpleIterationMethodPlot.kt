@@ -6,7 +6,7 @@ import androidx.compose.ui.Modifier
 import com.arkivanov.decompose.extensions.compose.jetbrains.subscribeAsState
 import io.github.e1turin.output.view.entities.plot.ui.SystemPlot2D
 import io.github.e1turin.output.view.entities.settings.model.SystemSimpleIterationSettings
-import io.github.e1turin.output.view.shared.lib.std.toFloatRange
+import io.github.e1turin.output.view.shared.lib.std.toFloatRanges
 
 @Composable
 fun SystemSimpleIterationMethodPlot(
@@ -17,7 +17,7 @@ fun SystemSimpleIterationMethodPlot(
 
     SystemPlot2D(
         modifier = modifier,
-        inspectingRange = data.range.toFloatRange(),
+        inspectingZone = data.range.toFloatRanges(),
         system = data.system!!
     )
 }

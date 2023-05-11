@@ -9,6 +9,11 @@ fun ClosedRange<Double>.toFloatRange(): ClosedFloatingPointRange<Float> =
 fun ClosedRange<Float>.toDoubleRange(): ClosedRange<Double> =
     start.toDouble()..endInclusive.toDouble()
 
+
+fun List<ClosedRange<Double>>.toFloatRanges(): List<ClosedFloatingPointRange<Float>> =
+    this.map { it.toFloatRange() }
+
+
 fun ClosedRange<Float>.slideToLowestBy(step: Float): ClosedFloatingPointRange<Float> =
     (start - step)..(endInclusive - step)
 

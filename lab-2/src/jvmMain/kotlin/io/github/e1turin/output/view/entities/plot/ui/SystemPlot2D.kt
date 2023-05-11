@@ -9,7 +9,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clipToBounds
 import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.graphics.drawscope.drawIntoCanvas
 import androidx.compose.ui.graphics.nativeCanvas
 import androidx.compose.ui.unit.dp
@@ -31,7 +33,10 @@ fun SystemPlot2DPreview() {
     Box(Modifier.size(400.dp)) {
         SystemPlot2D(
             modifier = Modifier.fillMaxSize(),
-            inspectingRange = -4F..4F,
+            inspectingZone = listOf(
+                -4F..4F,
+                -4F..4F
+            ),
             system = listOf(
                 { arg -> arg[0] + arg[1] },
                 { arg -> arg[0] - arg[1] }
@@ -44,27 +49,37 @@ fun SystemPlot2DPreview() {
 @Composable
 fun SystemPlot2D(
     modifier: Modifier = Modifier,
-    inspectingRange: ClosedFloatingPointRange<Float>,
+    inspectingZone: List<ClosedFloatingPointRange<Float>>,
     step: Float = 0.01F,
     system: List<(List<Double>) -> Double>
 ) {
     require(system.size == 2) { "The system must be possible to represent on a plane" }
+    require(inspectingZone.size == 2) { "The range must be possible to represent on a plane" }
+
+    val inspectingXRange = inspectingZone[0]
+    val inspectingYRange = inspectingZone[1]
+
     val padding = 80F
 
     Canvas(modifier = modifier.clipToBounds()) {
         val zoneWidth = size.width - padding
-        val scale = zoneWidth / inspectingRange.length
-        val rangeHeight = (size.height - padding)/ scale
+        val zoneHeight = size.height - padding
 
-        for (x in inspectingRange unsteadyStep step) {
-            for (y in (-rangeHeight / 2)..(+rangeHeight / 2) unsteadyStep step) {
+        val scale = if (zoneWidth > zoneHeight) {
+            zoneWidth / inspectingXRange.length
+        } else {
+            zoneHeight / inspectingYRange.length
+        }
+
+        for (x in inspectingXRange unsteadyStep step) {
+            for (y in inspectingYRange unsteadyStep step) {
                 if (system[0](listOf(x.toDouble(), y.toDouble())) approx 0.0) {
                     drawCircle(
                         Color.Red,
                         radius = 2F,
                         center = Offset(
-                            x = padding + (x - inspectingRange.start) * scale,
-                            y = center.y - y * scale - padding / 2
+                            x = padding + (x - inspectingXRange.start) * scale,
+                            y = (y - inspectingYRange.start) * scale
                         )
                     )
                 }
@@ -74,8 +89,8 @@ fun SystemPlot2D(
                         Color.Blue,
                         radius = 2F,
                         center = Offset(
-                            x = padding + (x - inspectingRange.start) * scale,
-                            y = center.y - y * scale - padding / 2
+                            x = padding + (x - inspectingXRange.start) * scale,
+                            y = (y - inspectingYRange.start) * scale
                         )
                     )
                 }
@@ -85,14 +100,17 @@ fun SystemPlot2D(
 
         //grid + vertical axes step
         run {
-            val power = log(inspectingRange.length, 10F)
+            val usingAlignmentRange = if (zoneWidth > zoneHeight) inspectingXRange else inspectingYRange
+
+            val power = log(usingAlignmentRange.length, 10F)
+
             val actualGridStep = 10F.pow(floor(power).toInt() - 1)
             val gridStep = actualGridStep * scale
 
             val verticalLines = (zoneWidth / gridStep).toInt() + 1
-            val actualFirstVertical = ceil(inspectingRange.start / actualGridStep) * actualGridStep
-            var currentVertical =
-                padding + (actualFirstVertical - inspectingRange.start) * scale
+            val actualFirstVertical = ceil(inspectingXRange.start / actualGridStep) * actualGridStep
+
+            var currentVertical = padding + (actualFirstVertical - inspectingXRange.start) * scale
 
             drawIntoCanvas { canvas ->
                 canvas.nativeCanvas.drawString(
@@ -123,89 +141,74 @@ fun SystemPlot2D(
                 drawLine(
                     Color.DarkGray,
                     start = Offset(
-                        x = padding - inspectingRange.start * scale,
+                        x = padding - inspectingXRange.start * scale,
                         y = 0F,
                     ),
                     end = Offset(
-                        x = padding - inspectingRange.start * scale,
+                        x = padding - inspectingXRange.start * scale,
                         y = size.height - padding,
                     ),
                     strokeWidth = 3F
                 )
 
-            val horizontalLines = ((size.height - padding) / gridStep).toInt() / 2
-            var currentHorizontalOffset = gridStep
+            val horizontalLines = (zoneHeight / gridStep).toInt()
+            val actualFirstHorizontal = ceil(inspectingYRange.start / actualGridStep) * actualGridStep
+
+            var actualCurrentHorizontal = actualFirstHorizontal
 
             repeat(horizontalLines) {
+                val currentHorizontal = (actualCurrentHorizontal - inspectingYRange.start) * scale
+
                 drawLine(
                     Color.DarkGray,
                     start = Offset(
                         x = padding,
-                        y = center.y + currentHorizontalOffset - padding / 2,
+                        y = currentHorizontal,
                     ),
                     end = Offset(
                         x = size.width,
-                        y = center.y + currentHorizontalOffset - padding / 2,
+                        y = currentHorizontal,
                     )
                 )
 
                 drawIntoCanvas { canvas ->
                     canvas.nativeCanvas.drawString(
-                        s = (+actualGridStep * (it + 1)).pretty(),
+                        s = actualCurrentHorizontal.pretty(),
                         x = 10F,
-                        y = center.y - currentHorizontalOffset - padding / 2,
+                        y = currentHorizontal + 2F,
                         font = Font(Typeface.makeDefault(), 10F),
                         paint = Color.Black.toPaint()
                     )
                 }
 
+                actualCurrentHorizontal += actualGridStep
+            }
+            if (actualFirstHorizontal * (actualFirstHorizontal + horizontalLines * actualGridStep) < 0)
                 drawLine(
                     Color.DarkGray,
                     start = Offset(
                         x = padding,
-                        y = center.y - currentHorizontalOffset - padding / 2,
+                        y = -inspectingYRange.start * scale,
                     ),
                     end = Offset(
                         x = size.width,
-                        y = center.y - currentHorizontalOffset - padding / 2,
-                    )
-                )
-
-                drawIntoCanvas { canvas ->
-                    canvas.nativeCanvas.drawString(
-                        s = (-actualGridStep * (it + 1)).pretty(),
-                        x = 10F,
-                        y = center.y + currentHorizontalOffset - padding / 2,
-                        font = Font(Typeface.makeDefault(), 10F),
-                        paint = Color.Black.toPaint()
-                    )
-                }
-
-                currentHorizontalOffset += gridStep
-            }.also {
-                drawLine(
-                    Color.DarkGray,
-                    start = Offset(
-                        x = padding,
-                        y = center.y - padding / 2,
-                    ),
-                    end = Offset(
-                        x = size.width,
-                        y = center.y - padding / 2
+                        y = -inspectingYRange.start * scale
                     ),
                     strokeWidth = 3F
                 )
 
-                drawIntoCanvas { canvas ->
-                    canvas.nativeCanvas.drawString(
-                        s = 0F.pretty(),
-                        x = 10F,
-                        y = center.y - padding / 2,
-                        font = Font(Typeface.makeDefault(), 10F),
-                        paint = Color.Black.toPaint()
-                    )
-                }
-            }
+            drawRect(
+                color = Color.Magenta,
+                topLeft = Offset(
+                    x = padding + 0F,
+                    y = 0F
+                ),
+                size = Size(
+                    width = inspectingXRange.length * scale,
+                    height = inspectingYRange.length * scale
+                ),
+                style = Stroke(width = 3.dp.toPx())
+            )
         }
     }
 }
