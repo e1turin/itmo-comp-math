@@ -1,4 +1,4 @@
-package io.github.e1turin.output.view.entities.plot.ui
+package io.github.e1turin.output.view.features.draw_plot.ui
 
 import androidx.compose.desktop.ui.tooling.preview.Preview
 import androidx.compose.foundation.Canvas
@@ -173,7 +173,7 @@ fun SystemPlot2D(
 
                 drawIntoCanvas { canvas ->
                     canvas.nativeCanvas.drawString(
-                        s = actualCurrentHorizontal.pretty(),
+                        s = (-actualCurrentHorizontal).pretty(),
                         x = 10F,
                         y = currentHorizontal + 2F,
                         font = Font(Typeface.makeDefault(), 10F),

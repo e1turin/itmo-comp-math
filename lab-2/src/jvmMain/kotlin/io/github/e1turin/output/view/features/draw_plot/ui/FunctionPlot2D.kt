@@ -1,4 +1,4 @@
-package io.github.e1turin.output.view.entities.plot.ui
+package io.github.e1turin.output.view.features.draw_plot.ui
 
 import androidx.compose.foundation.Canvas
 import androidx.compose.runtime.Composable
@@ -11,6 +11,7 @@ import androidx.compose.ui.graphics.drawscope.scale
 import androidx.compose.ui.graphics.drawscope.withTransform
 import androidx.compose.ui.graphics.nativeCanvas
 import io.github.e1turin.output.view.entities.plot.model.Gu
+import io.github.e1turin.output.view.entities.plot.ui.GraphContext
 import io.github.e1turin.output.view.entities.settings.model.Settings
 import io.github.e1turin.output.view.shared.lib.compose.toPaint
 import io.github.e1turin.output.view.shared.lib.plot.gu
@@ -19,7 +20,6 @@ import io.github.e1turin.output.view.shared.lib.std.pretty
 import org.jetbrains.skia.Font
 import org.jetbrains.skia.Typeface
 import kotlin.math.*
-
 
 
 @Composable

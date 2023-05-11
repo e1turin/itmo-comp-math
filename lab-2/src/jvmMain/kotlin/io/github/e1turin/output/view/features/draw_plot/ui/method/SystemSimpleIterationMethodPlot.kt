@@ -1,11 +1,11 @@
-package io.github.e1turin.output.view.entities.plot.ui.method
+package io.github.e1turin.output.view.features.draw_plot.ui.method
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import com.arkivanov.decompose.extensions.compose.jetbrains.subscribeAsState
-import io.github.e1turin.output.view.entities.plot.ui.SystemPlot2D
 import io.github.e1turin.output.view.entities.settings.model.SystemSimpleIterationSettings
+import io.github.e1turin.output.view.features.draw_plot.ui.SystemPlot2D
 import io.github.e1turin.output.view.shared.lib.std.toFloatRanges
 
 @Composable

@@ -5,9 +5,9 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import io.github.e1turin.output.view.entities.plot.ui.method.NewtonMethodPlot
-import io.github.e1turin.output.view.entities.plot.ui.method.SystemSimpleIterationMethodPlot
 import io.github.e1turin.output.view.entities.settings.model.*
+import io.github.e1turin.output.view.features.draw_plot.ui.method.NewtonMethodPlot
+import io.github.e1turin.output.view.features.draw_plot.ui.method.SystemSimpleIterationMethodPlot
 
 @Composable
 fun Plot(
