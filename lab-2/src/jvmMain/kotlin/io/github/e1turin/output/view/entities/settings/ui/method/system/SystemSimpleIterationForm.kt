@@ -41,11 +41,13 @@ fun SystemSimpleIterationForm(
 
                     val newXValue: Double = initialXValueInput.toDoubleOrNull() ?: data.initialValue[0]
 
-                    settings.onInitialXValueChange(newXValue)
+                    if (newXValue.isFinite()) {
+                        settings.onInitialXValueChange(newXValue)
 
-                    xRange = calculateBoundsOfRange(newXValue.toFloat())
+                        xRange = calculateBoundsOfRange(newXValue.toFloat())
 
-                    settings.onXRangeChange(xRange.toDoubleRange())
+                        settings.onXRangeChange(xRange.toDoubleRange())
+                    }
                 },
                 modifier = Modifier,
                 maxLines = 1
@@ -88,11 +90,13 @@ fun SystemSimpleIterationForm(
 
                     val newYValue: Double = initialYValueInput.toDoubleOrNull() ?: data.initialValue[1]
 
-                    settings.onInitialYValueChange(newYValue)
+                    if (newYValue.isFinite()) {
+                        settings.onInitialYValueChange(newYValue)
 
-                    yRange = calculateBoundsOfRange(newYValue.toFloat())
+                        yRange = calculateBoundsOfRange(newYValue.toFloat())
 
-                    settings.onYRangeChange(yRange.toDoubleRange())
+                        settings.onYRangeChange(yRange.toDoubleRange())
+                    }
                 },
                 modifier = Modifier,
                 maxLines = 1

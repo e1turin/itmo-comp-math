@@ -37,10 +37,12 @@ internal fun NewtonSettingsForm(
                 onValueChange = { newValueString ->
                     initialValueInput = newValueString
                     val newValue = initialValueInput.toDoubleOrNull() ?: data.initialValue
-                    settings.onInitialValueChange(newValue)
-                    boundsOfInspection = calculateBoundsOfRange(newValue.toFloat())
-                    range = boundsOfInspection
-                    settings.onRangeChange(range.toDoubleRange())
+                    if (newValue.isFinite()) {
+                        settings.onInitialValueChange(newValue)
+                        boundsOfInspection = calculateBoundsOfRange(newValue.toFloat())
+                        range = boundsOfInspection
+                        settings.onRangeChange(range.toDoubleRange())
+                    }
                 },
                 modifier = Modifier.fillMaxWidth(),
                 maxLines = 1
