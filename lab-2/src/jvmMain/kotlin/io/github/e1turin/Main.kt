@@ -13,7 +13,7 @@ fun main() = application {
         title = "lab-2",
         icon = painterResource("favicon.png"),
         onCloseRequest = ::exitApplication,
-        state = rememberWindowState(width = 1200.dp, height = 800.dp),
+        state = rememberWindowState(width = 1200.dp, height = 900.dp),
     ) {
         App()
     }
