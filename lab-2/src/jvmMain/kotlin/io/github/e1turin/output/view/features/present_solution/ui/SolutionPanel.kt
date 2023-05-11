@@ -3,7 +3,7 @@ package io.github.e1turin.output.view.features.present_solution.ui
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import io.github.e1turin.output.view.entities.settings.model.*
-import io.github.e1turin.output.view.features.present_solution.ui.method.NewtonSolvingMethodSolutionPresenter
+import io.github.e1turin.output.view.features.present_solution.ui.method.NewtonEquationSolution
 import io.github.e1turin.output.view.features.present_solution.ui.method.SimpleIterationSystemSolutionPresenter
 
 @Composable
@@ -26,7 +26,7 @@ private fun EquationSolutionPanel(
     settings: EquationSettings
 ) {
     when (settings) {
-        is NewtonEquationSettings -> NewtonSolvingMethodSolutionPresenter(modifier, settings)
+        is NewtonEquationSettings -> NewtonEquationSolution(modifier, settings)
 
         DefaultEquationSettings -> {/* Unreachable case */
         }

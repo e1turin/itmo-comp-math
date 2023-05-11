@@ -18,10 +18,10 @@ import io.github.e1turin.output.view.shared.lib.std.pretty
 import kotlin.math.abs
 
 @Composable
-fun NewtonSolvingMethodSolutionPresenter(
+fun NewtonEquationSolution(
     modifier: Modifier = Modifier,
     settings: NewtonEquationSettings
-){
+) {
     val data by settings.data.subscribeAsState()
 
     var initialValue: Double = data.initialValue
@@ -44,7 +44,7 @@ fun NewtonSolvingMethodSolutionPresenter(
         val solver = IterativeEquationSolver(
             method = method,
             initialApproximation = initialValue,
-            stopCondition = { eps: Double -> abs(eps) < 0.001 || ++step < 10000 }
+            stopCondition = { eps: Double -> abs(eps) < 0.001 || ++step > 10000 }
         )
 
         val solution = solver.solve(data.function!!)
