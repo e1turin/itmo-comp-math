@@ -17,6 +17,7 @@ import io.github.e1turin.output.view.entities.settings.model.SystemSimpleIterati
 import io.github.e1turin.output.view.features.present_solution.model.SolvingResult
 import io.github.e1turin.output.view.features.present_solution.model.toResultString
 import io.github.e1turin.output.view.shared.lib.std.prettyVector
+import kotlin.math.pow
 
 
 private sealed interface SimpleIterationTestResult {
@@ -43,8 +44,8 @@ fun SimpleIterationSystemSolutionPresenter(
         val result = SimpleIterationSystemSolvingMethod.testConvergenceCondition(
             range = data.range,
             jacobianMatrix = listOf(
-                listOf({ 1.0 }, { 2.0 }),
-                listOf({ 2.0 }, { -1.0 })
+                listOf({ x -> -0.2 * x[0] /*        */ }, { x -> -0.4 * x[1] }),
+                listOf({ x -> -0.4 * x[0] - 0.1 * x[1] }, { x -> -0.1 * x[0] })
             )
         )
 
@@ -56,8 +57,8 @@ fun SimpleIterationSystemSolutionPresenter(
     val result = try {
         val method = SimpleIterationSystemSolvingMethod(
             approximationFunction = listOf(
-                { x -> -2 * x[1] - 1 },
-                { x -> 2 * x[0] },
+                { x -> 0.3 - 0.1 * x[0].pow(2) - 0.2 * x[1].pow(2) },
+                { x -> 0.7 - 0.2 * x[0].pow(2) - 0.1 * x[0] * x[1] },
             )
         )
 

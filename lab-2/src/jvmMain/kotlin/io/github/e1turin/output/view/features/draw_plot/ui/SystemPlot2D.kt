@@ -173,7 +173,7 @@ fun SystemPlot2D(
 
                 drawIntoCanvas { canvas ->
                     canvas.nativeCanvas.drawString(
-                        s = (-actualCurrentHorizontal).pretty(),
+                        s = actualCurrentHorizontal.pretty(),
                         x = 10F,
                         y = currentHorizontal + 2F,
                         font = Font(Typeface.makeDefault(), 10F),

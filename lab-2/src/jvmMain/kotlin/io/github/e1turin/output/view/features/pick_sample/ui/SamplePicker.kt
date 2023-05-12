@@ -89,11 +89,11 @@ private fun SystemPicker(
         }
             .also { Spacer(Modifier.size(10.dp)) }
 
-        Selection("{x[0]^3.0 - 3*x[0] + x[1]^2.0 - 3},\n{x[0]^2.0 - x[1]^2.0/4 - 1}") {
+        Selection("{ 0.1x² + x + 0.2y² - 0.3,\n 0.2x² + y + 0.1xy - 0.7 }") {
             settings.onSystemSelect(
                 listOf(
-                    { x -> x[0].pow(3.0) - 3 * x[0] + x[1].pow(2.0) - 3 },
-                    { x -> x[0].pow(2.0) - x[1].pow(2.0) / 4 - 1 }
+                    { x -> 0.1 * x[0].pow(2) + x[0] + 0.2 * x[1].pow(2) - 0.3 },
+                    { x -> 0.2 * x[0].pow(2) + x[1] + 0.1 * x[0] * x[1] - 0.7 }
                 )
             )
         }
