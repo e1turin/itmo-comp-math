@@ -17,6 +17,7 @@ import io.github.e1turin.output.view.entities.settings.model.SystemSettings
 import kotlin.math.log
 import kotlin.math.pow
 import kotlin.math.sin
+import kotlin.math.sqrt
 
 @Composable
 fun SamplePicker(
@@ -28,14 +29,13 @@ fun SamplePicker(
         contentAlignment = Alignment.Center
     ) {
         when (model) {
+            is EquationSettings -> EquationPicker(settings = model)
+            is SystemSettings -> SystemPicker(settings = model)
             is DefaultSettings -> Box(
                 contentAlignment = Alignment.Center
             ) {
                 Text("Select a task first")
             }
-
-            is EquationSettings -> EquationPicker(settings = model)
-            is SystemSettings -> SystemPicker(settings = model)
         }
     }
 }
@@ -73,29 +73,59 @@ private fun EquationPicker(
 
 @Composable
 private fun SystemPicker(
-    modifier: Modifier = Modifier, settings: SystemSettings
+    modifier: Modifier = Modifier,
+    settings: SystemSettings
 ) {
     Column(
         modifier = modifier,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Selection("{ x + 2y + 1 = 0,\n 2x - y + 1 = 0 }") {
-            settings.onSystemSelect(
-                listOf(
-                    { x -> x[0] + 2 * x[1] + 1 },
-                    { x -> 2 * x[0] - x[1] },
+        Selection("{ (x-1)^2 + y^2 - 4 = 0,\n  (x+1)^2 + y^2 - 4 = 0 }") {
+            settings.apply {
+                onSystemSelect(
+                    listOf(
+                        { x -> (x[0] - 1).pow(2) + x[1].pow(2) - 4 },
+                        { x -> (x[0] + 1).pow(2) + x[1].pow(2) - 4 },
+                    )
                 )
-            )
+                onJacobianSelect(
+                    listOf(
+                        listOf({ x -> 2 * (x[0] - 1) }, { x -> 2 * x[1] }),
+                        listOf({ x -> 2 * (x[0] + 1) }, { x -> 2 * x[1] })
+                    )
+                )
+                onApproximationFunctionsSelect(
+                    listOf(
+                        { x -> sqrt(4 - x[1].pow(2)) + 1 },
+                        { x -> sqrt(4 - (x[0] + 1).pow(2)) },
+                    )
+                )
+            }
+
         }
             .also { Spacer(Modifier.size(10.dp)) }
 
-        Selection("{ 0.1x² + x + 0.2y² - 0.3,\n 0.2x² + y + 0.1xy - 0.7 }") {
-            settings.onSystemSelect(
-                listOf(
-                    { x -> 0.1 * x[0].pow(2) + x[0] + 0.2 * x[1].pow(2) - 0.3 },
-                    { x -> 0.2 * x[0].pow(2) + x[1] + 0.1 * x[0] * x[1] - 0.7 }
+        Selection("{ 0.1x² + x + 0.2y² - 0.3,\n  0.2x² + y + 0.1xy - 0.7 }") {
+            settings.apply {
+                onSystemSelect(
+                    listOf(
+                        { x -> 0.1 * x[0].pow(2) + x[0] + 0.2 * x[1].pow(2) - 0.3 },
+                        { x -> 0.2 * x[0].pow(2) + x[1] + 0.1 * x[0] * x[1] - 0.7 }
+                    )
                 )
-            )
+                onJacobianSelect(
+                    listOf(
+                        listOf({ x -> -0.2 * x[0] /*        */ }, { x -> -0.4 * x[1] }),
+                        listOf({ x -> -0.4 * x[0] - 0.1 * x[1] }, { x -> -0.1 * x[0] })
+                    )
+                )
+                onApproximationFunctionsSelect(
+                    listOf(
+                        { x -> 0.3 - 0.1 * x[0].pow(2) - 0.2 * x[1].pow(2) },
+                        { x -> 0.7 - 0.2 * x[0].pow(2) - 0.1 * x[0] * x[1] },
+                    )
+                )
+            }
         }
     }
 }

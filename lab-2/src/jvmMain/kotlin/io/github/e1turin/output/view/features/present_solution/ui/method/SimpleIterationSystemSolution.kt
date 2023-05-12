@@ -38,15 +38,12 @@ fun SimpleIterationSystemSolutionPresenter(
 ) {
     val data by settings.data.subscribeAsState()
 
-    var initialValue = data.initialValue
+    val initialValue = data.initialValue
 
     val conditionState = try {
         val result = SimpleIterationSystemSolvingMethod.testConvergenceCondition(
             range = data.range,
-            jacobianMatrix = listOf(
-                listOf({ x -> -0.2 * x[0] /*        */ }, { x -> -0.4 * x[1] }),
-                listOf({ x -> -0.4 * x[0] - 0.1 * x[1] }, { x -> -0.1 * x[0] })
-            )
+            jacobianMatrix = data.jacobian!!
         )
 
         SimpleIterationTestResult.State(result)
@@ -56,10 +53,7 @@ fun SimpleIterationSystemSolutionPresenter(
 
     val result = try {
         val method = SimpleIterationSystemSolvingMethod(
-            approximationFunction = listOf(
-                { x -> 0.3 - 0.1 * x[0].pow(2) - 0.2 * x[1].pow(2) },
-                { x -> 0.7 - 0.2 * x[0].pow(2) - 0.1 * x[0] * x[1] },
-            )
+            approximationFunction = data.approximationFunctions!!
         )
 
         var step = 0
