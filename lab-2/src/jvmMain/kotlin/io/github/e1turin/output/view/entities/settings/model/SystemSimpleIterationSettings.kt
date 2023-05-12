@@ -20,11 +20,20 @@ class SystemSimpleIterationSettings : SystemSettings {
     )
     override val data: Value<SystemSimpleIterationData> = _data
 
-    val _isCompleted = MutableValue(false)
+    private val _isCompleted = MutableValue(false)
     override val isCompleted: Value<Boolean> = _isCompleted
 
-    override fun onSystemSelect(system: List<(List<Double>) -> Double>): Unit =
+    override fun onSystemSelect(system: List<(List<Double>) -> Double>) {
         _data.mutate { copy(system = system) }.also { _isCompleted.mutate { true } }
+    }
+
+    override fun onJacobianSelect(jacobian: List<List<(List<Double>) -> Double>>) {
+        _data.mutate { copy(jacobian = jacobian) }
+    }
+
+    override fun onApproximationFunctionsSelect(system: List<(List<Double>) -> Double>) {
+        _data.mutate { copy(approximationFunctions = system) }
+    }
 
 
     fun onRangeChange(range: List<ClosedRange<Double>>): Unit =
@@ -50,6 +59,8 @@ class SystemSimpleIterationSettings : SystemSettings {
     data class SystemSimpleIterationData(
         val system: List<(List<Double>) -> Double>? = null,
         val range: List<ClosedRange<Double>>,
-        val initialValue: List<Double>
+        val initialValue: List<Double>,
+        val jacobian: List<List<(List<Double>) -> Double>>? = null,
+        val approximationFunctions: List<(List<Double>) -> Double>? = null,
     ) : Settings.Data()
 }
