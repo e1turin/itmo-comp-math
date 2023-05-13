@@ -2,6 +2,7 @@ package io.github.e1turin.output.view.features.select_settings.ui
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Text
@@ -19,11 +20,12 @@ fun SettingsPanel(
     modifier: Modifier = Modifier,
     model: Settings,
 ) {
-    Box(
+
+    Column(
         modifier = modifier
             .background(Color.LightGray, RoundedCornerShape(10.dp))
             .padding(10.dp),
-        contentAlignment = Alignment.TopStart
+        horizontalAlignment = Alignment.CenterHorizontally
     ) {
         when (model) {
             is NewtonEquationSettings -> NewtonSettingsForm(modifier = Modifier, settings = model)
