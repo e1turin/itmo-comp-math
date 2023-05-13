@@ -3,15 +3,20 @@ package io.github.e1turin.output.view.entities.settings.ui.method.equation
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.material.Button
+import androidx.compose.material.Text
 import androidx.compose.material.TextField
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import com.arkivanov.decompose.extensions.compose.jetbrains.subscribeAsState
 import io.github.e1turin.output.view.entities.settings.model.NewtonEquationSettings
+import io.github.e1turin.output.view.features.export_settings.ui.SettingsExporter
 import io.github.e1turin.output.view.shared.lib.std.*
 import io.github.e1turin.output.view.shared.ui.form.Property
 import io.github.e1turin.output.view.shared.ui.range.RangePicker
+import kotlinx.serialization.encodeToString
+import kotlinx.serialization.json.Json
 
 
 @Composable
@@ -25,6 +30,8 @@ internal fun NewtonSettingsForm(
     }
     var range by remember { mutableStateOf(data.range.toFloatRange()) }
     var initialValueInput by remember { mutableStateOf(data.initialValue.toString()) }
+
+    var showFileSelector by remember { mutableStateOf(false) }
 
     Column(
         modifier = modifier,
@@ -72,21 +79,21 @@ internal fun NewtonSettingsForm(
                         settings.onRangeChange(range.toDoubleRange())
                     },
                 )
-//                RangeSlider(
-//                    modifier = Modifier,
-//                    value = range,
-//                    onValueChange = { newRange: ClosedFloatingPointRange<Float> ->
-//                        range = newRange
-//                    },
-//                    valueRange = boundsOfInspection,
-//                    onValueChangeFinished = {
-//                        settings.onRangeChange(range.toDoubleRange())
-//                    }
-//                )
-//                Text("start: ${range.start.pretty()}")
-//                Text("end:   ${range.endInclusive.pretty()}")
             }
+        }
 
+        Button(onClick = {
+            showFileSelector = true
+        }) {
+            Text("Export settings")
+        }
+
+        if (showFileSelector) {
+            SettingsExporter(
+                jsonData = Json.encodeToString(settings.data.value)
+            ) {
+                showFileSelector = false
+            }
         }
 
     }

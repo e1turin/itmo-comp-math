@@ -2,8 +2,15 @@ package io.github.e1turin.output.view.entities.settings.model
 
 import com.arkivanov.decompose.value.MutableValue
 import com.arkivanov.decompose.value.Value
-import io.github.e1turin.output.view.entities.settings.model.Settings.Translation
 import io.github.e1turin.output.view.shared.lib.decompose.mutate
+import kotlinx.serialization.KSerializer
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.SerializationException
+import kotlinx.serialization.Transient
+import kotlinx.serialization.descriptors.SerialDescriptor
+import kotlinx.serialization.descriptors.buildClassSerialDescriptor
+import kotlinx.serialization.descriptors.element
+import kotlinx.serialization.encoding.*
 
 
 class NewtonEquationSettings : EquationSettings {
@@ -27,23 +34,38 @@ class NewtonEquationSettings : EquationSettings {
     fun onInitialValueChange(initialValue: Double): Unit =
         _data.mutate { copy(initialValue = initialValue) }
 
-    fun onScaleValueChange(scale: Double): Unit =
-        _data.mutate { copy(scale = scale) }
-
-    fun onTranslateXChange(offsetX: Double): Unit =
-        _data.mutate { copy(translate = translate.copy(offsetX = offsetX)) }
-
-    fun onTranslateYChange(offsetY: Double): Unit =
-        _data.mutate { copy(translate = translate.copy(offsetY = offsetY)) }
-
-    fun onTranslateFullChange(offset: Translation): Unit =
-        _data.mutate { copy(translate = offset) }
-
+    @Serializable
     data class NewtonData(
-        val function: ((Double) -> Double)? = null,
-        val range: ClosedRange<Double>,
+        @Transient val function: ((Double) -> Double)? = null,
+        @Serializable(with = CFPRSerializer::class) val range: ClosedRange<Double>,
         val initialValue: Double,
-        val scale: Double = 1.0,
-        val translate: Translation = Translation(0.0, 0.0)
     ) : Settings.Data()
+}
+
+object CFPRSerializer : KSerializer<ClosedRange<Double>> {
+    override val descriptor: SerialDescriptor = buildClassSerialDescriptor("kotlin.ranges.DoubleClosedRange") {
+        element<Double>("start")
+        element<Double>("endInclusive")
+    }
+
+    override fun serialize(encoder: Encoder, value: ClosedRange<Double>) {
+        encoder.encodeStructure(descriptor) {
+            encodeDoubleElement(descriptor, 0, value.start)
+            encodeDoubleElement(descriptor, 1, value.endInclusive)
+        }
+    }
+
+    override fun deserialize(decoder: Decoder): ClosedRange<Double> =
+        decoder.decodeStructure(descriptor) {
+            var start: Double? = null
+            var end: Double? = null
+            while (true) {
+                val index = decodeElementIndex(descriptor)
+                if (index == CompositeDecoder.DECODE_DONE) break
+                if (index == 0) start = decodeDoubleElement(descriptor, index)
+                else end = decodeDoubleElement(descriptor, index)
+            }
+            if (start == null || end == null) throw SerializationException("Error appeared while deserialization")
+            return@decodeStructure start..end
+        }
 }
