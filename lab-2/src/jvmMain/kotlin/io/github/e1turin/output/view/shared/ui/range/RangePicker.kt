@@ -40,7 +40,7 @@ fun RangePickerPreview() {
 fun RangePicker(
     modifier: Modifier = Modifier,
     buttonModifier: Modifier = Modifier,
-    range: ClosedFloatingPointRange<Float>,
+    range: ClosedRange<Float>,
     onMoveLeft: () -> Unit = {},
     onMoveRight: () -> Unit = {},
     onStretch: () -> Unit = {},
