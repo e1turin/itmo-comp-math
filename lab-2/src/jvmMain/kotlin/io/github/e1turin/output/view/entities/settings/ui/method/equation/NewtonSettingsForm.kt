@@ -1,17 +1,19 @@
 package io.github.e1turin.output.view.entities.settings.ui.method.equation
 
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.*
 import androidx.compose.material.Button
 import androidx.compose.material.Text
 import androidx.compose.material.TextField
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.unit.dp
 import com.arkivanov.decompose.extensions.compose.jetbrains.subscribeAsState
 import io.github.e1turin.output.view.entities.settings.model.NewtonEquationSettings
 import io.github.e1turin.output.view.features.export_settings.ui.SettingsExporter
+import io.github.e1turin.output.view.features.import_settings.ui.SettingsImporter
 import io.github.e1turin.output.view.shared.lib.std.*
 import io.github.e1turin.output.view.shared.ui.form.Property
 import io.github.e1turin.output.view.shared.ui.range.RangePicker
@@ -24,14 +26,13 @@ internal fun NewtonSettingsForm(
     modifier: Modifier = Modifier,
     settings: NewtonEquationSettings,
 ) {
+
     val data by settings.data.subscribeAsState()
-    var boundsOfInspection by remember {
-        mutableStateOf(calculateBoundsOfRange(data.initialValue.toFloat()))
-    }
     var range by remember { mutableStateOf(data.range.toFloatRange()) }
     var initialValueInput by remember { mutableStateOf(data.initialValue.toString()) }
 
-    var showFileSelector by remember { mutableStateOf(false) }
+    var showExportFileSelector by remember { mutableStateOf(false) }
+    var showImportFileSelector by remember { mutableStateOf(false) }
 
     Column(
         modifier = modifier,
@@ -39,60 +40,87 @@ internal fun NewtonSettingsForm(
         verticalArrangement = Arrangement.Top
     ) {
         Property(title = "Initial value") {
-            TextField(
-                value = initialValueInput,
-                onValueChange = { newValueString ->
-                    initialValueInput = newValueString
-                    val newValue = initialValueInput.toDoubleOrNull() ?: data.initialValue
-                    if (newValue.isFinite()) {
-                        settings.onInitialValueChange(newValue)
-                        boundsOfInspection = calculateBoundsOfRange(newValue.toFloat())
-                        range = boundsOfInspection
-                        settings.onRangeChange(range.toDoubleRange())
-                    }
-                },
-                modifier = Modifier.fillMaxWidth(),
-                maxLines = 1
-            )
+            Column {
+                TextField(
+                    value = initialValueInput,
+                    onValueChange = { newValueString ->
+                        initialValueInput = newValueString
+                        val newValue = initialValueInput.toDoubleOrNull() ?: data.initialValue
+
+                        if (newValue.isFinite()) {
+                            settings.onInitialValueChange(newValue)
+                            settings.onRangeChange(
+                                calculateBoundsOfRange(newValue.toFloat()).toDoubleRange()
+                            )
+                        }
+                    },
+                    modifier = Modifier.fillMaxWidth(),
+                    maxLines = 1
+                )
+                    .also { Spacer(Modifier.size(10.dp)) }
+                Text("Value in use: ${data.initialValue.pretty()}")
+            }
+
         }
+
+        Spacer(Modifier.padding(5.dp).height(1.dp).fillMaxWidth().background(Color.DarkGray))
 
         Property(title = "Inspecting range") {
             Column {
                 RangePicker(
-                    range = range,
+                    range = data.range.toFloatRange(),
                     onMoveLeft = {
-                        range = range.slideToLowestBy(0.1F)
-                        settings.onRangeChange(range.toDoubleRange())
+                        settings.onRangeChange(data.range.slideToLowestBy(0.1))
                     },
                     onMoveRight = {
-                        range = range.slideToHighestBy(0.1F)
-                        settings.onRangeChange(range.toDoubleRange())
+                        settings.onRangeChange(data.range.slideToHighestBy(0.1))
                     },
                     onShrink = {
                         if (range.length > 0.2F) {
-                            range = range.shrinkBy(0.1F)
-                            settings.onRangeChange(range.toDoubleRange())
+                            settings.onRangeChange(data.range.shrinkBy(0.1))
                         }
                     },
                     onStretch = {
-                        range = range.stretchBy(0.1F)
-                        settings.onRangeChange(range.toDoubleRange())
+                        settings.onRangeChange(data.range.stretchBy(0.1))
                     },
                 )
             }
         }
 
-        Button(onClick = {
-            showFileSelector = true
-        }) {
-            Text("Export settings")
-        }
+        Spacer(Modifier.weight(1F))
 
-        if (showFileSelector) {
-            SettingsExporter(
-                jsonData = Json.encodeToString(settings.data.value)
-            ) {
-                showFileSelector = false
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceAround
+        ) {
+            Button(onClick = {
+                showExportFileSelector = true
+            }) {
+                Text("Export settings")
+            }
+
+            if (showExportFileSelector) {
+                SettingsExporter(
+                    jsonData = Json.encodeToString(data)
+                ) {
+                    showExportFileSelector = false
+                }
+            }
+
+            Button(onClick = {
+                showImportFileSelector = true
+            }) {
+                Text("Import settings")
+            }
+
+            if (showImportFileSelector) {
+                SettingsImporter { data ->
+                    if (data != null) {
+                        settings.onInitialValueChange(data.initialValue)
+                        settings.onRangeChange(data.range)
+                    }
+                    showImportFileSelector = false
+                }
             }
         }
 
