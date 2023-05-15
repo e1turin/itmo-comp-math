@@ -17,8 +17,6 @@ import io.github.e1turin.output.view.features.import_settings.ui.SettingsImporte
 import io.github.e1turin.output.view.shared.lib.std.*
 import io.github.e1turin.output.view.shared.ui.form.Property
 import io.github.e1turin.output.view.shared.ui.range.RangePicker
-import kotlinx.serialization.encodeToString
-import kotlinx.serialization.json.Json
 
 
 @Composable
@@ -26,9 +24,7 @@ internal fun NewtonSettingsForm(
     modifier: Modifier = Modifier,
     settings: NewtonEquationSettings,
 ) {
-
     val data by settings.data.subscribeAsState()
-    var range by remember { mutableStateOf(data.range.toFloatRange()) }
     var initialValueInput by remember { mutableStateOf(data.initialValue.toString()) }
 
     var showExportFileSelector by remember { mutableStateOf(false) }
@@ -58,6 +54,7 @@ internal fun NewtonSettingsForm(
                     maxLines = 1
                 )
                     .also { Spacer(Modifier.size(10.dp)) }
+
                 Text("Value in use: ${data.initialValue.pretty()}")
             }
 
@@ -76,7 +73,7 @@ internal fun NewtonSettingsForm(
                         settings.onRangeChange(data.range.slideToHighestBy(0.1))
                     },
                     onShrink = {
-                        if (range.length > 0.2F) {
+                        if (data.range.length > 0.2F) {
                             settings.onRangeChange(data.range.shrinkBy(0.1))
                         }
                     },
@@ -97,31 +94,34 @@ internal fun NewtonSettingsForm(
                 showExportFileSelector = true
             }) {
                 Text("Export settings")
-            }
-
-            if (showExportFileSelector) {
-                SettingsExporter(
-                    jsonData = Json.encodeToString(data)
-                ) {
-                    showExportFileSelector = false
+            }.also {
+                if (showExportFileSelector) {
+                    SettingsExporter(
+                        data = settings
+                    ) {
+                        showExportFileSelector = false
+                    }
                 }
             }
+
 
             Button(onClick = {
                 showImportFileSelector = true
             }) {
                 Text("Import settings")
-            }
-
-            if (showImportFileSelector) {
-                SettingsImporter { data ->
-                    if (data != null) {
-                        settings.onInitialValueChange(data.initialValue)
-                        settings.onRangeChange(data.range)
+            }.also {
+                if (showImportFileSelector) {
+                    SettingsImporter<NewtonEquationSettings.NewtonData> { data ->
+                        if (data != null) {
+                            // XXX: may be Dispatchers.Main is needed?
+                            settings.onInitialValueChange(data.initialValue)
+                            settings.onRangeChange(data.range)
+                        }
+                        showImportFileSelector = false
                     }
-                    showImportFileSelector = false
                 }
             }
+
         }
 
     }

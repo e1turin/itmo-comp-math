@@ -1,16 +1,14 @@
 package io.github.e1turin.output.view.features.export_settings.ui
 
 import androidx.compose.runtime.Composable
-import io.github.e1turin.output.view.entities.file_system.model.FileSystemAdapter
+import io.github.e1turin.output.view.entities.settings_repository.model.SettingsRepository
 import io.github.e1turin.output.view.entities.file_system.ui.FileSelector
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.supervisorScope
+import io.github.e1turin.output.view.entities.settings.model.Settings
+import kotlinx.coroutines.*
 
 @Composable
 fun SettingsExporter(
-    jsonData: String,
+    data: Settings,
     onComplete: () -> Unit = {}
 ) {
 
@@ -20,21 +18,19 @@ fun SettingsExporter(
 
         val filePath = file?.path
 
-        if (filePath != null) {
-            CoroutineScope(Dispatchers.IO).launch {
-                try {
-                    supervisorScope {
-                        FileSystemAdapter.saveToFile(filePath, jsonData)
-                    }
-                } catch (e: Exception) {
-                    println("[SettingsExporter.kt]exception appeared: $e")
+        try {
+            if (filePath != null) {
+                CoroutineScope(Dispatchers.IO + SupervisorJob()).launch {
+                    SettingsRepository.saveToFile(filePath, data)
                 }
+            } else {
+                println("[SettingsExporter.kt]export path is null")
             }
-        } else {
-            println("[SettingsExporter.kt]export path is null")
+        } catch (e: Exception) {
+            println("[SettingsExporter.kt]exception appeared: $e")
+        } finally {
+            onComplete() //TODO: Return result type
         }
-
-        onComplete()
     }
 
 
