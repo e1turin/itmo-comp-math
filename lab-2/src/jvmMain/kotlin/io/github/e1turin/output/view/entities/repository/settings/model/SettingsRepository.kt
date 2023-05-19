@@ -1,4 +1,4 @@
-package io.github.e1turin.output.view.entities.settings_repository.model
+package io.github.e1turin.output.view.entities.repository.settings.model
 
 import io.github.e1turin.output.view.entities.settings.model.Settings
 import kotlinx.coroutines.CoroutineScope
@@ -40,18 +40,18 @@ sealed interface OperationResult {
     data class Error(val e: Exception) : OperationResult
 }
 
-@DelicateCringeApi
-internal fun String.toCringeFormat(): String =
-    replace(',', ';').replace('.', ',')
 
 @DelicateCringeApi
-internal fun String.fromCringeFormat(): String =
-    replace(',', '.').replace(';', ',')
+internal fun String.toCringeFormat(): String = replace(',', ';').replace('.', ',')
+
+@DelicateCringeApi
+internal fun String.fromCringeFormat(): String = replace(',', '.').replace(';', ',')
+
 
 @Retention(value = AnnotationRetention.BINARY)
 @RequiresOptIn(
     level = RequiresOptIn.Level.WARNING,
-    message = "This is a delicate API and its use requires care and insensitivity to the cringe." +
-            " Make sure you fully read and understand documentation of the declaration that is marked as a delicate API."
+    message = "This is a delicate API and its use requires care and insensitivity to the cringe."
+            + " Make sure you fully read and understand documentation of the declaration that is marked as a delicate API."
 )
 annotation class DelicateCringeApi

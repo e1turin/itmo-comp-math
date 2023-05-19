@@ -39,7 +39,7 @@ private fun SystemSolutionPanel(
     settings: SystemSettings
 ) {
     when (settings) {
-        is SystemSimpleIterationSettings -> SimpleIterationSystemSolutionPresenter(modifier, settings)
+        is SimpleIterationSystemSettings -> SimpleIterationSystemSolutionPresenter(modifier, settings)
 
         DefaultSystemSettings -> {/* Unreachable case */
         }

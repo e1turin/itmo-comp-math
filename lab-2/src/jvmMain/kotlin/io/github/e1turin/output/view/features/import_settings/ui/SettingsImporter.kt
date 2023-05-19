@@ -3,7 +3,7 @@ package io.github.e1turin.output.view.features.import_settings.ui
 import androidx.compose.runtime.Composable
 import com.darkrockstudios.libraries.mpfilepicker.FilePicker
 import io.github.e1turin.output.view.entities.settings.model.Settings
-import io.github.e1turin.output.view.entities.settings_repository.model.SettingsRepository
+import io.github.e1turin.output.view.entities.repository.settings.model.SettingsRepository
 import kotlinx.coroutines.*
 import java.io.IOException
 

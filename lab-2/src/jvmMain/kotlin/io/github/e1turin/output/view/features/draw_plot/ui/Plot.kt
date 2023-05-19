@@ -45,7 +45,7 @@ private fun SystemPlot(
     settings: SystemSettings
 ) {
     when (settings) {
-        is SystemSimpleIterationSettings -> SystemSimpleIterationMethodPlot(modifier = modifier, settings = settings)
+        is SimpleIterationSystemSettings -> SystemSimpleIterationMethodPlot(modifier = modifier, settings = settings)
 
         DefaultSystemSettings -> {/* impossible way due to usage contract */
         }

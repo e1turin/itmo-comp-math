@@ -34,6 +34,6 @@ private inline fun mapEquationSettings(taskType: TaskType.Equation) = when (task
 }
 
 private inline fun mapSystemSettings(taskType: TaskType.System) = when (taskType) {
-    TaskType.System.SimpleIteration -> SystemSimpleIterationSettings()
+    TaskType.System.SimpleIteration -> SimpleIterationSystemSettings()
     TaskType.System.Undefined -> DefaultSystemSettings
 }

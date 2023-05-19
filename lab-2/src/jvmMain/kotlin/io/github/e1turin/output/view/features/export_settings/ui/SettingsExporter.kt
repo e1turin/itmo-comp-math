@@ -1,7 +1,7 @@
 package io.github.e1turin.output.view.features.export_settings.ui
 
 import androidx.compose.runtime.Composable
-import io.github.e1turin.output.view.entities.settings_repository.model.SettingsRepository
+import io.github.e1turin.output.view.entities.repository.settings.model.SettingsRepository
 import io.github.e1turin.output.view.entities.file_system.ui.FileSelector
 import io.github.e1turin.output.view.entities.settings.model.Settings
 import kotlinx.coroutines.*

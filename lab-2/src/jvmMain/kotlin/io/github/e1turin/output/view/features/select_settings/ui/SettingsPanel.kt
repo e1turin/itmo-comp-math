@@ -29,7 +29,7 @@ fun SettingsPanel(
     ) {
         when (model) {
             is NewtonEquationSettings -> NewtonSettingsForm(modifier = Modifier, settings = model)
-            is SystemSimpleIterationSettings -> SystemSimpleIterationForm(modifier = Modifier, settings = model)
+            is SimpleIterationSystemSettings -> SystemSimpleIterationForm(modifier = Modifier, settings = model)
             //TODO: another methods
 
             is DefaultSettings -> Box(contentAlignment = Alignment.Center) {

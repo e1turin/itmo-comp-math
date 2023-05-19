@@ -9,7 +9,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.arkivanov.decompose.extensions.compose.jetbrains.subscribeAsState
-import io.github.e1turin.output.view.entities.settings.model.SystemSimpleIterationSettings
+import io.github.e1turin.output.view.entities.settings.model.SimpleIterationSystemSettings
 import io.github.e1turin.output.view.shared.lib.std.*
 import io.github.e1turin.output.view.shared.ui.form.Property
 import io.github.e1turin.output.view.shared.ui.range.RangePicker
@@ -18,7 +18,7 @@ import io.github.e1turin.output.view.shared.ui.range.RangePicker
 @Composable
 fun SystemSimpleIterationForm(
     modifier: Modifier = Modifier,
-    settings: SystemSimpleIterationSettings,
+    settings: SimpleIterationSystemSettings,
 ) {
     val data by settings.data.subscribeAsState()
 
