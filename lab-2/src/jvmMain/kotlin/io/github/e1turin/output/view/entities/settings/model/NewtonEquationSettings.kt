@@ -2,6 +2,7 @@ package io.github.e1turin.output.view.entities.settings.model
 
 import com.arkivanov.decompose.value.MutableValue
 import com.arkivanov.decompose.value.Value
+import io.github.e1turin.model.util.CFPRSerializer
 import io.github.e1turin.output.view.shared.lib.decompose.mutate
 import kotlinx.serialization.*
 import kotlinx.serialization.descriptors.SerialDescriptor
@@ -19,7 +20,7 @@ class NewtonEquationSettings : EquationSettings {
     )
     override val data: Value<NewtonData> = _data
 
-    val _isComplete = MutableValue(false)
+    private val _isComplete = MutableValue(false)
     override val isCompleted: Value<Boolean> = _isComplete
 
     override fun onEquationSelect(function: (Double) -> Double): Unit =
@@ -40,30 +41,3 @@ class NewtonEquationSettings : EquationSettings {
     ) : Settings.Data()
 }
 
-object CFPRSerializer : KSerializer<ClosedRange<Double>> {
-    override val descriptor: SerialDescriptor = buildClassSerialDescriptor("kotlin.ranges.DoubleClosedRange") {
-        element<Double>("start")
-        element<Double>("endInclusive")
-    }
-
-    override fun serialize(encoder: Encoder, value: ClosedRange<Double>) {
-        encoder.encodeStructure(descriptor) {
-            encodeDoubleElement(descriptor, 0, value.start)
-            encodeDoubleElement(descriptor, 1, value.endInclusive)
-        }
-    }
-
-    override fun deserialize(decoder: Decoder): ClosedRange<Double> =
-        decoder.decodeStructure(descriptor) {
-            var start: Double? = null
-            var end: Double? = null
-            while (true) {
-                val index = decodeElementIndex(descriptor)
-                if (index == CompositeDecoder.DECODE_DONE) break
-                if (index == 0) start = decodeDoubleElement(descriptor, index)
-                else end = decodeDoubleElement(descriptor, index)
-            }
-            if (start == null || end == null) throw SerializationException("Error appeared while deserialization")
-            return@decodeStructure start..end
-        }
-}
