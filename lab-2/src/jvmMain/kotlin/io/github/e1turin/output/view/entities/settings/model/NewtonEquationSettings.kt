@@ -3,10 +3,7 @@ package io.github.e1turin.output.view.entities.settings.model
 import com.arkivanov.decompose.value.MutableValue
 import com.arkivanov.decompose.value.Value
 import io.github.e1turin.output.view.shared.lib.decompose.mutate
-import kotlinx.serialization.KSerializer
-import kotlinx.serialization.Serializable
-import kotlinx.serialization.SerializationException
-import kotlinx.serialization.Transient
+import kotlinx.serialization.*
 import kotlinx.serialization.descriptors.SerialDescriptor
 import kotlinx.serialization.descriptors.buildClassSerialDescriptor
 import kotlinx.serialization.descriptors.element
@@ -35,6 +32,7 @@ class NewtonEquationSettings : EquationSettings {
         _data.mutate { copy(initialValue = initialValue) }
 
     @Serializable
+    @SerialName("Newton")
     data class NewtonData(
         @Transient val function: ((Double) -> Double)? = null,
         @Serializable(with = CFPRSerializer::class) val range: ClosedRange<Double>,

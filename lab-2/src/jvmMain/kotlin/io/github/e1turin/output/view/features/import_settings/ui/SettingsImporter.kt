@@ -10,7 +10,7 @@ import java.io.IOException
 
 @Composable
 inline fun <reified T : Settings.Data> SettingsImporter(
-    crossinline onComplete: (T?) -> Unit = {}
+    crossinline onComplete: (T?) -> Unit = {} //TODO: result types
 ) {
     FilePicker(
         show = true,
@@ -26,7 +26,7 @@ inline fun <reified T : Settings.Data> SettingsImporter(
             if (filePath != null) {
                 val data = SettingsRepository.loadFromFile<T>(filePath)
                 if (data == null) throw IOException("Incompatible settings type")
-                else onComplete(data) //TODO: result types
+                else onComplete(data)
             } else {
                 throw IOException("File was not selected")
             }
