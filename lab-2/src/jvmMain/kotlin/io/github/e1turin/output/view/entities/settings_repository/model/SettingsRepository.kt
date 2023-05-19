@@ -5,27 +5,29 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import kotlinx.serialization.ExperimentalSerializationApi
+import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
-import kotlinx.serialization.json.decodeFromStream
 import java.io.File
+import java.io.InputStreamReader
 
 object SettingsRepository {
     private val scope = CoroutineScope(Dispatchers.IO)
 
+    @OptIn(DelicateCringeApi::class)
     suspend fun saveToFile(filePath: String, settings: Settings) {
         scope.launch {
             val file = File(filePath)
-            file.writeText(Json.encodeToString(settings.data.value))
+            file.writeText(Json.encodeToString(settings.data.value).toCringeFormat())
         }.join()
     }
 
-    @OptIn(ExperimentalSerializationApi::class)
+    @OptIn(DelicateCringeApi::class)
     suspend fun loadUnspecifiedFromFile(filePath: String): Settings.Data {
         return withContext(scope.coroutineContext) {
             val fileInputStream = File(filePath).inputStream()
-            Json.decodeFromStream<Settings.Data>(fileInputStream)
+            val cringeData = InputStreamReader(fileInputStream).readText().fromCringeFormat()
+            Json.decodeFromString<Settings.Data>(cringeData)
         }
     }
 
@@ -37,3 +39,19 @@ sealed interface OperationResult {
     data class Complete(val success: Boolean) : OperationResult
     data class Error(val e: Exception) : OperationResult
 }
+
+@DelicateCringeApi
+internal fun String.toCringeFormat(): String =
+    replace(',', ';').replace('.', ',')
+
+@DelicateCringeApi
+internal fun String.fromCringeFormat(): String =
+    replace(',', '.').replace(';', ',')
+
+@Retention(value = AnnotationRetention.BINARY)
+@RequiresOptIn(
+    level = RequiresOptIn.Level.WARNING,
+    message = "This is a delicate API and its use requires care and insensitivity to the cringe." +
+            " Make sure you fully read and understand documentation of the declaration that is marked as a delicate API."
+)
+annotation class DelicateCringeApi
