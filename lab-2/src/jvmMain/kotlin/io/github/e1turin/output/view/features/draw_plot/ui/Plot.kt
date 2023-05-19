@@ -36,6 +36,8 @@ private fun EquationPlot(
         is NewtonEquationSettings -> NewtonMethodPlot(modifier = modifier, settings = settings)
         DefaultEquationSettings -> {/* impossible way due to usage contract */
         }
+
+        is SimpleIterationEquationSettings -> TODO()
     }
 }
 

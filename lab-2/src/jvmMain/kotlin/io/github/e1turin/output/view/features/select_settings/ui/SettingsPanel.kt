@@ -39,6 +39,7 @@ fun SettingsPanel(
             DefaultEquationSettings, DefaultSystemSettings -> {/* impossible way due to previous case */
             }
 
+            is SimpleIterationEquationSettings -> TODO()
         }
     }
 }

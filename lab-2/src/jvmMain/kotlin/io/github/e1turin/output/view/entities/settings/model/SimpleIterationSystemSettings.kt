@@ -2,7 +2,11 @@ package io.github.e1turin.output.view.entities.settings.model
 
 import com.arkivanov.decompose.value.MutableValue
 import com.arkivanov.decompose.value.Value
+import io.github.e1turin.model.util.CFPRSerializer
 import io.github.e1turin.output.view.shared.lib.decompose.mutate
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.Transient
 
 
 class SimpleIterationSystemSettings : SystemSettings {
@@ -56,11 +60,13 @@ class SimpleIterationSystemSettings : SystemSettings {
         _data.mutate { copy(initialValue = listOf(initialValue[0], initialYValue)) }
 
 
+    @Serializable
+    @SerialName("SimpleIterationSystem")
     data class SystemSimpleIterationData(
-        val system: List<(List<Double>) -> Double>? = null,
-        val range: List<ClosedRange<Double>>,
+        @Transient val system: List<(List<Double>) -> Double>? = null,
+        val range: List<@Serializable(with = CFPRSerializer::class) ClosedRange<Double>>,
         val initialValue: List<Double>,
-        val jacobian: List<List<(List<Double>) -> Double>>? = null,
-        val approximationFunctions: List<(List<Double>) -> Double>? = null,
+        @Transient val jacobian: List<List<(List<Double>) -> Double>>? = null,
+        @Transient val approximationFunctions: List<(List<Double>) -> Double>? = null,
     ) : Settings.Data()
 }

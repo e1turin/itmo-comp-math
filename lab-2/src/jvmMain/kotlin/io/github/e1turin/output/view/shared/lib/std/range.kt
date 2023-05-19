@@ -1,6 +1,10 @@
 package io.github.e1turin.output.view.shared.lib.std
 
 
+
+fun calculateBoundsOfRange(middleValue: Float): ClosedFloatingPointRange<Float> =
+    (middleValue - 1.5F)..(middleValue + 1.5F)
+
 fun ClosedRange<Double>.toFloatRange(): ClosedFloatingPointRange<Float> =
     start.toFloat()..endInclusive.toFloat()
 

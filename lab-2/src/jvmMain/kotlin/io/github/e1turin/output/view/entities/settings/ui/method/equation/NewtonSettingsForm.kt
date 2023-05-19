@@ -127,7 +127,3 @@ internal fun NewtonSettingsForm(
     }
 
 }
-
-
-private fun calculateBoundsOfRange(middleValue: Float): ClosedFloatingPointRange<Float> =
-    (middleValue - 1.5F)..(middleValue + 1.5F)

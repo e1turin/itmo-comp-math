@@ -30,6 +30,8 @@ private fun EquationSolutionPanel(
 
         DefaultEquationSettings -> {/* Unreachable case */
         }
+
+        is SimpleIterationEquationSettings -> TODO()
     }
 }
 

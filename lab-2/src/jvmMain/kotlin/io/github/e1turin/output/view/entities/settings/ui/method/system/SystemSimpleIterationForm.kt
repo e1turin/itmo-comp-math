@@ -2,6 +2,8 @@ package io.github.e1turin.output.view.entities.settings.ui.method.system
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.material.Button
+import androidx.compose.material.Text
 import androidx.compose.material.TextField
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -10,6 +12,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.arkivanov.decompose.extensions.compose.jetbrains.subscribeAsState
 import io.github.e1turin.output.view.entities.settings.model.SimpleIterationSystemSettings
+import io.github.e1turin.output.view.features.export_settings.ui.SettingsExporter
+import io.github.e1turin.output.view.features.import_settings.ui.SettingsImporter
 import io.github.e1turin.output.view.shared.lib.std.*
 import io.github.e1turin.output.view.shared.ui.form.Property
 import io.github.e1turin.output.view.shared.ui.range.RangePicker
@@ -27,6 +31,9 @@ fun SystemSimpleIterationForm(
 
     var initialXValueInput by remember { mutableStateOf(data.initialValue[0].toString()) }
     var initialYValueInput by remember { mutableStateOf(data.initialValue[1].toString()) }
+
+    var showExportFileSelector by remember { mutableStateOf(false) }
+    var showImportFileSelector by remember { mutableStateOf(false) }
 
     Column(
         modifier = modifier,
@@ -128,9 +135,47 @@ fun SystemSimpleIterationForm(
                 )
             }
         }
+
+        Spacer(Modifier.weight(1F))
+
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceAround
+        ) {
+            Button(onClick = {
+                showExportFileSelector = true
+            }) {
+                Text("Export settings")
+            }.also {
+                if (showExportFileSelector) {
+                    SettingsExporter(
+                        data = settings
+                    ) {
+                        showExportFileSelector = false
+                    }
+                }
+            }
+
+            Button(onClick = {
+                showImportFileSelector = true
+            }) {
+                Text("Import settings")
+            }.also {
+                if (showImportFileSelector) {
+                    SettingsImporter<SimpleIterationSystemSettings.SystemSimpleIterationData> { data ->
+                        if (data != null) {
+                            // XXX: may be Dispatchers.Main is needed?
+                            settings.onInitialValueChange(data.initialValue)
+                            settings.onRangeChange(data.range)
+                            println("[SSIForm]$data")
+                        }
+                        showImportFileSelector = false
+                    }
+                }
+            }
+
+        }
     }
 }
 
 
-private fun calculateBoundsOfRange(middleValue: Float): ClosedFloatingPointRange<Float> =
-    (middleValue - 1.5F)..(middleValue + 1.5F)
