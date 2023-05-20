@@ -11,7 +11,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.arkivanov.decompose.extensions.compose.jetbrains.subscribeAsState
-import io.github.e1turin.output.view.entities.settings.model.SimpleIterationSystemSettings
+import io.github.e1turin.output.view.entities.settings.model.SISystemSettings
 import io.github.e1turin.output.view.features.export_settings.ui.SettingsExporter
 import io.github.e1turin.output.view.features.import_settings.ui.SettingsImporter
 import io.github.e1turin.output.view.shared.lib.std.*
@@ -19,10 +19,13 @@ import io.github.e1turin.output.view.shared.ui.form.Property
 import io.github.e1turin.output.view.shared.ui.range.RangePicker
 
 
+/**
+ * Form for settings of simple iteration method for numerical solving system of equations
+ */
 @Composable
-fun SystemSimpleIterationForm(
+fun SISystemSettingsForm(
     modifier: Modifier = Modifier,
-    settings: SimpleIterationSystemSettings,
+    settings: SISystemSettings,
 ) {
     val data by settings.data.subscribeAsState()
 
@@ -163,7 +166,7 @@ fun SystemSimpleIterationForm(
                 Text("Import settings")
             }.also {
                 if (showImportFileSelector) {
-                    SettingsImporter<SimpleIterationSystemSettings.SystemSimpleIterationData> { data ->
+                    SettingsImporter<SISystemSettings.SISystemData> { data ->
                         if (data != null) {
                             // XXX: may be Dispatchers.Main is needed?
                             settings.onInitialValueChange(data.initialValue)

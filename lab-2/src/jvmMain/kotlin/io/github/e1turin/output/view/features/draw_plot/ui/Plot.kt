@@ -6,8 +6,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import io.github.e1turin.output.view.entities.settings.model.*
-import io.github.e1turin.output.view.features.draw_plot.ui.method.NewtonMethodPlot
-import io.github.e1turin.output.view.features.draw_plot.ui.method.SystemSimpleIterationMethodPlot
+import io.github.e1turin.output.view.features.draw_plot.ui.method.NewtonEquationPlot
+import io.github.e1turin.output.view.features.draw_plot.ui.method.SISystemMethodPlot
 
 @Composable
 fun Plot(
@@ -33,11 +33,11 @@ private fun EquationPlot(
     settings: EquationSettings
 ) {
     when (settings) {
-        is NewtonEquationSettings -> NewtonMethodPlot(modifier = modifier, settings = settings)
+        is NewtonEquationSettings -> NewtonEquationPlot(modifier = modifier, settings = settings)
         DefaultEquationSettings -> {/* impossible way due to usage contract */
         }
 
-        is SimpleIterationEquationSettings -> TODO()
+        is SIEquationSettings -> TODO()
     }
 }
 
@@ -47,7 +47,7 @@ private fun SystemPlot(
     settings: SystemSettings
 ) {
     when (settings) {
-        is SimpleIterationSystemSettings -> SystemSimpleIterationMethodPlot(modifier = modifier, settings = settings)
+        is SISystemSettings -> SISystemMethodPlot(modifier = modifier, settings = settings)
 
         DefaultSystemSettings -> {/* impossible way due to usage contract */
         }

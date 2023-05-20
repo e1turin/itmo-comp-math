@@ -9,7 +9,7 @@ import io.github.e1turin.output.view.features.draw_plot.ui.FunctionPlot2D
 import io.github.e1turin.output.view.shared.lib.std.toFloatRange
 
 @Composable
-fun NewtonMethodPlot(
+fun NewtonEquationPlot(
     modifier: Modifier = Modifier,
     settings: NewtonEquationSettings
 ) {

@@ -13,7 +13,7 @@ import com.arkivanov.decompose.extensions.compose.jetbrains.subscribeAsState
 import io.github.e1turin.model.domain.equation.nonlinear.system.method.SimpleIterationSystemSolvingMethod
 import io.github.e1turin.model.domain.equation.nonlinear.system.solver.IterativeSystemSolver
 import io.github.e1turin.model.util.vectorLength
-import io.github.e1turin.output.view.entities.settings.model.SimpleIterationSystemSettings
+import io.github.e1turin.output.view.entities.settings.model.SISystemSettings
 import io.github.e1turin.output.view.features.present_solution.model.SolvingResult
 import io.github.e1turin.output.view.features.present_solution.model.toResultString
 import io.github.e1turin.output.view.shared.lib.std.prettyVector
@@ -31,9 +31,9 @@ private fun SimpleIterationTestResult.toResultString(): String = when (this) {
 
 
 @Composable
-fun SimpleIterationSystemSolutionPresenter(
+fun SISystemSolution(
     modifier: Modifier = Modifier,
-    settings: SimpleIterationSystemSettings
+    settings: SISystemSettings
 ) {
     val data by settings.data.subscribeAsState()
 

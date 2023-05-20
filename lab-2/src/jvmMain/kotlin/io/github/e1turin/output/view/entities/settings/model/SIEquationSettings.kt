@@ -8,14 +8,18 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.Transient
 
-class SimpleIterationEquationSettings : EquationSettings {
+
+/**
+ * Settings of simple iteration method for numerical solving equations
+ */
+class SIEquationSettings : EquationSettings {
     private val _data = MutableValue(
-        SimpleIterationData(
+        SIEquationData(
             range = -3.0..3.0,
             initialValue = 0.0
         )
     )
-    override val data: Value<SimpleIterationData> = _data
+    override val data: Value<SIEquationData> = _data
 
     private val _isComplete = MutableValue(false)
     override val isCompleted: Value<Boolean> = _isComplete
@@ -31,7 +35,7 @@ class SimpleIterationEquationSettings : EquationSettings {
 
     @Serializable
     @SerialName("SimpleIteration")
-    data class SimpleIterationData(
+    data class SIEquationData(
         @Transient val function: ((Double) -> Double)? = null,
         @Serializable(with = CFPRSerializer::class) val range: ClosedRange<Double>,
         val initialValue: Double,

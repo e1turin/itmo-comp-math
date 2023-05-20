@@ -13,7 +13,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import io.github.e1turin.output.view.entities.settings.model.*
 import io.github.e1turin.output.view.entities.settings.ui.method.equation.NewtonSettingsForm
-import io.github.e1turin.output.view.entities.settings.ui.method.system.SystemSimpleIterationForm
+import io.github.e1turin.output.view.entities.settings.ui.method.system.SISystemSettingsForm
 
 @Composable
 fun SettingsPanel(
@@ -29,7 +29,7 @@ fun SettingsPanel(
     ) {
         when (model) {
             is NewtonEquationSettings -> NewtonSettingsForm(modifier = Modifier, settings = model)
-            is SimpleIterationSystemSettings -> SystemSimpleIterationForm(modifier = Modifier, settings = model)
+            is SISystemSettings -> SISystemSettingsForm(modifier = Modifier, settings = model)
             //TODO: another methods
 
             is DefaultSettings -> Box(contentAlignment = Alignment.Center) {
@@ -39,7 +39,7 @@ fun SettingsPanel(
             DefaultEquationSettings, DefaultSystemSettings -> {/* impossible way due to previous case */
             }
 
-            is SimpleIterationEquationSettings -> TODO()
+            is SIEquationSettings -> TODO()
         }
     }
 }
