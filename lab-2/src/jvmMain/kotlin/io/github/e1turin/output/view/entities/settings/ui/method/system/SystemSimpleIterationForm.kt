@@ -26,9 +26,6 @@ fun SystemSimpleIterationForm(
 ) {
     val data by settings.data.subscribeAsState()
 
-    var xRange by remember { mutableStateOf(data.range[0].toFloatRange()) }
-    var yRange by remember { mutableStateOf(data.range[1].toFloatRange()) }
-
     var initialXValueInput by remember { mutableStateOf(data.initialValue[0].toString()) }
     var initialYValueInput by remember { mutableStateOf(data.initialValue[1].toString()) }
 
@@ -45,92 +42,96 @@ fun SystemSimpleIterationForm(
                 value = initialXValueInput,
                 onValueChange = { newXValueString ->
                     initialXValueInput = newXValueString
-
                     val newXValue: Double = initialXValueInput.toDoubleOrNull() ?: data.initialValue[0]
 
                     if (newXValue.isFinite()) {
                         settings.onInitialXValueChange(newXValue)
-
-                        xRange = calculateBoundsOfRange(newXValue.toFloat())
-
-                        settings.onXRangeChange(xRange.toDoubleRange())
+                        settings.onXRangeChange(
+                            calculateBoundsOfRange(newXValue.toFloat()).toDoubleRange()
+                        )
                     }
                 },
-                modifier = Modifier,
+                modifier = Modifier.fillMaxWidth(),
                 maxLines = 1
             )
+                .also { Spacer(Modifier.size(10.dp)) }
+
+            Text("Value of X in use: ${data.initialValue[0].pretty()}").also {
+                    Spacer(
+                        Modifier.padding(5.dp).height(1.dp).fillMaxWidth(0.75F).background(Color.DarkGray)
+                    )
+                }
         }
 
         Property(title = "Inspecting X range") {
             Column {
                 RangePicker(
-                    range = xRange,
+                    range = data.range[0].toFloatRange(),
                     onMoveLeft = {
-                        xRange = xRange.slideToLowestBy(0.1F)
-                        settings.onXRangeChange(xRange.toDoubleRange())
+                        settings.onXRangeChange(data.range[0].slideToLowestBy(0.1))
                     },
                     onMoveRight = {
-                        xRange = xRange.slideToHighestBy(0.1F)
-                        settings.onXRangeChange(xRange.toDoubleRange())
+                        settings.onXRangeChange(data.range[0].slideToHighestBy(0.1))
                     },
                     onShrink = {
-                        if (xRange.length > 0.2F) {
-                            xRange = xRange.shrinkBy(0.1F)
-                            settings.onXRangeChange(xRange.toDoubleRange())
+                        if (data.range[0].length > 0.2F) {
+                            settings.onXRangeChange(data.range[0].shrinkBy(0.1))
                         }
                     },
                     onStretch = {
-                        xRange = xRange.stretchBy(0.1F)
-                        settings.onXRangeChange(xRange.toDoubleRange())
+                        settings.onXRangeChange(data.range[0].stretchBy(0.1))
                     },
                 )
             }
         }
 
-        Spacer(Modifier.padding(5.dp).height(1.dp).fillMaxWidth().background(Color.DarkGray))
+        Spacer(Modifier.padding(5.dp).height(3.dp).fillMaxWidth().background(Color.DarkGray))
 
         Property(title = "Initial Y value") {
             TextField(
                 value = initialYValueInput,
                 onValueChange = { newYValueString ->
                     initialYValueInput = newYValueString
-
                     val newYValue: Double = initialYValueInput.toDoubleOrNull() ?: data.initialValue[1]
 
                     if (newYValue.isFinite()) {
                         settings.onInitialYValueChange(newYValue)
 
-                        yRange = calculateBoundsOfRange(newYValue.toFloat())
-
-                        settings.onYRangeChange(yRange.toDoubleRange())
+                        settings.onYRangeChange(
+                            calculateBoundsOfRange(newYValue.toFloat()).toDoubleRange()
+                        )
                     }
                 },
-                modifier = Modifier,
+                modifier = Modifier.fillMaxWidth(),
                 maxLines = 1
             )
+                .also { Spacer(Modifier.size(10.dp)) }
+
+            Text("Value of Y in use: ${data.initialValue[1].pretty()}")
+                .also {
+                    Spacer(
+                        Modifier.padding(5.dp).height(1.dp).fillMaxWidth(0.75F).background(Color.DarkGray)
+                    )
+                }
         }
 
         Property(title = "Inspecting Y range") {
             Column {
                 RangePicker(
-                    range = yRange,
+                    range = data.range[1].toFloatRange(),
                     onMoveLeft = {
-                        yRange = yRange.slideToLowestBy(0.1F)
-                        settings.onYRangeChange(yRange.toDoubleRange())
+                        settings.onYRangeChange(data.range[1].slideToLowestBy(0.1))
                     },
                     onMoveRight = {
-                        yRange = yRange.slideToHighestBy(0.1F)
-                        settings.onYRangeChange(yRange.toDoubleRange())
+                        settings.onYRangeChange(data.range[1].slideToHighestBy(0.1))
                     },
                     onShrink = {
-                        if (yRange.length > 0.2F) {
-                            yRange = yRange.shrinkBy(0.1F)
-                            settings.onYRangeChange(yRange.toDoubleRange())
+                        if (data.range[1].length > 0.2F) {
+                            settings.onYRangeChange(data.range[1].shrinkBy(0.1))
                         }
                     },
                     onStretch = {
-                        yRange = yRange.stretchBy(0.1F)
-                        settings.onYRangeChange(yRange.toDoubleRange())
+                        settings.onYRangeChange(data.range[1].stretchBy(0.1))
                     },
                 )
             }

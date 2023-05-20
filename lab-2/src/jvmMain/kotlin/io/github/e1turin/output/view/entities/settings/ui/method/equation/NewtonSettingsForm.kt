@@ -60,7 +60,7 @@ internal fun NewtonSettingsForm(
 
         }
 
-        Spacer(Modifier.padding(5.dp).height(1.dp).fillMaxWidth().background(Color.DarkGray))
+        Spacer(Modifier.padding(5.dp).height(1.dp).fillMaxWidth(0.75F).background(Color.DarkGray))
 
         Property(title = "Inspecting range") {
             Column {
