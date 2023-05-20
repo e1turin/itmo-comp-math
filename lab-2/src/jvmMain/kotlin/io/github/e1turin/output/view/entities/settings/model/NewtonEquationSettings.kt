@@ -4,6 +4,7 @@ import com.arkivanov.decompose.value.MutableValue
 import com.arkivanov.decompose.value.Value
 import io.github.e1turin.model.util.CFPRSerializer
 import io.github.e1turin.output.view.shared.lib.decompose.mutate
+import io.github.e1turin.output.view.shared.lib.std.calculateBoundsOfRange
 import kotlinx.serialization.*
 import kotlinx.serialization.descriptors.SerialDescriptor
 import kotlinx.serialization.descriptors.buildClassSerialDescriptor
@@ -14,7 +15,7 @@ import kotlinx.serialization.encoding.*
 class NewtonEquationSettings : EquationSettings {
     private val _data = MutableValue(
         NewtonData(
-            range = -3.0..3.0,
+            range = calculateBoundsOfRange(0.0),
             initialValue = 0.0
         )
     )

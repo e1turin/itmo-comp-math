@@ -4,6 +4,7 @@ import com.arkivanov.decompose.value.MutableValue
 import com.arkivanov.decompose.value.Value
 import io.github.e1turin.model.util.CFPRSerializer
 import io.github.e1turin.output.view.shared.lib.decompose.mutate
+import io.github.e1turin.output.view.shared.lib.std.calculateBoundsOfRange
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.Transient
@@ -16,8 +17,8 @@ class SISystemSettings : SystemSettings {
     private val _data = MutableValue(
         SISystemData(
             range = listOf(
-                -3.0..3.0, // x
-                -3.0..3.0 // y
+                calculateBoundsOfRange(0.0), // x
+                calculateBoundsOfRange(0.0) // y
             ),
             initialValue = listOf(
                 0.0, // x
