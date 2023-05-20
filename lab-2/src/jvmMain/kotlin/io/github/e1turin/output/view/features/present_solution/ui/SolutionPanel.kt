@@ -3,8 +3,9 @@ package io.github.e1turin.output.view.features.present_solution.ui
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import io.github.e1turin.output.view.entities.settings.model.*
-import io.github.e1turin.output.view.features.present_solution.ui.method.NewtonEquationSolution
-import io.github.e1turin.output.view.features.present_solution.ui.method.SISystemSolution
+import io.github.e1turin.output.view.features.present_solution.ui.method.equation.NewtonEquationSolution
+import io.github.e1turin.output.view.features.present_solution.ui.method.equation.SIEquationSolution
+import io.github.e1turin.output.view.features.present_solution.ui.method.system.SISystemSolution
 
 @Composable
 fun SolutionPanel(
@@ -27,7 +28,7 @@ private fun EquationSolutionPanel(
 ) {
     when (settings) {
         is NewtonEquationSettings -> NewtonEquationSolution(modifier, settings)
-        is SIEquationSettings -> TODO()
+        is SIEquationSettings -> SIEquationSolution(modifier, settings)
 
         DefaultEquationSettings -> {/* Unreachable case */
         }

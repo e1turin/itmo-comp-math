@@ -1,4 +1,4 @@
-package io.github.e1turin.output.view.features.present_solution.ui.method
+package io.github.e1turin.output.view.features.present_solution.ui.method.equation
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -31,14 +31,11 @@ fun NewtonEquationSolution(
         val method = NewtonSolvingMethod(
             range = data.range,
             function = data.function!!,
-//            derivative = TODO()
         )
 
         initialValue = NewtonSolvingMethod.initialApproximation(
             range = data.range,
             function = data.function!!
-//            firstDerivative = TODO(),
-//            secondDerivative = TODO()
         ).also { settings.onInitialValueChange(it) }
 
         var step = 0

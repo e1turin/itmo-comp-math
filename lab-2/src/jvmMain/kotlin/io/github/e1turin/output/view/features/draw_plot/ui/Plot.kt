@@ -6,8 +6,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import io.github.e1turin.output.view.entities.settings.model.*
-import io.github.e1turin.output.view.features.draw_plot.ui.method.NewtonEquationPlot
-import io.github.e1turin.output.view.features.draw_plot.ui.method.SISystemMethodPlot
+import io.github.e1turin.output.view.features.draw_plot.ui.method.equation.NewtonEquationPlot
+import io.github.e1turin.output.view.features.draw_plot.ui.method.equation.SIEquationPlot
+import io.github.e1turin.output.view.features.draw_plot.ui.method.system.SISystemMethodPlot
 
 @Composable
 fun Plot(
@@ -22,8 +23,8 @@ fun Plot(
             Text("Select a task first")
         }
 
-        is EquationSettings -> EquationPlot(modifier = modifier, settings = model)
-        is SystemSettings -> SystemPlot(modifier = modifier, settings = model)
+        is EquationSettings -> EquationPlot(modifier, model)
+        is SystemSettings -> SystemPlot(modifier, model)
     }
 }
 
@@ -33,11 +34,12 @@ private fun EquationPlot(
     settings: EquationSettings
 ) {
     when (settings) {
-        is NewtonEquationSettings -> NewtonEquationPlot(modifier = modifier, settings = settings)
+        is NewtonEquationSettings -> NewtonEquationPlot(modifier, settings)
+        is SIEquationSettings -> SIEquationPlot(modifier, settings)
+
         DefaultEquationSettings -> {/* impossible way due to usage contract */
         }
 
-        is SIEquationSettings -> TODO()
     }
 }
 
@@ -47,7 +49,7 @@ private fun SystemPlot(
     settings: SystemSettings
 ) {
     when (settings) {
-        is SISystemSettings -> SISystemMethodPlot(modifier = modifier, settings = settings)
+        is SISystemSettings -> SISystemMethodPlot(modifier, settings)
 
         DefaultSystemSettings -> {/* impossible way due to usage contract */
         }

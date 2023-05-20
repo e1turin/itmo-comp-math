@@ -1,1 +1,1 @@
-{"type":"SimpleIterationSystem";"range":[{"start":-4,5;"endInclusive":-1,5};{"start":4,5;"endInclusive":7,5}];"initialValue":[-3,0;6,0]}
+{"type":"SimpleIteration";"range":{"start":-1,5;"endInclusive":1,2999999999999998};"initialValue":2,700000000000001}

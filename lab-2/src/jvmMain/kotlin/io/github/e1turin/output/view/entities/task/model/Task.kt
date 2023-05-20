@@ -26,14 +26,14 @@ open class Task(
     }
 }
 
-private inline fun mapEquationSettings(taskType: TaskType.Equation) = when (taskType) {
+private fun mapEquationSettings(taskType: TaskType.Equation) = when (taskType) {
     TaskType.Equation.Newton -> NewtonEquationSettings()
-    TaskType.Equation.Chord -> TODO()
-    TaskType.Equation.SimpleIteration -> TODO()
+    TaskType.Equation.Chord -> TODO("[Task.kt]Chord")
+    TaskType.Equation.SimpleIteration -> SIEquationSettings()
     TaskType.Equation.Undefined -> DefaultEquationSettings
 }
 
-private inline fun mapSystemSettings(taskType: TaskType.System) = when (taskType) {
+private fun mapSystemSettings(taskType: TaskType.System) = when (taskType) {
     TaskType.System.SimpleIteration -> SISystemSettings()
     TaskType.System.Undefined -> DefaultSystemSettings
 }

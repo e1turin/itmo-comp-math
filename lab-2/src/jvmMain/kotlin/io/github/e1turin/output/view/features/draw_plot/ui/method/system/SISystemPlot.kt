@@ -1,4 +1,4 @@
-package io.github.e1turin.output.view.features.draw_plot.ui.method
+package io.github.e1turin.output.view.features.draw_plot.ui.method.system
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue

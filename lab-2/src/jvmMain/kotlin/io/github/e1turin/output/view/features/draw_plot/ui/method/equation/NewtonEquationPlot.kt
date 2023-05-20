@@ -1,4 +1,4 @@
-package io.github.e1turin.output.view.features.draw_plot.ui.method
+package io.github.e1turin.output.view.features.draw_plot.ui.method.equation
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -20,7 +20,6 @@ fun NewtonEquationPlot(
         inspectingRange = data.range.toFloatRange(),
     ) { x: Float ->
         val f = data.function ?: throw IllegalArgumentException("Function to draw must not be null")
-
-        return@FunctionPlot2D f(x.toDouble()).toFloat()
+        f(x.toDouble()).toFloat()
     }
 }

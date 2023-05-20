@@ -1,4 +1,4 @@
-package io.github.e1turin.output.view.features.present_solution.ui.method
+package io.github.e1turin.output.view.features.present_solution.ui.method.system
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
