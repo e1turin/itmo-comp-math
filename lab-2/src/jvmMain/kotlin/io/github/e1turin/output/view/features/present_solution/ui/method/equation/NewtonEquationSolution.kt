@@ -60,7 +60,7 @@ fun NewtonEquationSolution(
                 .also { Spacer(Modifier.size(10.dp)) }
 
             Text("initial value: ${initialValue.pretty()}")
-            Text(outputText)
+            Text("result: $outputText")
         }
     }
 }
