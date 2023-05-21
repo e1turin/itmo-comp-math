@@ -1,37 +1,32 @@
 package io.github.e1turin.output.view.features.export_settings.ui
 
 import androidx.compose.runtime.Composable
-import io.github.e1turin.output.view.entities.repository.settings.model.SettingsRepository
 import io.github.e1turin.output.view.entities.file_system.ui.FileSelector
+import io.github.e1turin.output.view.entities.repository.settings.model.SettingsRepository
 import io.github.e1turin.output.view.entities.settings.model.Settings
 import kotlinx.coroutines.*
 
 @Composable
 fun SettingsExporter(
     data: Settings,
-    onComplete: () -> Unit = {}
+    onComplete: (ExportResult) -> Unit = {}
 ) {
-
     FileSelector(
         show = true,
     ) { file ->
+        val handler = CoroutineExceptionHandler { _, e ->
+            onComplete(ExportResult.Error(e))
+        }
 
-        val filePath = file?.path
-
-        try {
-            if (filePath != null) {
-                CoroutineScope(Dispatchers.IO + SupervisorJob()).launch {
-                    SettingsRepository.saveToFile(filePath, data)
-                }
-            } else {
-                println("[SettingsExporter.kt]export path is null")
-            }
-        } catch (e: Exception) {
-            println("[SettingsExporter.kt]exception appeared: $e")
-        } finally {
-            onComplete() //TODO: Return result type
+        CoroutineScope(Dispatchers.IO + SupervisorJob()).launch(handler) {
+            val filePath = file?.path ?: throw Exception("No file selected")
+            SettingsRepository.saveToFile(filePath, data)
+            onComplete(ExportResult.Complete)
         }
     }
+}
 
-
+sealed interface ExportResult {
+    object Complete : ExportResult
+    data class Error(val e: Throwable) : ExportResult
 }

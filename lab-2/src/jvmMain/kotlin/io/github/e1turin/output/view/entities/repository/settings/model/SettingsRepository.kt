@@ -3,12 +3,12 @@ package io.github.e1turin.output.view.entities.repository.settings.model
 import io.github.e1turin.output.view.entities.settings.model.Settings
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import java.io.File
+import java.io.IOException
 import java.io.InputStreamReader
 
 object SettingsRepository {
@@ -16,10 +16,10 @@ object SettingsRepository {
 
     @OptIn(DelicateCringeApi::class)
     suspend fun saveToFile(filePath: String, settings: Settings) {
-        scope.launch {
+        withContext(scope.coroutineContext) {
             val file = File(filePath)
             file.writeText(Json.encodeToString(settings.data.value).toCringeFormat())
-        }.join()
+        }
     }
 
     @OptIn(DelicateCringeApi::class)
@@ -31,13 +31,14 @@ object SettingsRepository {
         }
     }
 
-    suspend inline fun <reified T : Settings.Data> loadFromFile(filePath: String): T? =
-        loadUnspecifiedFromFile(filePath) as? T
-}
-
-sealed interface OperationResult {
-    data class Complete(val success: Boolean) : OperationResult
-    data class Error(val e: Exception) : OperationResult
+    @Throws(IOException::class)
+    suspend inline fun <reified T : Settings.Data> loadFromFile(filePath: String): T {
+        try {
+            return loadUnspecifiedFromFile(filePath) as T
+        } catch (e: ClassCastException) {
+            throw IOException("Incompatible type of settings")
+        }
+    }
 }
 
 

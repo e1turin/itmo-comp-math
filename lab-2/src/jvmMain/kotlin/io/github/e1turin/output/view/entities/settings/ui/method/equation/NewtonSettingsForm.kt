@@ -2,6 +2,7 @@ package io.github.e1turin.output.view.entities.settings.ui.method.equation
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.text.selection.SelectionContainer
 import androidx.compose.material.Button
 import androidx.compose.material.Text
 import androidx.compose.material.TextField
@@ -12,11 +13,15 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.arkivanov.decompose.extensions.compose.jetbrains.subscribeAsState
 import io.github.e1turin.output.view.entities.settings.model.NewtonEquationSettings
+import io.github.e1turin.output.view.features.export_settings.ui.ExportResult
 import io.github.e1turin.output.view.features.export_settings.ui.SettingsExporter
+import io.github.e1turin.output.view.features.import_settings.ui.ImportResult
 import io.github.e1turin.output.view.features.import_settings.ui.SettingsImporter
 import io.github.e1turin.output.view.shared.lib.std.*
 import io.github.e1turin.output.view.shared.ui.form.Property
 import io.github.e1turin.output.view.shared.ui.range.RangePicker
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 
 @Composable
@@ -24,11 +29,13 @@ internal fun NewtonSettingsForm(
     modifier: Modifier = Modifier,
     settings: NewtonEquationSettings,
 ) {
+    val coroutineScope = rememberCoroutineScope()
     val data by settings.data.subscribeAsState()
     var initialValueInput by remember { mutableStateOf(data.initialValue.toString()) }
 
     var showExportFileSelector by remember { mutableStateOf(false) }
     var showImportFileSelector by remember { mutableStateOf(false) }
+    var message by remember { mutableStateOf("") }
 
     Column(
         modifier = modifier,
@@ -98,7 +105,12 @@ internal fun NewtonSettingsForm(
                 if (showExportFileSelector) {
                     SettingsExporter(
                         data = settings
-                    ) {
+                    ) { result ->
+                        message = when (result) {
+                            is ExportResult.Complete -> "Settings are exported successfully"
+                            is ExportResult.Error ->
+                                result.e.message ?: "Error while exporting"
+                        }
                         showExportFileSelector = false
                     }
                 }
@@ -111,17 +123,34 @@ internal fun NewtonSettingsForm(
                 Text("Import settings")
             }.also {
                 if (showImportFileSelector) {
-                    SettingsImporter<NewtonEquationSettings.NewtonData> { data ->
-                        if (data != null) {
-                            // XXX: may be Dispatchers.Main is needed?
-                            settings.onInitialValueChange(data.initialValue)
-                            settings.onRangeChange(data.range)
+                    SettingsImporter<NewtonEquationSettings.NewtonData> { result ->
+                        message = when (result) {
+                            is ImportResult.Complete -> {
+                                settings.onInitialValueChange(result.data.initialValue)
+                                settings.onRangeChange(result.data.range)
+                                "Settings are imported successfully"
+                            }
+
+                            is ImportResult.Error -> {
+                                result.e.message ?: "Error while importing"
+                            }
                         }
                         showImportFileSelector = false
                     }
+
                 }
             }
 
+        }
+
+        if (message.isNotBlank()) {
+            SelectionContainer {
+                Text(message)
+            }
+            coroutineScope.launch {
+                delay(10_000L)
+                message = ""
+            }
         }
 
     }
