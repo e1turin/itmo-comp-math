@@ -1,7 +1,6 @@
 package io.github.e1turin.output.view.shared.lib.std
 
 
-
 fun calculateBoundsOfRange(middleValue: Float): ClosedFloatingPointRange<Float> =
     (middleValue - 1.5F)..(middleValue + 1.5F)
 
@@ -34,7 +33,7 @@ fun ClosedRange<Float>.shrinkBy(step: Float): ClosedFloatingPointRange<Float> =
 fun ClosedRange<Float>.stretchBy(step: Float): ClosedFloatingPointRange<Float> =
     (start - step)..(endInclusive + step)
 
-inline infix fun ClosedRange<Float>.unsteadyStep(step: Float) = object : Iterator<Float> {
+infix fun ClosedRange<Float>.unsteadyStep(step: Float) = object : Iterator<Float> {
     private var current = start
 
     override fun hasNext(): Boolean =
@@ -60,7 +59,7 @@ fun ClosedRange<Double>.shrinkBy(step: Double): ClosedFloatingPointRange<Double>
 fun ClosedRange<Double>.stretchBy(step: Double): ClosedFloatingPointRange<Double> =
     (start - step)..(endInclusive + step)
 
-inline infix fun ClosedRange<Double>.unsteadyStep(step: Double) = object : Iterator<Double> {
+infix fun ClosedRange<Double>.unsteadyStep(step: Double) = object : Iterator<Double> {
     private var current = start
 
     override fun hasNext(): Boolean =

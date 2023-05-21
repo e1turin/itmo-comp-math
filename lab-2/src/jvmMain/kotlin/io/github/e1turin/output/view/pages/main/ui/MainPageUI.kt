@@ -12,9 +12,9 @@ import androidx.compose.ui.unit.dp
 import com.arkivanov.decompose.extensions.compose.jetbrains.subscribeAsState
 import io.github.e1turin.output.view.features.draw_plot.ui.Plot
 import io.github.e1turin.output.view.features.pick_sample.ui.SamplePicker
+import io.github.e1turin.output.view.features.present_solution.ui.SolutionPanel
 import io.github.e1turin.output.view.features.select_settings.ui.SettingsPanel
 import io.github.e1turin.output.view.features.select_task.ui.TaskSelection
-import io.github.e1turin.output.view.features.present_solution.ui.SolutionPanel
 import io.github.e1turin.output.view.pages.main.model.MainPage
 
 @Composable
@@ -43,8 +43,7 @@ fun MainPage(
                     if (isReady && isCompleted) {
                         Plot(
                             modifier = Modifier
-                                .fillMaxSize()
-                            ,
+                                .fillMaxSize(),
                             model = settings
                         )
                     } else {
@@ -63,8 +62,7 @@ fun MainPage(
                     SettingsPanel(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .weight(1F)
-                        ,
+                            .weight(1F),
                         model = settings.also { println("[ui/MainPageUI.kt]${it}") }
                     )
                         .also { Spacer(Modifier.size(5.dp)) }

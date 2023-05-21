@@ -5,11 +5,9 @@ import com.arkivanov.decompose.value.Value
 import io.github.e1turin.model.util.CFPRSerializer
 import io.github.e1turin.output.view.shared.lib.decompose.mutate
 import io.github.e1turin.output.view.shared.lib.std.calculateBoundsOfRange
-import kotlinx.serialization.*
-import kotlinx.serialization.descriptors.SerialDescriptor
-import kotlinx.serialization.descriptors.buildClassSerialDescriptor
-import kotlinx.serialization.descriptors.element
-import kotlinx.serialization.encoding.*
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.Transient
 
 
 class NewtonEquationSettings : EquationSettings {

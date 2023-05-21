@@ -2,7 +2,6 @@ package io.github.e1turin.model.domain.equation.nonlinear.method
 
 import io.github.e1turin.model.domain.equation.SolvingMethod
 import io.github.e1turin.model.util.derivative
-import kotlin.jvm.Throws
 
 
 class NewtonSolvingMethod @Throws(IllegalArgumentException::class) constructor(

@@ -14,7 +14,9 @@ import io.github.e1turin.output.view.entities.settings.model.DefaultSettings
 import io.github.e1turin.output.view.entities.settings.model.EquationSettings
 import io.github.e1turin.output.view.entities.settings.model.Settings
 import io.github.e1turin.output.view.entities.settings.model.SystemSettings
-import kotlin.math.*
+import kotlin.math.log
+import kotlin.math.pow
+import kotlin.math.sqrt
 
 @Composable
 fun SamplePicker(
