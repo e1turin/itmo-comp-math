@@ -79,7 +79,7 @@ internal fun ChordSettingsForm(
                         data = settings
                     ) { result ->
                         message = when (result) {
-                            is ExportResult.Complete -> "Settings are exported successfully"
+                            is ExportResult.Complete -> "✅ Settings are exported successfully"
                             is ExportResult.Error ->
                                 "⛔ ${result.e.message ?: "Error while exporting"}"
                         }
@@ -99,7 +99,7 @@ internal fun ChordSettingsForm(
                         message = when (result) {
                             is ImportResult.Complete -> {
                                 settings.onRangeChange(result.data.range)
-                                "Settings are imported successfully"
+                                "✅ Settings are imported successfully"
                             }
 
                             is ImportResult.Error -> {

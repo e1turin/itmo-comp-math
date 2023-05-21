@@ -164,9 +164,9 @@ fun SISystemSettingsForm(
                         data = settings
                     ) { result ->
                         message = when (result) {
-                            is ExportResult.Complete -> "Settings are exported successfully"
+                            is ExportResult.Complete -> "✅ Settings are exported successfully"
                             is ExportResult.Error ->
-                                result.e.message ?: "Error while exporting"
+                                "⛔ ${result.e.message ?: "Error while exporting"}"
                         }
                         showExportFileSelector = false
                     }
@@ -184,11 +184,11 @@ fun SISystemSettingsForm(
                             is ImportResult.Complete -> {
                                 settings.onInitialValueChange(result.data.initialValue)
                                 settings.onRangeChange(result.data.range)
-                                "Settings are imported successfully"
+                                "✅ Settings are imported successfully"
                             }
 
                             is ImportResult.Error -> {
-                                result.e.message ?: "Error while importing"
+                                "⛔ ${result.e.message ?: "Error while importing"}"
                             }
                         }
                         showImportFileSelector = false
