@@ -28,6 +28,12 @@ class SIEquationSettings : EquationSettings {
     override fun onEquationSelect(function: (Double) -> Double): Unit =
         _data.mutate { copy(function = function) }.also { _isComplete.mutate { true } }
 
+    override fun onApproximationFunctionSelect(function: (Double) -> Double): Unit =
+        _data.mutate { copy(approximationFunction = function) }
+
+    override fun onDerivativeFunctionSelect(function: (Double) -> Double): Unit =
+        _data.mutate { copy(derivativeFunction = function) }
+
     fun onRangeChange(range: ClosedRange<Double>): Unit =
         _data.mutate { copy(range = range) }
 
@@ -37,8 +43,10 @@ class SIEquationSettings : EquationSettings {
     @Serializable
     @SerialName("SimpleIteration")
     data class SIEquationData(
-        @Transient val function: ((Double) -> Double)? = null,
         @Serializable(with = CFPRSerializer::class) val range: ClosedRange<Double>,
         val initialValue: Double,
+        @Transient val function: ((Double) -> Double)? = null,
+        @Transient val approximationFunction: ((Double) -> Double)? = null,
+        @Transient val derivativeFunction: ((Double) -> Double)? = null
     ) : Settings.Data()
 }

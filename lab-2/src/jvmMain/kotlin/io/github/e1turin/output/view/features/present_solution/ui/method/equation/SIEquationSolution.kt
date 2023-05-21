@@ -10,14 +10,25 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.arkivanov.decompose.extensions.compose.jetbrains.subscribeAsState
-import io.github.e1turin.model.domain.equation.nonlinear.method.NewtonSolvingMethod
+import io.github.e1turin.model.domain.equation.nonlinear.method.SimpleIterationSolvingMethod
 import io.github.e1turin.model.domain.equation.nonlinear.solver.IterativeEquationSolver
-import io.github.e1turin.output.view.entities.settings.model.NewtonEquationSettings
 import io.github.e1turin.output.view.entities.settings.model.SIEquationSettings
 import io.github.e1turin.output.view.features.present_solution.model.SolvingResult
 import io.github.e1turin.output.view.features.present_solution.model.toResultString
 import io.github.e1turin.output.view.shared.lib.std.pretty
 import kotlin.math.abs
+
+
+private sealed interface SimpleIterationTestResult {
+    data class Error(val e: Exception) : SimpleIterationTestResult
+    data class State(val result: Boolean) : SimpleIterationTestResult
+}
+
+private fun SimpleIterationTestResult.toResultString(): String = when (this) {
+    is SimpleIterationTestResult.Error -> e.message ?: "Error appeared while checking condition"
+    is SimpleIterationTestResult.State -> if (result) "condition is met" else "condition is not met"
+}
+
 
 @Composable
 fun SIEquationSolution(
@@ -26,23 +37,28 @@ fun SIEquationSolution(
 ) {
     val data by settings.data.subscribeAsState()
 
-    var initialValue: Double = data.initialValue
+    val initialValue: Double = data.initialValue
 
-    val solvingResult: SolvingResult = try {
-        val method = NewtonSolvingMethod(
+    val conditionState = try {
+        val result = SimpleIterationSolvingMethod.testConvergenceCondition(
             range = data.range,
-            function = data.function!!,
+            derivative = data.derivativeFunction!!
         )
 
-        initialValue = NewtonSolvingMethod.initialApproximation(
-            range = data.range,
-            function = data.function!!
-        ).also { settings.onInitialValueChange(it) }
+        SimpleIterationTestResult.State(result)
+    } catch (e: Exception) {
+        SimpleIterationTestResult.Error(e)
+    }
+
+    val solvingResult: SolvingResult = try {
+        val method = SimpleIterationSolvingMethod(
+            approximationFunction = data.approximationFunction!!,
+        )
 
         var step = 0
         val solver = IterativeEquationSolver(
             method = method,
-            initialApproximation = initialValue,
+            initialApproximation = data.initialValue,
             stopCondition = { eps: Double -> abs(eps) < 0.001 || ++step > 10000 }
         )
 
@@ -53,15 +69,21 @@ fun SIEquationSolution(
         SolvingResult.Error(e)
     }
 
-    val outputText: String = solvingResult.toResultString()
+    val outputResultText: String = solvingResult.toResultString()
+    val outputTestResultText = conditionState.toResultString()
 
     SelectionContainer {
         Column(modifier = modifier) {
+            Text("Convergence condition")
+                .also { Spacer(Modifier.size(10.dp)) }
+            Text(outputTestResultText)
+
+            Spacer(Modifier.size(20.dp))
+
             Text("Solution")
                 .also { Spacer(Modifier.size(10.dp)) }
-
             Text("initial value: ${initialValue.pretty()}")
-            Text(outputText)
+            Text("result: $outputResultText")
         }
     }
 }

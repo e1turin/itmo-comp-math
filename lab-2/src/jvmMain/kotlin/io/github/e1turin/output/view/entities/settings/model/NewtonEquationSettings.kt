@@ -27,6 +27,14 @@ class NewtonEquationSettings : EquationSettings {
     override fun onEquationSelect(function: (Double) -> Double): Unit =
         _data.mutate { copy(function = function) }.also { _isComplete.mutate { true } }
 
+    override fun onApproximationFunctionSelect(function: (Double) -> Double) {
+        /* Unnecessary operation */
+    }
+
+    override fun onDerivativeFunctionSelect(function: (Double) -> Double) {
+        /* Unnecessary operation */
+    }
+
     fun onRangeChange(range: ClosedRange<Double>): Unit =
         _data.mutate { copy(range = range) }
 

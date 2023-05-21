@@ -9,6 +9,8 @@ object DefaultEquationSettings : DefaultSettings, EquationSettings {
     override val isCompleted: Value<Boolean> = MutableValue(false)
 
     override fun onEquationSelect(function: (Double) -> Double) {}
+    override fun onApproximationFunctionSelect(function: (Double) -> Double) {}
+    override fun onDerivativeFunctionSelect(function: (Double) -> Double) {}
 
     object Data : Settings.Data()
 }

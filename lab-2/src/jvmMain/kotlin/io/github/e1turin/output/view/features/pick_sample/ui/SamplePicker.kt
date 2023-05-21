@@ -14,10 +14,7 @@ import io.github.e1turin.output.view.entities.settings.model.DefaultSettings
 import io.github.e1turin.output.view.entities.settings.model.EquationSettings
 import io.github.e1turin.output.view.entities.settings.model.Settings
 import io.github.e1turin.output.view.entities.settings.model.SystemSettings
-import kotlin.math.log
-import kotlin.math.pow
-import kotlin.math.sin
-import kotlin.math.sqrt
+import kotlin.math.*
 
 @Composable
 fun SamplePicker(
@@ -49,23 +46,54 @@ private fun EquationPicker(
         modifier = modifier,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Selection(description = "x^4/10 - 2") {
+        Selection(description = "x^4/10 - 2 = 0") {
             settings.onEquationSelect { x ->
                 x.pow(4.0) / 10 - 2
             }
-        }
-            .also { Spacer(Modifier.size(10.dp)) }
-
-        Selection(description = "ln(x)") {
-            settings.onEquationSelect { x ->
-                log(x, 2.71)
+            settings.onApproximationFunctionSelect {
+                (20.0).pow(1.0 / 4)
+            }
+            settings.onDerivativeFunctionSelect { x ->
+                4 * x.pow(3.0) / 10
             }
         }
             .also { Spacer(Modifier.size(10.dp)) }
 
-        Selection(description = "sin(x)") {
+        Selection(description = "ln(x) = 0") {
             settings.onEquationSelect { x ->
-                sin(x)
+                log(x, kotlin.math.E)
+            }
+            settings.onApproximationFunctionSelect { x ->
+                1.0
+            }
+            settings.onDerivativeFunctionSelect { x ->
+                1 / x
+            }
+        }
+            .also { Spacer(Modifier.size(10.dp)) }
+
+        Selection(description = "[1] x^3 - x + 4 = 0") {
+            settings.onEquationSelect { x ->
+                x.pow(3.0) - x + 4
+            }
+            settings.onApproximationFunctionSelect { x ->
+                x.pow(3.0) + 4
+            }
+            settings.onDerivativeFunctionSelect { x ->
+                3 * x.pow(2.0) - 1
+            }
+        }
+            .also { Spacer(Modifier.size(5.dp)) }
+
+        Selection(description = "[2] x^3 - x + 4 = 0") {
+            settings.onEquationSelect { x ->
+                x.pow(3.0) - x + 4
+            }
+            settings.onApproximationFunctionSelect { x ->
+                (x - 4).pow(1.0 / 3)
+            }
+            settings.onDerivativeFunctionSelect { x ->
+                (x - 4).pow(-2.0 / 3) / 3
             }
         }
     }
