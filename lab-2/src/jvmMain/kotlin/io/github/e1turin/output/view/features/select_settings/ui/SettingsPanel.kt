@@ -12,6 +12,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import io.github.e1turin.output.view.entities.settings.model.*
+import io.github.e1turin.output.view.entities.settings.ui.method.equation.ChordSettingsForm
 import io.github.e1turin.output.view.entities.settings.ui.method.equation.NewtonSettingsForm
 import io.github.e1turin.output.view.entities.settings.ui.method.equation.SIEquationSettingsForm
 import io.github.e1turin.output.view.entities.settings.ui.method.system.SISystemSettingsForm
@@ -31,9 +32,9 @@ fun SettingsPanel(
         when (model) {
             is NewtonEquationSettings -> NewtonSettingsForm(modifier = Modifier, settings = model)
             is SIEquationSettings -> SIEquationSettingsForm(modifier = Modifier, settings = model)
+            is ChordEquationSettings -> ChordSettingsForm(modifier = Modifier, settings = model)
 
             is SISystemSettings -> SISystemSettingsForm(modifier = Modifier, settings = model)
-            //TODO: another methods
 
             is DefaultSettings -> Box(contentAlignment = Alignment.Center) {
                 Text("Select a task first")

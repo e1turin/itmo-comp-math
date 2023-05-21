@@ -12,7 +12,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.arkivanov.decompose.extensions.compose.jetbrains.subscribeAsState
-import io.github.e1turin.output.view.entities.settings.model.SIEquationSettings
+import io.github.e1turin.output.view.entities.settings.model.ChordEquationSettings
 import io.github.e1turin.output.view.features.export_settings.ui.ExportResult
 import io.github.e1turin.output.view.features.export_settings.ui.SettingsExporter
 import io.github.e1turin.output.view.features.import_settings.ui.ImportResult
@@ -25,9 +25,9 @@ import kotlinx.coroutines.launch
 
 
 @Composable
-internal fun SIEquationSettingsForm(
+internal fun ChordSettingsForm(
     modifier: Modifier = Modifier,
-    settings: SIEquationSettings,
+    settings: ChordEquationSettings,
 ) {
     val coroutineScope = rememberCoroutineScope()
     val data by settings.data.subscribeAsState()
@@ -53,7 +53,7 @@ internal fun SIEquationSettingsForm(
                         if (newValue.isFinite()) {
                             settings.onInitialValueChange(newValue)
                             settings.onRangeChange(
-                                calculateBoundsOfRange(newValue)
+                                calculateBoundsOfRange(newValue.toFloat()).toDoubleRange()
                             )
                         }
                     },
@@ -123,7 +123,7 @@ internal fun SIEquationSettingsForm(
                 Text("Import settings")
             }.also {
                 if (showImportFileSelector) {
-                    SettingsImporter<SIEquationSettings.SIEquationData> { result ->
+                    SettingsImporter<ChordEquationSettings.ChordData> { result ->
                         message = when (result) {
                             is ImportResult.Complete -> {
                                 settings.onInitialValueChange(result.data.initialValue)
@@ -137,6 +137,7 @@ internal fun SIEquationSettingsForm(
                         }
                         showImportFileSelector = false
                     }
+
                 }
             }
 
@@ -151,6 +152,7 @@ internal fun SIEquationSettingsForm(
                 message = ""
             }
         }
+
     }
 
 }

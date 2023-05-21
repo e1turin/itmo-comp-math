@@ -3,7 +3,6 @@ package io.github.e1turin.output.view.entities.task.model
 import com.arkivanov.decompose.value.MutableValue
 import com.arkivanov.decompose.value.Value
 import io.github.e1turin.output.view.entities.settings.model.*
-import io.github.e1turin.output.view.entities.settings.model.DefaultEquationSettings
 
 open class Task(
     taskType: TaskType,
@@ -28,7 +27,7 @@ open class Task(
 
 private fun mapEquationSettings(taskType: TaskType.Equation) = when (taskType) {
     TaskType.Equation.Newton -> NewtonEquationSettings()
-    TaskType.Equation.Chord -> TODO("[Task.kt]Chord")
+    TaskType.Equation.Chord -> ChordEquationSettings()
     TaskType.Equation.SimpleIteration -> SIEquationSettings()
     TaskType.Equation.Undefined -> DefaultEquationSettings
 }

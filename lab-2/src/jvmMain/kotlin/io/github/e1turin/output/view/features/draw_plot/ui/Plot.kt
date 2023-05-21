@@ -6,6 +6,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import io.github.e1turin.output.view.entities.settings.model.*
+import io.github.e1turin.output.view.features.draw_plot.ui.method.equation.ChordEquationPlot
 import io.github.e1turin.output.view.features.draw_plot.ui.method.equation.NewtonEquationPlot
 import io.github.e1turin.output.view.features.draw_plot.ui.method.equation.SIEquationPlot
 import io.github.e1turin.output.view.features.draw_plot.ui.method.system.SISystemMethodPlot
@@ -36,6 +37,7 @@ private fun EquationPlot(
     when (settings) {
         is NewtonEquationSettings -> NewtonEquationPlot(modifier, settings)
         is SIEquationSettings -> SIEquationPlot(modifier, settings)
+        is ChordEquationSettings -> ChordEquationPlot(modifier, settings)
 
         DefaultEquationSettings -> {/* impossible way due to usage contract */
         }
