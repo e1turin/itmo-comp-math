@@ -14,7 +14,7 @@ fun Scanner.nextIntOrNull(isRandom: Boolean = false): Int? = if (isRandom) {
 }
 
 fun Scanner.nextDoubleOrNull(isRandom: Boolean = false): Double? = if (isRandom) {
-    Random.nextDouble()
+    Random.nextDouble()// * 2_000 - 1_000
 } else {
     try {
         this.nextDouble()
