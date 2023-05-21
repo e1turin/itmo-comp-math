@@ -42,9 +42,17 @@ object SettingsRepository {
 }
 
 
+/**
+ * From JSON to CON
+ * So called CON - cringe object notation: literally JSON with replaced commas with semicolons and dots replaced with commas.
+ */
 @DelicateCringeApi
 internal fun String.toCringeFormat(): String = replace(',', ';').replace('.', ',')
 
+/**
+ * From CON to JSON
+ * So-called CON - cringe object notation: literally JSON with replaced commas with semicolons and dots replaced with commas.
+ */
 @DelicateCringeApi
 internal fun String.fromCringeFormat(): String = replace(',', '.').replace(';', ',')
 
