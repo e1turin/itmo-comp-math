@@ -14,7 +14,6 @@ class ChordEquationSettings : EquationSettings {
     private val _data = MutableValue(
         ChordData(
             range = calculateBoundsOfRange(0.0),
-            initialValue = 0.0
         )
     )
     override val data: Value<ChordData> = _data
@@ -36,15 +35,11 @@ class ChordEquationSettings : EquationSettings {
     fun onRangeChange(range: ClosedRange<Double>): Unit =
         _data.mutate { copy(range = range) }
 
-    fun onInitialValueChange(initialValue: Double): Unit =
-        _data.mutate { copy(initialValue = initialValue) }
-
     @Serializable
     @SerialName("Chord")
     data class ChordData(
         @Transient val function: ((Double) -> Double)? = null,
         @Serializable(with = CFPRSerializer::class) val range: ClosedRange<Double>,
-        val initialValue: Double,
     ) : Settings.Data()
 }
 

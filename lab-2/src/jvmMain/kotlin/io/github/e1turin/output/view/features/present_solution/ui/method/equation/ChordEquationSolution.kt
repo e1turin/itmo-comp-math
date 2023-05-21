@@ -10,13 +10,13 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.arkivanov.decompose.extensions.compose.jetbrains.subscribeAsState
-import io.github.e1turin.model.domain.equation.nonlinear.method.NewtonSolvingMethod
-import io.github.e1turin.model.domain.equation.nonlinear.solver.IterativeEquationSolver
+import io.github.e1turin.model.domain.equation.nonlinear.method.ChordSolvingMethod
+import io.github.e1turin.model.domain.equation.nonlinear.solver.TelescopicEquationSolver
 import io.github.e1turin.output.view.entities.settings.model.ChordEquationSettings
 import io.github.e1turin.output.view.features.present_solution.model.SolvingResult
 import io.github.e1turin.output.view.features.present_solution.model.toResultString
-import io.github.e1turin.output.view.shared.lib.std.pretty
-import kotlin.math.abs
+import io.github.e1turin.output.view.shared.lib.std.length
+import io.github.e1turin.output.view.shared.lib.std.prettyRange
 
 @Composable
 fun ChordEquationSolution(
@@ -25,24 +25,18 @@ fun ChordEquationSolution(
 ) {
     val data by settings.data.subscribeAsState()
 
-    var initialValue: Double = data.initialValue
-
     val solvingResult: SolvingResult = try {
-        val method = NewtonSolvingMethod(
-            range = data.range,
+        val method = ChordSolvingMethod(
             function = data.function!!,
         )
 
-        initialValue = NewtonSolvingMethod.initialApproximation(
-            range = data.range,
-            function = data.function!!
-        ).also { settings.onInitialValueChange(it) }
-
         var step = 0
-        val solver = IterativeEquationSolver(
+        val solver = TelescopicEquationSolver(
             method = method,
-            initialApproximation = initialValue,
-            stopCondition = { eps: Double -> abs(eps) < 0.001 || ++step > 10000 }
+            stopCondition = { approxRange: ClosedRange<Double> ->
+                approxRange.length < 0.001 || ++step > 10000
+            },
+            initialRange = data.range
         )
 
         val solution = solver.solve(data.function!!)
@@ -52,15 +46,15 @@ fun ChordEquationSolution(
         SolvingResult.Error(e)
     }
 
-    val outputText: String = solvingResult.toResultString()
+    val outputResultText: String = solvingResult.toResultString()
 
     SelectionContainer {
         Column(modifier = modifier) {
             Text("Solution")
                 .also { Spacer(Modifier.size(10.dp)) }
 
-            Text("initial value: ${initialValue.pretty()}")
-            Text(outputText)
+            Text("initial range: ${data.range.prettyRange()}")
+            Text(outputResultText)
         }
     }
 }

@@ -31,7 +31,6 @@ internal fun ChordSettingsForm(
 ) {
     val coroutineScope = rememberCoroutineScope()
     val data by settings.data.subscribeAsState()
-    var initialValueInput by remember { mutableStateOf(data.initialValue.toString()) }
 
     var showExportFileSelector by remember { mutableStateOf(false) }
     var showImportFileSelector by remember { mutableStateOf(false) }
@@ -42,33 +41,6 @@ internal fun ChordSettingsForm(
         horizontalAlignment = Alignment.Start,
         verticalArrangement = Arrangement.Top
     ) {
-        Property(title = "Initial value") {
-            Column {
-                TextField(
-                    value = initialValueInput,
-                    onValueChange = { newValueString ->
-                        initialValueInput = newValueString
-                        val newValue = initialValueInput.toDoubleOrNull() ?: data.initialValue
-
-                        if (newValue.isFinite()) {
-                            settings.onInitialValueChange(newValue)
-                            settings.onRangeChange(
-                                calculateBoundsOfRange(newValue.toFloat()).toDoubleRange()
-                            )
-                        }
-                    },
-                    modifier = Modifier.fillMaxWidth(),
-                    maxLines = 1
-                )
-                    .also { Spacer(Modifier.size(10.dp)) }
-
-                Text("Value in use: ${data.initialValue.pretty()}")
-            }
-
-        }
-
-        Spacer(Modifier.padding(5.dp).height(1.dp).fillMaxWidth(0.75F).background(Color.DarkGray))
-
         Property(title = "Inspecting range") {
             Column {
                 RangePicker(
@@ -109,7 +81,7 @@ internal fun ChordSettingsForm(
                         message = when (result) {
                             is ExportResult.Complete -> "Settings are exported successfully"
                             is ExportResult.Error ->
-                                result.e.message ?: "Error while exporting"
+                                "⛔ ${result.e.message ?: "Error while exporting"}"
                         }
                         showExportFileSelector = false
                     }
@@ -126,7 +98,6 @@ internal fun ChordSettingsForm(
                     SettingsImporter<ChordEquationSettings.ChordData> { result ->
                         message = when (result) {
                             is ImportResult.Complete -> {
-                                settings.onInitialValueChange(result.data.initialValue)
                                 settings.onRangeChange(result.data.range)
                                 "Settings are imported successfully"
                             }
