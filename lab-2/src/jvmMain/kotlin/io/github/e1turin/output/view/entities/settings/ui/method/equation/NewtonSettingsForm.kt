@@ -12,6 +12,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.arkivanov.decompose.extensions.compose.jetbrains.subscribeAsState
+import io.github.e1turin.output.view.entities.repository.settings.model.DelicateCringeApi
+import io.github.e1turin.output.view.entities.repository.settings.model.fromCringeFormat
+import io.github.e1turin.output.view.entities.repository.settings.model.toCringeFormat
 import io.github.e1turin.output.view.entities.settings.model.NewtonEquationSettings
 import io.github.e1turin.output.view.features.export_settings.ui.ExportResult
 import io.github.e1turin.output.view.features.export_settings.ui.SettingsExporter
@@ -26,6 +29,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 
+@OptIn(DelicateCringeApi::class)
 @Composable
 internal fun NewtonSettingsForm(
     modifier: Modifier = Modifier,
@@ -47,9 +51,9 @@ internal fun NewtonSettingsForm(
         Property(title = "Initial value") {
             Column {
                 TextField(
-                    value = initialValueInput,
+                    value = initialValueInput.toCringeFormat(),
                     onValueChange = { newValueString ->
-                        initialValueInput = newValueString
+                        initialValueInput = newValueString.fromCringeFormat()
                         val newValue = initialValueInput.toDoubleOrNull() ?: data.initialValue
 
                         if (newValue.isFinite()) {
