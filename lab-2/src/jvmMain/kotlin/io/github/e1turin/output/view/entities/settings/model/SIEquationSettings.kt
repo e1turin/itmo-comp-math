@@ -9,7 +9,6 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.Transient
 
-
 /**
  * Settings of simple iteration method for numerical solving equations
  */
@@ -25,20 +24,25 @@ class SIEquationSettings : EquationSettings {
     private val _isComplete = MutableValue(false)
     override val isCompleted: Value<Boolean> = _isComplete
 
-    override fun onEquationSelect(function: (Double) -> Double): Unit =
+    override fun onEquationSelect(function: (Double) -> Double) {
         _data.mutate { copy(function = function) }.also { _isComplete.mutate { true } }
+    }
 
-    override fun onApproximationFunctionSelect(function: (Double) -> Double): Unit =
+    override fun onApproximationFunctionSelect(function: (Double) -> Double) {
         _data.mutate { copy(approximationFunction = function) }
+    }
 
-    override fun onDerivativeFunctionSelect(function: (Double) -> Double): Unit =
+    override fun onDerivativeFunctionSelect(function: (Double) -> Double) {
         _data.mutate { copy(derivativeFunction = function) }
+    }
 
-    fun onRangeChange(range: ClosedRange<Double>): Unit =
+    fun onRangeChange(range: ClosedRange<Double>) {
         _data.mutate { copy(range = range) }
+    }
 
-    fun onInitialValueChange(initialValue: Double): Unit =
+    fun onInitialValueChange(initialValue: Double) {
         _data.mutate { copy(initialValue = initialValue) }
+    }
 
     @Serializable
     @SerialName("SimpleIteration")

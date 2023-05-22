@@ -32,8 +32,9 @@ class ChordEquationSettings : EquationSettings {
         /* Unnecessary operation */
     }
 
-    fun onRangeChange(range: ClosedRange<Double>): Unit =
+    fun onRangeChange(range: ClosedRange<Double>) {
         _data.mutate { copy(range = range) }
+    }
 
     @Serializable
     @SerialName("Chord")

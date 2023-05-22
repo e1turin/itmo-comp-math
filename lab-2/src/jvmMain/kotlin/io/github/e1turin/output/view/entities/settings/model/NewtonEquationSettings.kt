@@ -5,11 +5,9 @@ import com.arkivanov.decompose.value.Value
 import io.github.e1turin.model.util.CFPRSerializer
 import io.github.e1turin.output.view.shared.lib.decompose.mutate
 import io.github.e1turin.output.view.shared.lib.std.calculateBoundsOfRange
-import kotlinx.serialization.*
-import kotlinx.serialization.descriptors.SerialDescriptor
-import kotlinx.serialization.descriptors.buildClassSerialDescriptor
-import kotlinx.serialization.descriptors.element
-import kotlinx.serialization.encoding.*
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.Transient
 
 
 class NewtonEquationSettings : EquationSettings {
@@ -24,8 +22,9 @@ class NewtonEquationSettings : EquationSettings {
     private val _isComplete = MutableValue(false)
     override val isCompleted: Value<Boolean> = _isComplete
 
-    override fun onEquationSelect(function: (Double) -> Double): Unit =
+    override fun onEquationSelect(function: (Double) -> Double) {
         _data.mutate { copy(function = function) }.also { _isComplete.mutate { true } }
+    }
 
     override fun onApproximationFunctionSelect(function: (Double) -> Double) {
         /* Unnecessary operation */
@@ -35,11 +34,13 @@ class NewtonEquationSettings : EquationSettings {
         /* Unnecessary operation */
     }
 
-    fun onRangeChange(range: ClosedRange<Double>): Unit =
+    fun onRangeChange(range: ClosedRange<Double>) {
         _data.mutate { copy(range = range) }
+    }
 
-    fun onInitialValueChange(initialValue: Double): Unit =
+    fun onInitialValueChange(initialValue: Double) {
         _data.mutate { copy(initialValue = initialValue) }
+    }
 
     @Serializable
     @SerialName("Newton")
