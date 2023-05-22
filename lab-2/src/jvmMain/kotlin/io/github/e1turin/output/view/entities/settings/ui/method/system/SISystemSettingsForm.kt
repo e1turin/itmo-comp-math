@@ -17,6 +17,8 @@ import io.github.e1turin.output.view.features.export_settings.ui.ExportResult
 import io.github.e1turin.output.view.features.export_settings.ui.SettingsExporter
 import io.github.e1turin.output.view.features.import_settings.ui.ImportResult
 import io.github.e1turin.output.view.features.import_settings.ui.SettingsImporter
+import io.github.e1turin.output.view.shared.config.msToMessageDisappear
+import io.github.e1turin.output.view.shared.config.isReasonable
 import io.github.e1turin.output.view.shared.lib.std.*
 import io.github.e1turin.output.view.shared.ui.form.Property
 import io.github.e1turin.output.view.shared.ui.range.RangePicker
@@ -56,10 +58,14 @@ fun SISystemSettingsForm(
                     val newXValue: Double = initialXValueInput.toDoubleOrNull() ?: data.initialValue[0]
 
                     if (newXValue.isFinite()) {
-                        settings.onInitialXValueChange(newXValue)
-                        settings.onXRangeChange(
-                            calculateBoundsOfRange(newXValue.toFloat()).toDoubleRange()
-                        )
+                        if (newXValue.isReasonable()) {
+                            settings.onInitialXValueChange(newXValue)
+                            settings.onXRangeChange(
+                                calculateBoundsOfRange(newXValue.toFloat()).toDoubleRange()
+                            )
+                        } else {
+                            message = "New initial X value is beyond reasonable"
+                        }
                     }
                 },
                 modifier = Modifier.fillMaxWidth(),
@@ -106,11 +112,14 @@ fun SISystemSettingsForm(
                     val newYValue: Double = initialYValueInput.toDoubleOrNull() ?: data.initialValue[1]
 
                     if (newYValue.isFinite()) {
-                        settings.onInitialYValueChange(newYValue)
-
-                        settings.onYRangeChange(
-                            calculateBoundsOfRange(newYValue.toFloat()).toDoubleRange()
-                        )
+                        if (newYValue.isReasonable()) {
+                            settings.onInitialYValueChange(newYValue)
+                            settings.onYRangeChange(
+                                calculateBoundsOfRange(newYValue.toFloat()).toDoubleRange()
+                            )
+                        } else {
+                            message = "New initial Y value is beyond reasonable"
+                        }
                     }
                 },
                 modifier = Modifier.fillMaxWidth(),
@@ -119,11 +128,7 @@ fun SISystemSettingsForm(
                 .also { Spacer(Modifier.size(10.dp)) }
 
             Text("Value of Y in use: ${data.initialValue[1].pretty()}")
-                .also {
-                    Spacer(
-                        Modifier.padding(5.dp).height(1.dp).fillMaxWidth(0.75F).background(Color.DarkGray)
-                    )
-                }
+            Spacer(Modifier.padding(5.dp).height(1.dp).fillMaxWidth(0.75F).background(Color.DarkGray))
         }
 
         Property(title = "Inspecting Y range") {
@@ -182,9 +187,13 @@ fun SISystemSettingsForm(
                     SettingsImporter<SISystemSettings.SISystemData> { result ->
                         message = when (result) {
                             is ImportResult.Complete -> {
-                                settings.onInitialValueChange(result.data.initialValue)
-                                settings.onRangeChange(result.data.range)
-                                "✅ Settings are imported successfully"
+                                if (result.data.initialValue.all { it.isReasonable() } && result.data.range.all { it.isReasonable() }) {
+                                    settings.onInitialValueChange(result.data.initialValue)
+                                    settings.onRangeChange(result.data.range)
+                                    "✅ Settings are imported successfully"
+                                } else {
+                                    "⚠ Settings are beyond reasonable"
+                                }
                             }
 
                             is ImportResult.Error -> {
@@ -203,7 +212,7 @@ fun SISystemSettingsForm(
                 Text(message)
             }
             coroutineScope.launch {
-                delay(10000L)
+                delay(msToMessageDisappear)
                 message = ""
             }
         }
