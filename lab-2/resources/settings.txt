@@ -1,1 +1,1 @@
-{"type":"Chord";"range":{"start":-1,5;"endInclusive":1,5}}
+{"type":"Newton";"range":{"start":8,000000000000002;"endInclusive":11,000000000000002};"initialValue":10,0}

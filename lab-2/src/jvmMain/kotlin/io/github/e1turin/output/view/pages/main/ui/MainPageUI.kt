@@ -30,12 +30,15 @@ fun MainPage(
         modifier = modifier.fillMaxSize()
     ) {
         Column(
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier.fillMaxWidth().padding(10.dp)
         ) {
             TaskSelection(
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier.fillMaxWidth().background(Color.LightGray, RoundedCornerShape(10.dp)),
                 model = model.task
             )
+
+            Spacer(Modifier.height(10.dp).fillMaxWidth())
+
             Row {
                 Box(
                     modifier = Modifier.weight(1F),
@@ -58,7 +61,7 @@ fun MainPage(
                     .also { Spacer(Modifier.size(20.dp)) }
 
                 Column(
-                    modifier = Modifier.width(500.dp).padding(10.dp)
+                    modifier = Modifier.width(500.dp)
                 ) {
                     SettingsPanel(
                         modifier = Modifier
