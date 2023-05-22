@@ -10,6 +10,7 @@ import kotlinx.serialization.json.Json
 import java.io.File
 import java.io.IOException
 import java.io.InputStreamReader
+import java.lang.Exception
 
 object SettingsRepository {
     private val scope = CoroutineScope(Dispatchers.IO)
@@ -37,6 +38,8 @@ object SettingsRepository {
             return loadUnspecifiedFromFile(filePath) as T
         } catch (e: ClassCastException) {
             throw IOException("Incompatible type of settings")
+        } catch (e: Exception) {
+            throw IOException("Error while decoding file. It might contain illegal values.")
         }
     }
 }
