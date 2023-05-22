@@ -1,0 +1,156 @@
+class ChordSolvingMethod(
+    private val function: (Double) -> Double
+) : SolvingMethod<ClosedRange<Double>> {
+
+    override fun nextApproximation(current: ClosedRange<Double>): ClosedRange<Double> {
+        val startValue = function(current.start)
+        val endValue = function(current.endInclusive)
+        require(startValue * endValue < 0) { /* ... */ }
+
+        val middle = current.start - (current.endInclusive - current.start) * startValue / (endValue - startValue)
+        val middleValue: Double = function(middle)
+
+        return if (startValue * middleValue < 0) {
+            current.start..middle
+        } else if (endValue * middleValue < 0) {
+            middle..current.endInclusive
+        } else {
+            middle..middle
+        }
+    }
+
+}
+
+class NewtonSolvingMethod @Throws(IllegalArgumentException::class) constructor(
+    range: ClosedRange<Double>,
+    private val function: (Double) -> Double,
+    private val derivative: (Double) -> Double = function.derivative
+) : SolvingMethod<Double> {
+
+    init { /* ... */ }
+
+    @Throws(IllegalStateException::class)
+    override fun nextApproximation(current: Double): Double {
+        val tan = derivative(current)
+
+        check(tan != 0.0) { /* ... */ }
+
+        val h = function(current) / tan
+        val x = current - h
+        return x
+    }
+
+    companion object {
+        @Throws(IllegalArgumentException::class)
+        fun initialApproximation(
+            range: ClosedRange<Double>,
+            function: (Double) -> Double,
+            firstDerivative: (Double) -> Double = function.derivative,
+            secondDerivative: (Double) -> Double = firstDerivative.derivative
+        ): Double {
+            return if (function(range.start) * secondDerivative(range.start) > 0) range.start
+            else if (function(range.endInclusive) * secondDerivative(range.endInclusive) > 0) range.endInclusive
+            else throw IllegalArgumentException("Function value and it's 2nd derivative value must have same sign and not be zero at least in one bound of range")
+        }
+    }
+
+}
+
+class SimpleIterationSolvingMethod(
+    private val approximationFunction: (Double) -> Double,
+) : SolvingMethod<Double> {
+
+    override fun nextApproximation(current: Double): Double {
+        return approximationFunction(current)
+    }
+
+    companion object {
+        fun approximationFunctionFrom(
+            range: ClosedRange<Double>,
+            stepToCheck: Double = 1e-2,
+            function: (Double) -> Double,
+            derivative: (Double) -> Double = function.derivative,
+        ): Pair<(Double) -> Double, (Double) -> Double> {
+            val lambda = -1 / maxAbsDerivativeValue(
+                range, stepToCheck, derivative
+            )
+
+            return Pair({ x: Double -> x + lambda * function(x) },  // phi(x)
+                { x: Double -> 1 + lambda * derivative(x) }         // d(phi(x))/dx
+            )
+        }
+
+        fun testConvergenceCondition(
+            range: ClosedRange<Double>, stepToCheck: Double = 1e-2, derivative: (Double) -> Double
+        ): Boolean {
+            return maxAbsDerivativeValue(range, stepToCheck, derivative) < 1
+        }
+
+        private fun maxAbsDerivativeValue(
+            range: ClosedRange<Double>, stepToCheck: Double = 1e-2, derivative: (Double) -> Double
+        ): Double {
+            var maxAbsDerivativeValue = 1.0
+
+            for (x in range step stepToCheck) {
+                maxAbsDerivativeValue = max(maxAbsDerivativeValue, abs(derivative(x)))
+            }
+
+            return maxAbsDerivativeValue
+        }
+    }
+}
+
+class SimpleIterationSystemSolvingMethod(
+    private val approximationFunction: List<(List<Double>) -> Double>,
+) : SolvingMethod<List<Double>> {
+
+    init { /* ... */ }
+
+    override fun nextApproximation(current: List<Double>): List<Double> {
+        require(approximationFunction.size == current.size) {
+            "Invalid current approximation dimension. By agreement, the dimension of the domains of equations must be equal to $dim."
+        }
+
+        return approximationFunction(current)
+    }
+
+    companion object {
+        const val dim: Int = 2
+
+        fun approximationFunctionFrom(
+            range: List<ClosedRange<Double>>,
+        ): (List<Double>) -> Double {
+            TODO("Not yet implemented")
+        }
+
+        fun testConvergenceCondition(
+            range: List<ClosedRange<Double>>,
+            stepsToCheck: List<Double> = listOf(1e-2, 1e-2),
+            jacobianMatrix: List<List<(List<Double>) -> Double>>
+        ): Boolean {
+            require(range.size == dim) {
+                "Invalid domain ranges dimension. By agreement, the dimension of the domains of equations must be equal to $dim."
+            }
+
+            var maxDerivativeValueInRange = 0.0
+
+            for (x1 in range[0] step stepsToCheck[0]) {
+                for (x2 in range[1] step stepsToCheck[1]) {
+                    var maxDerivativeValueInMatrix = 0.0
+
+                    jacobianMatrix.map { derivative ->
+                        maxDerivativeValueInMatrix =
+                            max(maxDerivativeValueInMatrix, derivative(listOf(x1, x2)).reduce { acc, d ->
+                                acc + abs(d)
+                            })
+                    }
+
+                    maxDerivativeValueInRange = max(
+                        maxDerivativeValueInRange, maxDerivativeValueInMatrix
+                    )
+                }
+            }
+            return maxDerivativeValueInRange < 1
+        }
+    }
+}
