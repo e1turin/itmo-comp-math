@@ -1,22 +1,20 @@
 package io.github.e1turin.output.view.entities.settings.ui.method.equation
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.selection.SelectionContainer
 import androidx.compose.material.Button
 import androidx.compose.material.Text
-import androidx.compose.material.TextField
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.unit.dp
 import com.arkivanov.decompose.extensions.compose.jetbrains.subscribeAsState
 import io.github.e1turin.output.view.entities.settings.model.ChordEquationSettings
 import io.github.e1turin.output.view.features.export_settings.ui.ExportResult
 import io.github.e1turin.output.view.features.export_settings.ui.SettingsExporter
 import io.github.e1turin.output.view.features.import_settings.ui.ImportResult
 import io.github.e1turin.output.view.features.import_settings.ui.SettingsImporter
+import io.github.e1turin.output.view.shared.config.isReasonable
+import io.github.e1turin.output.view.shared.config.msToMessageDisappear
 import io.github.e1turin.output.view.shared.lib.std.*
 import io.github.e1turin.output.view.shared.ui.form.Property
 import io.github.e1turin.output.view.shared.ui.range.RangePicker
@@ -98,8 +96,12 @@ internal fun ChordSettingsForm(
                     SettingsImporter<ChordEquationSettings.ChordData> { result ->
                         message = when (result) {
                             is ImportResult.Complete -> {
-                                settings.onRangeChange(result.data.range)
-                                "✅ Settings are imported successfully"
+                                if (result.data.range.isReasonable()) {
+                                    settings.onRangeChange(result.data.range)
+                                    "✅ Settings are imported successfully"
+                                } else {
+                                    "⚠ Settings are beyond reasonable"
+                                }
                             }
 
                             is ImportResult.Error -> {
@@ -119,7 +121,7 @@ internal fun ChordSettingsForm(
                 Text(message)
             }
             coroutineScope.launch {
-                delay(10_000L)
+                delay(msToMessageDisappear)
                 message = ""
             }
         }

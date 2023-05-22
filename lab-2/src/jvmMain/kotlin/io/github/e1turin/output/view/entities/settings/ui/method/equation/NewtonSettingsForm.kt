@@ -17,6 +17,8 @@ import io.github.e1turin.output.view.features.export_settings.ui.ExportResult
 import io.github.e1turin.output.view.features.export_settings.ui.SettingsExporter
 import io.github.e1turin.output.view.features.import_settings.ui.ImportResult
 import io.github.e1turin.output.view.features.import_settings.ui.SettingsImporter
+import io.github.e1turin.output.view.shared.config.msToMessageDisappear
+import io.github.e1turin.output.view.shared.config.isReasonable
 import io.github.e1turin.output.view.shared.lib.std.*
 import io.github.e1turin.output.view.shared.ui.form.Property
 import io.github.e1turin.output.view.shared.ui.range.RangePicker
@@ -51,10 +53,14 @@ internal fun NewtonSettingsForm(
                         val newValue = initialValueInput.toDoubleOrNull() ?: data.initialValue
 
                         if (newValue.isFinite()) {
-                            settings.onInitialValueChange(newValue)
-                            settings.onRangeChange(
-                                calculateBoundsOfRange(newValue.toFloat()).toDoubleRange()
-                            )
+                            if (newValue.isReasonable()) {
+                                settings.onInitialValueChange(newValue)
+                                settings.onRangeChange(
+                                    calculateBoundsOfRange(newValue.toFloat()).toDoubleRange()
+                                )
+                            } else {
+                                message = "New initial value is beyond reasonable"
+                            }
                         }
                     },
                     modifier = Modifier.fillMaxWidth(),
@@ -126,9 +132,13 @@ internal fun NewtonSettingsForm(
                     SettingsImporter<NewtonEquationSettings.NewtonData> { result ->
                         message = when (result) {
                             is ImportResult.Complete -> {
-                                settings.onInitialValueChange(result.data.initialValue)
-                                settings.onRangeChange(result.data.range)
-                                "✅ Settings are imported successfully"
+                                if (result.data.initialValue.isReasonable() && result.data.range.isReasonable()) {
+                                    settings.onInitialValueChange(result.data.initialValue)
+                                    settings.onRangeChange(result.data.range)
+                                    "✅ Settings are imported successfully"
+                                } else {
+                                    "⚠ Settings are beyond reasonable"
+                                }
                             }
 
                             is ImportResult.Error -> {
@@ -148,7 +158,7 @@ internal fun NewtonSettingsForm(
                 Text(message)
             }
             coroutineScope.launch {
-                delay(10_000L)
+                delay(msToMessageDisappear)
                 message = ""
             }
         }

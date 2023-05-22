@@ -44,24 +44,29 @@ class SISystemSettings : SystemSettings {
     }
 
 
-    fun onRangeChange(range: List<ClosedRange<Double>>): Unit =
+    fun onRangeChange(range: List<ClosedRange<Double>>) {
         _data.mutate { copy(range = range) }
+    }
 
-    fun onXRangeChange(xRange: ClosedRange<Double>): Unit =
+    fun onXRangeChange(xRange: ClosedRange<Double>) {
         _data.mutate { copy(range = listOf(xRange, range[1])) }
+    }
 
-    fun onYRangeChange(yRange: ClosedRange<Double>): Unit =
+    fun onYRangeChange(yRange: ClosedRange<Double>) {
         _data.mutate { copy(range = listOf(range[0], yRange)) }
+    }
 
-
-    fun onInitialValueChange(initialValue: List<Double>): Unit =
+    fun onInitialValueChange(initialValue: List<Double>) {
         _data.mutate { copy(initialValue = initialValue) }
+    }
 
-    fun onInitialXValueChange(initialXValue: Double): Unit =
+    fun onInitialXValueChange(initialXValue: Double) {
         _data.mutate { copy(initialValue = listOf(initialXValue, initialValue[1])) }
+    }
 
-    fun onInitialYValueChange(initialYValue: Double): Unit =
+    fun onInitialYValueChange(initialYValue: Double) {
         _data.mutate { copy(initialValue = listOf(initialValue[0], initialYValue)) }
+    }
 
 
     @Serializable
