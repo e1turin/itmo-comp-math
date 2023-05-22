@@ -3,7 +3,7 @@ package io.github.e1turin.output.view.features.select_task.ui
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.Divider
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.RadioButton
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
@@ -28,15 +28,13 @@ fun TaskSelection(
         Row(
             Modifier.fillMaxWidth()
         ) {
-            Column {
+            Column(Modifier.width(IntrinsicSize.Max)) {
                 SelectOption(
                     "Equation", taskType is TaskType.Equation
                 ) {
 //                    if (data.taskType !is TaskType.Equation)
                     model.onSelectOther(TaskType.Equation.Undefined)
                 }
-                    .also { Spacer(Modifier.size(20.dp)) }
-
 
                 SelectOption(
                     "System of Equations", taskType is TaskType.System
@@ -45,24 +43,17 @@ fun TaskSelection(
                     model.onSelectOther(TaskType.System.Undefined)
                 }
             }
-                .also {
-                    Spacer(Modifier.size(5.dp))
-                    Divider(Modifier.width(1.dp), color = Color.Black)
-                }
 
-            Column {
+            Column(Modifier.width(IntrinsicSize.Max)) {
                 when (val type = taskType) {
                     is TaskType.Equation -> {
                         SelectOption(
                             "Chord Method", type == TaskType.Equation.Chord
                         ) { model.onSelectOther(TaskType.Equation.Chord) }
-                            .also { Spacer(Modifier.size(20.dp)) }
-
 
                         SelectOption(
                             "Newton Method", type == TaskType.Equation.Newton
                         ) { model.onSelectOther(TaskType.Equation.Newton) }
-                            .also { Spacer(Modifier.size(20.dp)) }
 
                         SelectOption(
                             "Simple Iteration Method", type == TaskType.Equation.SimpleIteration
@@ -89,11 +80,14 @@ fun SelectOption(
     onSelect: () -> Unit,
 ) {
     Row(
-        Modifier
-            .background(Color.Random)
-            .clickable(onClick = onSelect), verticalAlignment = Alignment.CenterVertically
+        modifier = Modifier
+            .padding(5.dp)
+            .background(Color.Random, RoundedCornerShape(10.dp))
+            .clickable(onClick = onSelect)
+            .fillMaxWidth(),
+        verticalAlignment = Alignment.CenterVertically
     ) {
         RadioButton(selected = isSelected, onClick = {})
-        Text(text)
+        Text(text, modifier = Modifier.padding(20.dp))
     }
 }
