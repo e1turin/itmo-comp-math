@@ -2,36 +2,40 @@ package io.github.e1turin.entities.settings.model
 
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
-import io.github.e1turin.entities.integrator.model.IntegrationSettings
+import io.github.e1turin.entities.integrator.model.IntegrationMethod
 import io.github.e1turin.shared.lib.mutate
+import io.github.e1turin.shared.model.settings.IntegrationParameters
 
 object SettingsHolder {
-    private val _props = mutableStateOf(Settings())
-    val props: State<Settings> = _props
+    private val _params = mutableStateOf(IntegrationParameters())
+    val params: State<IntegrationParameters> = _params
 
     fun onDivisionsChange(divisions: Int) {
-        _props.mutate { copy(divisions = divisions) }
+        _params.mutate { copy(divisions = divisions) }
     }
 
     fun onRangeChange(range: ClosedFloatingPointRange<Double>) {
-        _props.mutate { copy(range = range) }
+        _params.mutate { copy(range = range) }
     }
 
     fun onRangeStartChange(start: Double) {
-        _props.mutate { copy(range = start..range.endInclusive) }
+        _params.mutate { copy(range = start..range.endInclusive) }
     }
 
     fun onRangeEndChange(endInclusive: Double) {
-        _props.mutate { copy(range = range.start..endInclusive) }
+        _params.mutate { copy(range = range.start..endInclusive) }
     }
 
-    fun onAccuracyChange(accuracy: Double) {
-        _props.mutate { copy(accuracy = accuracy) }
+    fun onPrecisionChange(accuracy: Double) {
+        _params.mutate { copy(precision = accuracy) }
     }
 
-    data class Settings(
-        override val divisions: Int = 4,
-        override val range: ClosedFloatingPointRange<Double> = -1.0..1.0,
-        override val accuracy: Double = 0.01
-    ) : IntegrationSettings
+    fun onMethodSelect(method: IntegrationMethod) {
+        _params.mutate { copy(method = method) }
+    }
+
+    fun onFunctionSelect(functionId: Int) {
+        _params.mutate { copy(functionId = functionId) }
+    }
 }
+

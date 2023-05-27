@@ -1,32 +1,40 @@
 package io.github.e1turin.features.settings.setup.ui
 
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import io.github.e1turin.entities.settings.model.SettingsHolder
+import io.github.e1turin.shared.config.functionStore
 import io.github.e1turin.shared.lib.pretty
 import io.github.e1turin.shared.ui.DoubleNumberInput
 import io.github.e1turin.shared.ui.IntNumberInput
+import io.github.e1turin.shared.ui.Property
 
 
 @Composable
 fun SetupSettings(modifier: Modifier = Modifier) {
-    val props by SettingsHolder.props
+    val props by SettingsHolder.params
 
     val inputModifier = Modifier.fillMaxWidth()
-
+    val propertyModifier = Modifier.fillMaxWidth()
 
     LazyColumn(
         userScrollEnabled = true,
         modifier = modifier
     ) {
+        item {
+            Property("function id = ${props.functionId}", propertyModifier) {
+                IntNumberInput(
+                    value = props.functionId,
+                    condition = { it >= 0 && it < functionStore.size },
+                    onValueChange = SettingsHolder::onFunctionSelect,
+                    modifier = inputModifier
+                )
+            }
+        }
+
         item {
             Property("divisions = ${props.divisions}", propertyModifier) {
                 IntNumberInput(
@@ -39,11 +47,11 @@ fun SetupSettings(modifier: Modifier = Modifier) {
         }
 
         item {
-            Property("accuracy = ${props.accuracy.pretty()}", propertyModifier) {
+            Property("accuracy = ${props.precision.pretty()}", propertyModifier) {
                 DoubleNumberInput(
-                    value = props.accuracy,
+                    value = props.precision,
                     condition = { it.isFinite() && it > 0 },
-                    onValueChange = SettingsHolder::onAccuracyChange,
+                    onValueChange = SettingsHolder::onPrecisionChange,
                     modifier = inputModifier
                 )
             }
@@ -74,18 +82,3 @@ fun SetupSettings(modifier: Modifier = Modifier) {
 
 }
 
-private val propertyModifier = Modifier.fillMaxWidth()
-
-@Composable
-private fun Property(title: String, modifier: Modifier = Modifier, content: @Composable () -> Unit) {
-    Column(
-        modifier = modifier
-    ) {
-        Text(
-            text = title,
-            fontSize = 24.sp,
-            modifier = Modifier.padding(5.dp)
-        )
-        content()
-    }
-}
