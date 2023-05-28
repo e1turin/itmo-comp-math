@@ -1,0 +1,82 @@
+####### input data from file #######
+
+Triangle matrix:
+[[10.0,	-7.0,	0.0],
+ [0.0,	2.5,	5.0],
+ [0.0,	0.0,	6.002]]
+
+Modified b:
+[7.0,
+ 2.5,
+ 6.001999999999999]
+
+Det(Matrix)=-150.04999999999998
+
+Result of calculating vector 'x':
+[2.6645352591003756E-16,
+ -0.9999999999999997,
+ 0.9999999999999999]
+
+Vector of deviance 'r':
+[0.0,
+ -1.400999999999999,
+ 0.0019999999999988916]
+####### print documentation #######
+
+DESCRIPTION
+    Utility for solving System of Liner Algebraic Equations
+    
+    NOTE: floating point is comma (",")
+
+SYNOPSIS 
+    solve [FLAG [PARAM]] 
+    
+FLAG
+    -h, --help          Prints help doc of utility;
+    
+    --file      [path]  Receives `path` to the input file, works in not interactive mode;
+    
+    --random    [n]     Receives number of matrix dimensions `n`;
+
+####### input data by random #######
+#--------------------------------------------------------# 
+# Your are welcome in System of Linear Equations solver. #
+#--------------------------------------------------------#
+Please input your matrix dimension:
+( 0 < n < 21 )
+ n= 3
+Please, input your (n x n) values of matrix by rows of n elements separated with single space:
+
+Thank you for your matrix:
+[[0.47605838251574817,	0.8113645483712928,	0.26142577878135476],
+ [0.19243939663868048,	0.30967754101767,	0.12289604698407952],
+ [0.6040888727423883,	0.3408073537056102,	0.6314133409219941]]
+
+Next step is input values of your system's right-hand part in one row separated with single space:
+
+Thank you for your vector:
+[0.14767079427067065,
+ 0.43526862948970035,
+ 0.4361731660679654]
+
+Triangle matrix:
+[[0.6040888727423883,	0.3408073537056102,	0.6314133409219941],
+ [0.0,	0.5427878457115936,	-0.23616592889834392],
+ [0.0,	0.0,	0.009254467679650977]]
+
+Modified b:
+[0.4361731660679654,
+ -0.19605990712835591,
+ 0.36896326648887656]
+
+Det(Matrix)=0.003034466822004519
+
+Result of calculating vector 'x':
+[-50.532697350685176,
+ 16.985568739373555,
+ 39.868664439788894]
+
+Vector of deviance 'r':
+[0.28850237179728977,
+ -0.6313285366180561,
+ -0.06720989957909007]

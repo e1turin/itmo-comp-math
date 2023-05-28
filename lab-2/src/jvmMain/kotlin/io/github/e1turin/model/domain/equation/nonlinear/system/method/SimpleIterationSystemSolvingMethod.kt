@@ -60,10 +60,7 @@ class SimpleIterationSystemSolvingMethod(
                     )
                 }
             }
-
             return maxDerivativeValueInRange < 1
         }
-
     }
-
 }

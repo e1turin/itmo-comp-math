@@ -12,6 +12,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.arkivanov.decompose.extensions.compose.jetbrains.subscribeAsState
+import io.github.e1turin.output.view.entities.repository.settings.model.DelicateCringeApi
+import io.github.e1turin.output.view.entities.repository.settings.model.fromCringeFormat
+import io.github.e1turin.output.view.entities.repository.settings.model.toCringeFormat
 import io.github.e1turin.output.view.entities.settings.model.SISystemSettings
 import io.github.e1turin.output.view.features.export_settings.ui.ExportResult
 import io.github.e1turin.output.view.features.export_settings.ui.SettingsExporter
@@ -29,6 +32,7 @@ import kotlinx.coroutines.launch
 /**
  * Form for settings of simple iteration method for numerical solving system of equations
  */
+@OptIn(DelicateCringeApi::class)
 @Composable
 fun SISystemSettingsForm(
     modifier: Modifier = Modifier,
@@ -52,9 +56,9 @@ fun SISystemSettingsForm(
     ) {
         Property(title = "Initial X value") {
             TextField(
-                value = initialXValueInput,
+                value = initialXValueInput.toCringeFormat(),
                 onValueChange = { newXValueString ->
-                    initialXValueInput = newXValueString
+                    initialXValueInput = newXValueString.fromCringeFormat()
                     val newXValue: Double = initialXValueInput.toDoubleOrNull() ?: data.initialValue[0]
 
                     if (newXValue.isFinite()) {
@@ -106,9 +110,9 @@ fun SISystemSettingsForm(
 
         Property(title = "Initial Y value") {
             TextField(
-                value = initialYValueInput,
+                value = initialYValueInput.toCringeFormat(),
                 onValueChange = { newYValueString ->
-                    initialYValueInput = newYValueString
+                    initialYValueInput = newYValueString.fromCringeFormat()
                     val newYValue: Double = initialYValueInput.toDoubleOrNull() ?: data.initialValue[1]
 
                     if (newYValue.isFinite()) {

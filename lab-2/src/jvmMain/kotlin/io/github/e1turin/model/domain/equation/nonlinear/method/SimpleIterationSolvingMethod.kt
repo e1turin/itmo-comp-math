@@ -48,7 +48,4 @@ class SimpleIterationSolvingMethod(
             return maxAbsDerivativeValue
         }
     }
-
-
-
 }
