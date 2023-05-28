@@ -17,7 +17,7 @@ object IntegralFinder {
                     IntegrationMethod.RightRectangle -> RightRectangleIntegrator(settings)
                     IntegrationMethod.CenterRectangle -> CenterRectangleIntegrator(settings)
                     IntegrationMethod.Simpson -> TODO()
-                    IntegrationMethod.Trapezoid -> TODO()
+                    IntegrationMethod.Trapezoid -> TrapezoidIntegrator(settings)
                 }
 
                 val result = integrator.integrate()
