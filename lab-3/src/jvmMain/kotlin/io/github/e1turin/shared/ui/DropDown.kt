@@ -26,13 +26,14 @@ import androidx.compose.ui.unit.sp
 @Composable
 fun <T> Dropdown(
     options: List<T>,
+    selected: T = options[0],
     modifier: Modifier = Modifier.size(250.dp, 32.dp)
         .clip(RoundedCornerShape(4.dp))
         .border(BorderStroke(1.dp, Color.LightGray), RoundedCornerShape(4.dp)),
     onSelect: (T) -> Unit
 ) {
     var expanded by remember { mutableStateOf(false) }
-    var selectedOptionText: String by remember { mutableStateOf(options[0].toString()) }
+    var selectedOptionText: String by remember { mutableStateOf(selected.toString()) }
 
     Box(
         contentAlignment = Alignment.CenterStart,

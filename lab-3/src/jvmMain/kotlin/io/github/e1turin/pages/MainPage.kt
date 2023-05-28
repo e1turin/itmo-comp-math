@@ -21,7 +21,7 @@ fun MainPage() {
         )
 
         SolutionPanel(
-            Modifier.weight(1F)
+            Modifier
         )
     }
 }
