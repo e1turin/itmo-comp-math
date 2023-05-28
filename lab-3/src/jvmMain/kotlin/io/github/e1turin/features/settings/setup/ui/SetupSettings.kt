@@ -35,7 +35,7 @@ fun SetupSettings(modifier: Modifier = Modifier) {
         }
 
         item {
-            Property("function : ") {
+            Property("function : ${props.functionLabel}") {
                 Dropdown(functionWithLabelStore.keys.toList()) { funcLabel ->
                     SettingsHolder.onFunctionSelect(funcLabel)
                 }
@@ -65,7 +65,9 @@ fun SetupSettings(modifier: Modifier = Modifier) {
         }
 
         item {
-            Property("range start = ${props.range.start.pretty()}", propertyModifier) {
+            Property("range:") { }
+
+            Property("start = ${props.range.start.pretty()}", propertyModifier) {
                 DoubleNumberInput(
                     value = props.range.start,
                     condition = { it.isFinite() && it < props.range.endInclusive },
@@ -73,10 +75,8 @@ fun SetupSettings(modifier: Modifier = Modifier) {
                     modifier = inputModifier
                 )
             }
-        }
 
-        item {
-            Property("range  end = ${props.range.endInclusive.pretty()}", propertyModifier) {
+            Property("end = ${props.range.endInclusive.pretty()}", propertyModifier) {
                 DoubleNumberInput(
                     value = props.range.endInclusive,
                     condition = { it.isFinite() && it > props.range.start },

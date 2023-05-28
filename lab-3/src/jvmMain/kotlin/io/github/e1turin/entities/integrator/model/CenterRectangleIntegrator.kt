@@ -8,7 +8,7 @@ import io.github.e1turin.shared.model.solution.IntegrationResult
 import kotlin.math.abs
 import kotlin.math.pow
 
-class LeftRectangleIntegrator(private val settings: IntegrationParameters) : Integrator {
+class CenterRectangleIntegrator(private val settings: IntegrationParameters) : Integrator {
 
     init {
         check(settings.range.length > 0) { "Inspected range mustn't be empty. Check its bounds." }
@@ -38,7 +38,7 @@ class LeftRectangleIntegrator(private val settings: IntegrationParameters) : Int
                 function = function
             )
 
-            deviance = abs(integralSum - preciseIntegralSum) / (2.0.pow(iteration) - 1)
+            deviance = abs(integralSum - preciseIntegralSum)  / (2.0.pow(iteration) - 1)
             currentIntegrationSum = preciseIntegralSum
             currentDivisions *= 2
 
@@ -50,7 +50,7 @@ class LeftRectangleIntegrator(private val settings: IntegrationParameters) : Int
             area = currentIntegrationSum,
             precision = deviance,
             divisions = currentDivisions,
-            convergence = true
+            convergence = false
         )
     }
 
@@ -64,7 +64,7 @@ class LeftRectangleIntegrator(private val settings: IntegrationParameters) : Int
 
         var integralSum = 0.0
 
-        var currentParam = start
+        var currentParam = start + step / 2
 
         repeat(divisions) {
             integralSum += function(currentParam) * step

@@ -14,8 +14,8 @@ object IntegralFinder {
             try {
                 val integrator = when (settings.method) {
                     IntegrationMethod.LeftRectangle -> LeftRectangleIntegrator(settings)
-                    IntegrationMethod.RightRectangle -> TODO()
-                    IntegrationMethod.CenterRectangle -> TODO()
+                    IntegrationMethod.RightRectangle -> RightRectangleIntegrator(settings)
+                    IntegrationMethod.CenterRectangle -> CenterRectangleIntegrator(settings)
                     IntegrationMethod.Simpson -> TODO()
                     IntegrationMethod.Trapezoid -> TODO()
                 }

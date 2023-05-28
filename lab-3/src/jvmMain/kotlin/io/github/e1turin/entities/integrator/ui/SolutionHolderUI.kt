@@ -34,9 +34,9 @@ fun SolutionHolderUI(modifier: Modifier = Modifier) {
                 Property("divisions = ${data?.divisions}") { }
             }
 
-            item {
-                Property("convergence : ${data?.convergence}") { }
-            }
+//            item {
+//                Property("convergence : ${data?.convergence}") { }
+//            }
         }
     }
 }
