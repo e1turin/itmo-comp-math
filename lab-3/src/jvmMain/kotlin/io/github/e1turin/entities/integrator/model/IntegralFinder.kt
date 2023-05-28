@@ -16,7 +16,7 @@ object IntegralFinder {
                     IntegrationMethod.LeftRectangle -> LeftRectangleIntegrator(settings)
                     IntegrationMethod.RightRectangle -> RightRectangleIntegrator(settings)
                     IntegrationMethod.CenterRectangle -> CenterRectangleIntegrator(settings)
-                    IntegrationMethod.Simpson -> TODO()
+                    IntegrationMethod.Simpson -> SimpsonIntegrator(settings)
                     IntegrationMethod.Trapezoid -> TrapezoidIntegrator(settings)
                 }
 
