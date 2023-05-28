@@ -21,7 +21,8 @@ fun SolutionPanel(modifier: Modifier = Modifier) {
     ) {
         Row(
             modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
         ) {
             Text(
                 text = "Solution", fontSize = 26.sp,
