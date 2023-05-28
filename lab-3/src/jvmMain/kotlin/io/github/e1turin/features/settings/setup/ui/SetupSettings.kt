@@ -5,10 +5,12 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import io.github.e1turin.entities.integrator.model.IntegrationMethod
 import io.github.e1turin.entities.settings.model.SettingsHolder
-import io.github.e1turin.shared.config.functionStore
+import io.github.e1turin.shared.config.functionWithLabelStore
 import io.github.e1turin.shared.lib.pretty
 import io.github.e1turin.shared.ui.DoubleNumberInput
+import io.github.e1turin.shared.ui.Dropdown
 import io.github.e1turin.shared.ui.IntNumberInput
 import io.github.e1turin.shared.ui.Property
 
@@ -25,13 +27,18 @@ fun SetupSettings(modifier: Modifier = Modifier) {
         modifier = modifier
     ) {
         item {
-            Property("function id = ${props.functionId}", propertyModifier) {
-                IntNumberInput(
-                    value = props.functionId,
-                    condition = { it >= 0 && it < functionStore.size },
-                    onValueChange = SettingsHolder::onFunctionSelect,
-                    modifier = inputModifier
-                )
+            Property("integration method : ${props.method}", propertyModifier) {
+                Dropdown(IntegrationMethod.values().toList()) { method ->
+                    SettingsHolder.onMethodSelect(method)
+                }
+            }
+        }
+
+        item {
+            Property("function : ") {
+                Dropdown(functionWithLabelStore.keys.toList()) { funcLabel ->
+                    SettingsHolder.onFunctionSelect(funcLabel)
+                }
             }
         }
 

@@ -34,8 +34,8 @@ object SettingsHolder {
         _params.mutate { copy(method = method) }
     }
 
-    fun onFunctionSelect(functionId: Int) {
-        _params.mutate { copy(functionId = functionId) }
+    fun onFunctionSelect(functionLabel: String) {
+        _params.mutate { copy(functionLabel = functionLabel) }
     }
 }
 

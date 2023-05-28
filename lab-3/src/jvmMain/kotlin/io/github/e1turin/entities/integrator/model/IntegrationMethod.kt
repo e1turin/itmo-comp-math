@@ -11,5 +11,15 @@ enum class IntegrationMethod {
     RightRectangle,
     CenterRectangle,
     Simpson,
-    Trapezoid
+    Trapezoid;
+
+    override fun toString(): String {
+        return when(this) {
+            LeftRectangle -> "Rectangle Left"
+            RightRectangle -> "Rectangle Right"
+            CenterRectangle -> "Rectangle Center"
+            Simpson -> "Simpson's"
+            Trapezoid -> "Trapezoid"
+        }
+    }
 }
