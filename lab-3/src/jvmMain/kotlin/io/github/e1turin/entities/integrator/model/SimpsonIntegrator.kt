@@ -21,9 +21,8 @@ class SimpsonIntegrator(private val settings: IntegrationParameters) : Integrato
         var currentIntegrationSum = 0.0
         var currentDivisions = settings.divisions
         var deviance: Double = Double.MAX_VALUE
-        var iteration = 1
 
-        while (deviance > settings.precision && iteration < maxNIteration) {
+        for(iteration in 0..maxNIteration) {
             val integralSum = nextIntegralApproximation(
                 start = settings.range.start,
                 endInclusive = settings.range.endInclusive,
@@ -38,11 +37,11 @@ class SimpsonIntegrator(private val settings: IntegrationParameters) : Integrato
                 function = function
             )
 
-            deviance = abs(integralSum - preciseIntegralSum) / (2.0.pow(iteration) - 1)
+            deviance = abs(integralSum - preciseIntegralSum) / (2.0.pow(4) - 1)
             currentIntegrationSum = preciseIntegralSum
             currentDivisions *= 2
 
-            iteration++
+            if (deviance < settings.precision ) break
         }
 
         return IntegrationResult(
