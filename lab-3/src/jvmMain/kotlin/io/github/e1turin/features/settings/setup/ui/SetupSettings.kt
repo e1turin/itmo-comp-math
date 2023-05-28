@@ -54,7 +54,7 @@ fun SetupSettings(modifier: Modifier = Modifier) {
         }
 
         item {
-            Property("accuracy = ${props.precision.pretty()}", propertyModifier) {
+            Property("precision = ${props.precision.pretty()}", propertyModifier) {
                 DoubleNumberInput(
                     value = props.precision,
                     condition = { it.isFinite() && it > 0 },
@@ -76,7 +76,7 @@ fun SetupSettings(modifier: Modifier = Modifier) {
         }
 
         item {
-            Property("range end = ${props.range.start.pretty()}", propertyModifier) {
+            Property("range  end = ${props.range.endInclusive.pretty()}", propertyModifier) {
                 DoubleNumberInput(
                     value = props.range.endInclusive,
                     condition = { it.isFinite() && it > props.range.start },

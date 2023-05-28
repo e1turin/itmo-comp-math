@@ -21,8 +21,9 @@ object IntegralFinder {
                 }
 
                 val result = integrator.integrate()
+
                 IntegrationResultHolder.onNewResult(result)
-            } catch (e: Exception) {
+            } catch (e: Throwable) {
                 println("[IntegralFinder.kt]error: $e")
             }
         }

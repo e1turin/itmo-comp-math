@@ -4,6 +4,8 @@ import io.github.e1turin.shared.config.functionWithLabelStore
 import io.github.e1turin.shared.lib.length
 import io.github.e1turin.shared.model.settings.IntegrationParameters
 import io.github.e1turin.shared.model.solution.IntegrationResult
+import kotlin.math.abs
+import kotlin.math.pow
 
 class LeftRectangleIntegrator(private val settings: IntegrationParameters) : Integrator {
 
@@ -13,23 +15,62 @@ class LeftRectangleIntegrator(private val settings: IntegrationParameters) : Int
     }
 
     override fun integrate(): IntegrationResult {
-        val step = settings.range.length / settings.divisions
+        val function: (Double) -> Double = functionWithLabelStore[settings.functionLabel]!!
 
-        // TODO("STUB Integration method")
-        var integralSum = 0.0
-        val currentParam = settings.range.start
-        val function: (Double) -> Double = functionWithLabelStore[settings.functionLabel]
-            ?: throw IllegalStateException("Undefined function")
+        var currentIntegrationSum = 0.0
+        var currentDivisions = settings.divisions
+        var deviance: Double = Double.MAX_VALUE
+        var iteration = 0
 
-        repeat(settings.divisions) {
-            integralSum += function(currentParam) * step
+        while (deviance > settings.precision && iteration < 20) {
+            val integralSum = nextIntegralApproximation(
+                start = settings.range.start,
+                endInclusive = settings.range.endInclusive,
+                divisions = currentDivisions,
+                function = function
+            )
+
+            val preciseIntegralSum = nextIntegralApproximation(
+                start = settings.range.start,
+                endInclusive = settings.range.endInclusive,
+                divisions = currentDivisions * 2,
+                function = function
+            )
+
+
+            deviance = abs(integralSum - preciseIntegralSum) / (2.0.pow(iteration) - 1)
+            currentIntegrationSum = preciseIntegralSum
+            currentDivisions *= 2
+
+            iteration++
         }
 
+
         return IntegrationResult(
-            area = integralSum,
-            precision = 0.0,
-            divisions = settings.divisions,
+            area = currentIntegrationSum,
+            precision = deviance,
+            divisions = currentDivisions,
             convergence = false
         )
+    }
+
+    private fun nextIntegralApproximation(
+        start: Double,
+        endInclusive: Double,
+        divisions: Int,
+        function: (Double) -> Double
+    ): Double {
+        val step = (endInclusive - start) / divisions
+
+        var integralSum = 0.0
+
+        var currentParam = start
+
+        repeat(divisions) {
+            integralSum += function(currentParam) * step
+            currentParam += step
+        }
+
+        return integralSum
     }
 }
