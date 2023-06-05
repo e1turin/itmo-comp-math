@@ -1,13 +1,11 @@
 package io.github.e1turin.model.approximation
 
-import io.github.e1turin.model.matrix.solveSLE
-import io.github.e1turin.model.matrix.toMatrix
 import kotlin.math.exp
 import kotlin.math.ln
 
-class ExponentialApproximation : Approximation {
-    private var a0: Double? = null
-    private var a1: Double? = null
+open class ExponentialApproximation : LinearApproximation() {
+    override var a0: Double? = null
+    override var a1: Double? = null
 
     override val function: (Double) -> Double
         get() {
@@ -27,28 +25,11 @@ class ExponentialApproximation : Approximation {
     override fun fit(x: DoubleArray, y: DoubleArray) {
         require(x.size == y.size) { "x and y arrays must have equal amount of elements" }
 
-        val y = y.map(::ln)
+        val lny = DoubleArray(y.size) { ln(y[it]) }
 
-        val n = x.size.toDouble()
-        val sx = x.sum()
-        val sy = y.sum()
-        val sxx = x.reduce { acc, d -> acc + d * d }
-        val sxy = x.reduceIndexed { idx, acc, d -> acc + d * y[idx]}
-
-        val matrix = arrayOf(
-            doubleArrayOf(n, sx),
-            doubleArrayOf(sx, sxx),
-        ).toMatrix()
-
-        val vector = doubleArrayOf(sy, sxy)
-
-        val solution = matrix.solveSLE(vector) ?: throw ArithmeticException("Can not solve system of equations")
+        val solution = fitLinear(x, lny)
         a0 = exp(solution[0])
         a1 = solution[1]
-    }
-
-    override fun predict(x: DoubleArray): DoubleArray {
-        return DoubleArray(x.size) { function(x[it]) }
     }
 
     private fun checkState() = check(a0 != null && a1 != null) { "Model must be fitted before" }

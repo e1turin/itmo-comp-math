@@ -4,7 +4,7 @@ import io.github.e1turin.model.matrix.solveSLE
 import io.github.e1turin.model.matrix.toMatrix
 import kotlin.math.pow
 
-class Polynom2Approximation : Approximation {
+open class Polynom2Approximation : Approximation {
     private var a0: Double? = null
     private var a1: Double? = null
     private var a2: Double? = null
@@ -12,7 +12,7 @@ class Polynom2Approximation : Approximation {
     override val function: (Double) -> Double
         get() {
             checkState()
-            return { x -> a0!!  + a1!! * x + a2!! * x.pow(2) }
+            return { x -> a0!! + a1!! * x + a2!! * x.pow(2) }
         }
 
     override val params: List<Double>
@@ -31,7 +31,7 @@ class Polynom2Approximation : Approximation {
         val sx = x.sum()
         val sy = y.sum()
         val sx2 = x.reduce { acc, d -> acc + d * d }
-        val sxy = x.reduceIndexed { idx, acc, d -> acc + d * y[idx]}
+        val sxy = x.reduceIndexed { idx, acc, d -> acc + d * y[idx] }
         val sx3 = x.reduce { acc, d -> acc + d.pow(3) }
         val sx2y = x.reduceIndexed { idx, acc, d -> acc + d * d * y[idx] }
         val sx4 = x.reduce { acc, d -> acc + d.pow(4) }
@@ -48,10 +48,6 @@ class Polynom2Approximation : Approximation {
         a0 = solution[0]
         a1 = solution[1]
         a2 = solution[2]
-    }
-
-    override fun predict(x: DoubleArray): DoubleArray {
-        return DoubleArray(x.size) { function(x[it]) }
     }
 
     private fun checkState() = check(a0 != null && a1 != null && a2 != null) { "Model must be fitted before" }
