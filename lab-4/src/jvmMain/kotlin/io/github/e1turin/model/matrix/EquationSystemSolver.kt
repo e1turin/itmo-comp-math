@@ -9,7 +9,7 @@ fun Double.approx(double: Double): Boolean {
 }
 
 /**
- * extension function on matrix to solve system of linear equations described by this and vector `b`.
+ * extension function on matrix to solve system of linear equations described by this [Matrix] and vector [b].
  * @return array of double with size of given [b] (equal to matrix amount of rows) if everything is ok.
  * @return null if system can not be solved because of zero value of matrix determinant.
  * @throws IllegalArgumentException on matrix and vector dimensions mismatch

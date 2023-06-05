@@ -7,6 +7,7 @@ interface Approximation {
     fun fit(x: DoubleArray, y: DoubleArray)
 
     fun predict(x: DoubleArray): DoubleArray {
-        return DoubleArray(x.size) { function(x[it]) }
+        val f = function
+        return DoubleArray(x.size) { f(x[it]) }
     }
 }
