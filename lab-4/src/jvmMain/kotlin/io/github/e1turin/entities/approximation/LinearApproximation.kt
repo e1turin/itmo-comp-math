@@ -1,7 +1,7 @@
-package io.github.e1turin.model.approximation
+package io.github.e1turin.entities.approximation
 
-import io.github.e1turin.model.matrix.solveSLE
-import io.github.e1turin.model.matrix.toMatrix
+import io.github.e1turin.entities.matrix.solveSLE
+import io.github.e1turin.entities.matrix.toMatrix
 
 open class LinearApproximation : Approximation {
     protected open var a0: Double? = null

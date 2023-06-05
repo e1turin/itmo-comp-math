@@ -1,4 +1,4 @@
-package io.github.e1turin.model.matrix
+package io.github.e1turin.entities.matrix
 
 interface Matrix {
     val elements: Array<DoubleArray>

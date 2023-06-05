@@ -1,4 +1,4 @@
-package io.github.e1turin.model.approximation
+package io.github.e1turin.entities.approximation
 
 import kotlin.math.exp
 import kotlin.math.ln
