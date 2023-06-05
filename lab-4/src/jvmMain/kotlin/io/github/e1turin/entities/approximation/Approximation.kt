@@ -10,4 +10,6 @@ interface Approximation {
         val f = function
         return DoubleArray(x.size) { f(x[it]) }
     }
+
+    fun textView(): String
 }

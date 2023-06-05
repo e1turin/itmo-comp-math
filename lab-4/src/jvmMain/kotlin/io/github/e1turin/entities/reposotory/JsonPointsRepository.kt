@@ -11,12 +11,12 @@ import java.io.File
 
 @OptIn(DelicateCringeApi::class)
 object JsonPointsRepository : PointsFileRepository {
-    override fun loadFrom(dest: File): Array<Point> {
+    override fun loadFrom(dest: File): List<Point> {
         val json = dest.readText().fromCringeFormat()
-        return Json.decodeFromString<Array<Point>>(json)
+        return Json.decodeFromString<List<Point>>(json)
     }
 
-    override fun saveTo(dest: File, data: Array<Point>) {
+    override fun saveTo(dest: File, data: List<Point>) {
         val con = Json.encodeToString(data).toCringeFormat()
         dest.writeText(con)
     }

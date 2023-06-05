@@ -1,5 +1,6 @@
 package io.github.e1turin.entities.approximation
 
+import io.github.e1turin.shared.lib.std.pretty
 import kotlin.math.exp
 import kotlin.math.ln
 import kotlin.math.pow
@@ -13,6 +14,10 @@ open class PowerFunctionApproximation : LinearApproximation() {
             checkState()
             return { x -> a0!! * x.pow(a1!!) }
         }
+
+    override fun textView(): String {
+        return "${a0?.pretty()} * x^(${a1?.pretty()}"
+    }
 
     override val params: List<Double>
         get() {

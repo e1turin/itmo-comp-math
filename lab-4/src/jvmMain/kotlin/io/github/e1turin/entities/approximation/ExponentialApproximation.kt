@@ -1,5 +1,6 @@
 package io.github.e1turin.entities.approximation
 
+import io.github.e1turin.shared.lib.std.pretty
 import kotlin.math.exp
 import kotlin.math.ln
 
@@ -12,6 +13,10 @@ open class ExponentialApproximation : LinearApproximation() {
             checkState()
             return { x -> a0!! * exp(x * a1!!) }
         }
+
+    override fun textView(): String {
+        return "${a0?.pretty()} * e^(x * ${a1?.pretty()})"
+    }
 
     override val params: List<Double>
         get() {

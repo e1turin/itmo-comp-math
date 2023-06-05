@@ -8,12 +8,12 @@ interface Repository<T, D> {
     fun saveTo(dest: D, data: T)
 }
 
-interface PointsRepository<D> : Repository<Array<Point>, D> {
-    override fun loadFrom(dest: D): Array<Point>
-    override fun saveTo(dest: D, data: Array<Point>)
+interface PointsRepository<D> : Repository<List<Point>, D> {
+    override fun loadFrom(dest: D): List<Point>
+    override fun saveTo(dest: D, data: List<Point>)
 }
 
 interface PointsFileRepository : PointsRepository<File> {
-    override fun loadFrom(dest: File): Array<Point>
-    override fun saveTo(dest: File, data: Array<Point>)
+    override fun loadFrom(dest: File): List<Point>
+    override fun saveTo(dest: File, data: List<Point>)
 }

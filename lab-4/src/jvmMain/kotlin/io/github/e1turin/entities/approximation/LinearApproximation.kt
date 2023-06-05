@@ -2,6 +2,7 @@ package io.github.e1turin.entities.approximation
 
 import io.github.e1turin.entities.matrix.solveSLE
 import io.github.e1turin.entities.matrix.toMatrix
+import io.github.e1turin.shared.lib.std.pretty
 
 open class LinearApproximation : Approximation {
     protected open var a0: Double? = null
@@ -12,6 +13,10 @@ open class LinearApproximation : Approximation {
             checkState()
             return { x -> a0!! + a1!! * x }
         }
+
+    override fun textView(): String {
+        return "${a0?.pretty()} + ${a1?.pretty()} * x"
+    }
 
     override val params: List<Double>
         get() {
