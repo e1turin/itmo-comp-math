@@ -1,7 +1,9 @@
 package io.github.e1turin.entities.approximation
 
+import androidx.compose.ui.graphics.Color
 import io.github.e1turin.entities.matrix.solveSLE
 import io.github.e1turin.entities.matrix.toMatrix
+import io.github.e1turin.shared.lib.compose.Random
 import io.github.e1turin.shared.lib.std.pretty
 
 open class LinearApproximation : Approximation {
@@ -17,6 +19,7 @@ open class LinearApproximation : Approximation {
     override fun textView(): String {
         return "${a0?.pretty()} + ${a1?.pretty()} * x"
     }
+    override val color: Color = Color.Random
 
     override val params: List<Double>
         get() {

@@ -1,5 +1,7 @@
 package io.github.e1turin.entities.approximation
 
+import androidx.compose.ui.graphics.Color
+
 interface Approximation {
     val function: (Double) -> Double
     val params: List<Double>
@@ -12,4 +14,5 @@ interface Approximation {
     }
 
     fun textView(): String
+    val color: Color
 }

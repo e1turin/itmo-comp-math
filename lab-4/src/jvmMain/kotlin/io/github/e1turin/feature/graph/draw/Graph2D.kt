@@ -9,12 +9,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clipToBounds
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.input.pointer.PointerEventType
-import androidx.compose.ui.input.pointer.onPointerEvent
-import androidx.compose.ui.layout.onGloballyPositioned
 import io.github.e1turin.entities.approximation.ApproximationsStore
 import io.github.e1turin.entities.point.Point
 import io.github.e1turin.entities.point.PointStore
+import io.github.e1turin.shared.lib.compose.Random
 import kotlin.math.max
 
 
@@ -23,23 +21,28 @@ import kotlin.math.max
 fun Graph2D(modifier: Modifier = Modifier, step: Double = 0.01) {
     val approximations by ApproximationsStore.approximations
     val points by PointStore.points
-    val sortedPoints = points.sortedBy { it.x }
 
+    val sortedPointsByX = points.sortedBy { it.x }
     var maxX: Double = 0.0
     var minX: Double = 0.0
-    var maxY: Double = 0.0
-    var minY: Double = 0.0
-
-    if (sortedPoints.isNotEmpty()) {
-        minX = sortedPoints.first().x
-        maxX = sortedPoints.last().x
-        minY = sortedPoints.first().y
-        maxY = sortedPoints.last().y
+    if (sortedPointsByX.isNotEmpty()) {
+        minX = sortedPointsByX.first().x
+        maxX = sortedPointsByX.last().x
     } else {
         println("points empty")
     }
 
-    val padding = 40F
+    val sortedPointsByY = points.sortedBy { it.y }
+    var maxY: Double = 0.0
+    var minY: Double = 0.0
+    if (sortedPointsByY.isNotEmpty()) {
+        minY = sortedPointsByY.first().y
+        maxY = sortedPointsByY.last().y
+    } else {
+        println("points empty")
+    }
+
+    val padding = 80F
 
     val dx = maxX - minX
     val dy = maxY - minY
@@ -55,53 +58,65 @@ fun Graph2D(modifier: Modifier = Modifier, step: Double = 0.01) {
             val greatestRangeLength = max(dx, dy)
             val scale = (greatestDimension - 2 * padding) / greatestRangeLength
 
-            fun scatter(points: List<Point>) {
+            fun calculateX(x: Double): Float {
+                return ((x - minX) * scale).toFloat() + padding
+            }
+
+            fun calculateY(y: Double): Float {
+                return size.height - (((y - minY) * scale).toFloat() + padding)
+            }
+
+            fun scatter(points: List<Point>, color: Color = Color.Random) {
                 for (p in points) {
                     drawCircle(
-                        color = Color.Cyan,
+                        color = color,
                         radius = 5F,
                         center = Offset(
-                            x = ((p.x - minX) * scale).toFloat() + padding,
-                            y = ((p.y - minY) * scale).toFloat() + padding
+                            x = calculateX(p.x),
+                            y = calculateY(p.y)
                         )
                     )
                 }
             }
 
-            fun plot(function: (Double) -> Double, step: Double) {
+            fun plot(function: (Double) -> Double, step: Double, color: Color = Color.Random) {
                 val intervals = ((greatestRangeLength) / step).toInt() + 1
 
                 var current = minX
 
                 repeat(intervals) {
                     val next = current + step
+                    val startY =calculateY(function(current))
+                    val endY = calculateY(function(next))
 
-                    drawLine(
-                        Color.Blue,
-                        start = Offset(
-                            x = ((current - minX) * scale).toFloat() + padding,
-                            y = ((function(current) - minY) * scale).toFloat() + padding
-                        ),
-                        end = Offset(
-                            x = ((next - minX) * scale).toFloat() + padding,
-                            y = ((function(next) - minY) * scale).toFloat() + padding
-                        ),
-                        strokeWidth = 2F
-                    )
+                    if (
+                        padding <= startY && startY < size.height - padding &&
+                        padding < endY && endY < size.height - padding
+                    ) {
+                        drawLine(
+                            color,
+                            start = Offset(
+                                x = calculateX(current),
+                                y = startY
+                            ),
+                            end = Offset(
+                                x = calculateX(next),
+                                y = endY
+                            ),
+                            strokeWidth = 2F
+                        )
+                    }
 
                     current = next
                 }
             }
 
-            scatter(sortedPoints)
+            scatter(sortedPointsByX)
 
             approximations.forEach {
-                val function = it.function
                 println(it.textView())
-                plot(function, step)
+                plot(it.function, step, it.color)
             }
-
-
         }
     }
 }

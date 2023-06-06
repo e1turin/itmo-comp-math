@@ -17,7 +17,9 @@ object JsonPointsRepository : PointsFileRepository {
     }
 
     override fun saveTo(dest: File, data: List<Point>) {
-        val con = Json.encodeToString(data).toCringeFormat()
+        val con = jsonFormat.encodeToString(data).toCringeFormat()
         dest.writeText(con)
     }
 }
+
+val jsonFormat = Json { prettyPrint = true }

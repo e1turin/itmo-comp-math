@@ -1,5 +1,7 @@
 package io.github.e1turin.entities.approximation
 
+import androidx.compose.ui.graphics.Color
+import io.github.e1turin.shared.lib.compose.Random
 import io.github.e1turin.shared.lib.std.pretty
 import kotlin.math.*
 
@@ -16,6 +18,7 @@ open class PowerFunctionApproximation : LinearApproximation() {
     override fun textView(): String {
         return "${a0?.pretty()} * x^(${a1?.pretty()})"
     }
+    override val color: Color = Color.Random
 
     override val params: List<Double>
         get() {
