@@ -1,9 +1,7 @@
 package io.github.e1turin.entities.approximation
 
 import io.github.e1turin.shared.lib.std.pretty
-import kotlin.math.exp
-import kotlin.math.ln
-import kotlin.math.pow
+import kotlin.math.*
 
 open class PowerFunctionApproximation : LinearApproximation() {
     override var a0: Double? = null
@@ -16,7 +14,7 @@ open class PowerFunctionApproximation : LinearApproximation() {
         }
 
     override fun textView(): String {
-        return "${a0?.pretty()} * x^(${a1?.pretty()}"
+        return "${a0?.pretty()} * x^(${a1?.pretty()})"
     }
 
     override val params: List<Double>
@@ -31,8 +29,10 @@ open class PowerFunctionApproximation : LinearApproximation() {
     override fun fit(x: DoubleArray, y: DoubleArray) {
         require(x.size == y.size) { "x and y arrays must have equal amount of elements" }
 
-        val lnx = DoubleArray(x.size) { ln(x[it]) }
-        val lny = DoubleArray(y.size) { ln(y[it]) }
+        val lnx = DoubleArray(x.size) { sign(x[it]) * ln(abs(x[it])) }
+        val lny = DoubleArray(y.size) { sign(y[it]) * ln(abs(y[it])) }
+
+        println(lny.joinToString(separator = ", ") { it.toString() })
 
         val solution = fitLinear(lnx, lny)
         a0 = exp(solution[0])

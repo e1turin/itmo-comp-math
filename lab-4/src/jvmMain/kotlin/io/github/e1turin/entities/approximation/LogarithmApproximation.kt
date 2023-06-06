@@ -1,8 +1,10 @@
 package io.github.e1turin.entities.approximation
 
 import io.github.e1turin.shared.lib.std.pretty
+import kotlin.math.abs
 import kotlin.math.exp
 import kotlin.math.ln
+import kotlin.math.sign
 
 open class LogarithmApproximation : LinearApproximation() {
     override var a0: Double? = null
@@ -30,7 +32,7 @@ open class LogarithmApproximation : LinearApproximation() {
     override fun fit(x: DoubleArray, y: DoubleArray) {
         require(x.size == y.size) { "x and y arrays must have equal amount of elements" }
 
-        val lnx = DoubleArray(x.size) { ln(x[it]) }
+        val lnx = DoubleArray(x.size) { sign(x[it]) * ln(abs(x[it])) }
 
         val solution = fitLinear(lnx, y)
         a0 = exp(solution[0])

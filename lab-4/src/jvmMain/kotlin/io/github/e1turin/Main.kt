@@ -6,14 +6,15 @@ import androidx.compose.ui.window.application
 import androidx.compose.ui.window.rememberWindowState
 import io.github.e1turin.app.App
 
-fun main() = application {
-
-    Window(
-        title = "lab-4",
-        icon = painterResource("favicon.png"),
-        onCloseRequest = ::exitApplication,
-        state = rememberWindowState()
-    ) {
-        App()
+fun main() {
+    application {
+        Window(
+            title = "lab-4",
+            icon = painterResource("favicon.png"),
+            onCloseRequest = ::exitApplication,
+            state = rememberWindowState()
+        ) {
+            App()
+        }
     }
 }

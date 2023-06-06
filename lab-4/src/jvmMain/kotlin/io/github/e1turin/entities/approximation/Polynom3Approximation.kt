@@ -58,6 +58,7 @@ open class Polynom3Approximation : Approximation {
         a0 = solution[0]
         a1 = solution[1]
         a2 = solution[2]
+        a3 = solution[3]
     }
 
     private fun checkState() =

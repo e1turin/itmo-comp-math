@@ -16,7 +16,18 @@ class MainActivity(private val scope: CoroutineScope) {
         scope.launch {
             try {
                 val points = withContext(Dispatchers.IO) { JsonPointsRepository.loadFrom(file) }
+                PointStore.onPointsClean()
                 PointStore.onPointsAppend(points)
+            } catch (e: Exception) {
+                println("[MainActivity.kt]error: ${e.message}")
+            }
+        }
+    }
+
+    fun savePointsToFile(file: File) {
+        scope.launch {
+            try {
+                JsonPointsRepository.saveTo(file, PointStore.points.value)
             } catch (e: Exception) {
                 println("[MainActivity.kt]error: ${e.message}")
             }
