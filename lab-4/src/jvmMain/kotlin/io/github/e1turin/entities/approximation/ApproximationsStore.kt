@@ -11,6 +11,10 @@ object ApproximationsStore {
         _approximations.value = _approximations.value + approximation
     }
 
+    fun onAllApproximationsChange(approximations: List<Approximation>) {
+        _approximations.value = approximations
+    }
+
     fun onApproximationsClear() {
         _approximations.value = emptyList()
     }

@@ -14,6 +14,7 @@ import io.github.e1turin.entities.point.Point
 import io.github.e1turin.entities.point.PointStore
 import io.github.e1turin.shared.lib.compose.Random
 import kotlin.math.max
+import kotlin.math.min
 
 
 @OptIn(ExperimentalComposeUiApi::class)
@@ -22,38 +23,38 @@ fun Graph2D(modifier: Modifier = Modifier, step: Double = 0.01) {
     val approximations by ApproximationsStore.approximations
     val points by PointStore.points
 
-    val sortedPointsByX = points.sortedBy { it.x }
-    var maxX: Double = 0.0
-    var minX: Double = 0.0
-    if (sortedPointsByX.isNotEmpty()) {
-        minX = sortedPointsByX.first().x
-        maxX = sortedPointsByX.last().x
-    } else {
-        println("points empty")
+    var maxX = 0.0
+    var minX = 0.0
+
+    var maxY = 0.0
+    var minY = 0.0
+
+    points.forEach {
+        minX = min(minX, it.x)
+        maxX = max(maxX, it.x)
+
+        minY = min(minY, it.y)
+        maxY = max(maxY, it.y)
     }
-
-    val sortedPointsByY = points.sortedBy { it.y }
-    var maxY: Double = 0.0
-    var minY: Double = 0.0
-    if (sortedPointsByY.isNotEmpty()) {
-        minY = sortedPointsByY.first().y
-        maxY = sortedPointsByY.last().y
-    } else {
-        println("points empty")
-    }
-
-    val padding = 80F
-
-    val dx = maxX - minX
-    val dy = maxY - minY
 
     Box(modifier) {
         Canvas(
             Modifier
                 .fillMaxSize()
                 .clipToBounds()
-
         ) {
+            //TODO: Draw Grid
+
+            if (points.isEmpty())  {
+                println("[Graph2D]points is empty")
+                return@Canvas
+            }
+
+            val padding = 80F
+
+            val dx = maxX - minX
+            val dy = maxY - minY
+
             val greatestDimension = if (dx > dy) size.width else size.height
             val greatestRangeLength = max(dx, dy)
             val scale = (greatestDimension - 2 * padding) / greatestRangeLength
@@ -111,7 +112,7 @@ fun Graph2D(modifier: Modifier = Modifier, step: Double = 0.01) {
                 }
             }
 
-            scatter(sortedPointsByX)
+            scatter(points)
 
             approximations.forEach {
                 println(it.textView())

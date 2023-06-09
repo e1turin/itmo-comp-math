@@ -4,6 +4,7 @@ import androidx.compose.runtime.getValue
 import io.github.e1turin.entities.approximation.*
 import io.github.e1turin.entities.point.PointStore
 import io.github.e1turin.entities.reposotory.JsonPointsRepository
+import io.github.e1turin.shared.config.definedApproximations
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -17,7 +18,7 @@ class MainActivity(private val scope: CoroutineScope) {
             try {
                 val points = withContext(Dispatchers.IO) { JsonPointsRepository.loadFrom(file) }
                 PointStore.onPointsClean()
-                PointStore.onPointsAppend(points)
+                PointStore.onAllPointsAppend(points)
             } catch (e: Exception) {
                 println("[MainActivity.kt]error: ${e.message}")
             }
@@ -34,7 +35,7 @@ class MainActivity(private val scope: CoroutineScope) {
         }
     }
 
-    fun calculateApproximations() {
+    fun calculateNewApproximations() {
         scope.launch(Dispatchers.Default) {
             val points by PointStore.points
             val x = DoubleArray(points.size)
@@ -45,23 +46,17 @@ class MainActivity(private val scope: CoroutineScope) {
                 y[i] = point.y
             }
 
-            val approximations = listOf(
-                LinearApproximation(),
-                Polynom2Approximation(),
-                Polynom3Approximation(),
-                ExponentialApproximation(),
-                LogarithmApproximation(),
-                PowerFunctionApproximation()
-            )
+            val approximations = definedApproximations
 
             approximations.forEach { approximation ->
                 try {
                     approximation.fit(x, y)
-                    ApproximationsStore.onApproximationAppend(approximation)
                 } catch (e: Exception) {
                     println("[MainActivity]error: ${e.message}")
                 }
             }
+
+            ApproximationsStore.onAllApproximationsChange(approximations)
         }
     }
 }
