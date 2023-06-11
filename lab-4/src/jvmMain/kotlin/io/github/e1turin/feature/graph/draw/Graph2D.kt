@@ -3,7 +3,8 @@ package io.github.e1turin.feature.graph.draw
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clipToBounds
@@ -45,7 +46,7 @@ fun Graph2D(modifier: Modifier = Modifier, step: Double = 0.01) {
         ) {
             //TODO: Draw Grid
 
-            if (points.isEmpty())  {
+            if (points.isEmpty()) {
                 println("[Graph2D]points is empty")
                 return@Canvas
             }
@@ -87,7 +88,7 @@ fun Graph2D(modifier: Modifier = Modifier, step: Double = 0.01) {
 
                 repeat(intervals) {
                     val next = current + step
-                    val startY =calculateY(function(current))
+                    val startY = calculateY(function(current))
                     val endY = calculateY(function(next))
 
                     if (
@@ -115,8 +116,9 @@ fun Graph2D(modifier: Modifier = Modifier, step: Double = 0.01) {
             scatter(points)
 
             approximations.forEach {
-                println(it.textView())
-                plot(it.function, step, it.color)
+                val approximation = it.first
+                println(approximation.textView())
+                plot(approximation.function, step, approximation.color)
             }
         }
     }

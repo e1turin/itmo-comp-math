@@ -1,9 +1,7 @@
-package io.github.e1turin.feature.point.edit
+package io.github.e1turin.entities.point.ui
 
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier

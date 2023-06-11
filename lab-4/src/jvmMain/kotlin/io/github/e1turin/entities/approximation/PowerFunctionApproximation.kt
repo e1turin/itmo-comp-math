@@ -3,7 +3,9 @@ package io.github.e1turin.entities.approximation
 import androidx.compose.ui.graphics.Color
 import io.github.e1turin.shared.lib.compose.Random
 import io.github.e1turin.shared.lib.std.pretty
-import kotlin.math.*
+import kotlin.math.exp
+import kotlin.math.ln
+import kotlin.math.pow
 
 open class PowerFunctionApproximation : LinearApproximation() {
     override var a0: Double? = null
@@ -18,6 +20,7 @@ open class PowerFunctionApproximation : LinearApproximation() {
     override fun textView(): String {
         return "${a0?.pretty()} * x^(${a1?.pretty()})"
     }
+
     override val color: Color = Color.Random
 
     override val params: List<Double>
@@ -32,12 +35,12 @@ open class PowerFunctionApproximation : LinearApproximation() {
     override fun fit(x: DoubleArray, y: DoubleArray) {
         require(x.size == y.size) { "x and y arrays must have equal amount of elements" }
 
-        val lnx = DoubleArray(x.size) { sign(x[it]) * ln(abs(x[it])) }
-        val lny = DoubleArray(y.size) { sign(y[it]) * ln(abs(y[it])) }
+        val xy = x.zip(y).filter { it.first > 0 && it.second > 0 }
 
-        println(lny.joinToString(separator = ", ") { it.toString() })
+        val lnFilteredX = DoubleArray(xy.size) { ln(xy[it].first) }
+        val lnFilteredY = DoubleArray(xy.size) { ln(xy[it].second) }
 
-        val solution = fitLinear(lnx, lny)
+        val solution = fitLinear(lnFilteredX, lnFilteredY)
         a0 = exp(solution[0])
         a1 = solution[1]
     }

@@ -3,10 +3,8 @@ package io.github.e1turin.entities.approximation
 import androidx.compose.ui.graphics.Color
 import io.github.e1turin.shared.lib.compose.Random
 import io.github.e1turin.shared.lib.std.pretty
-import kotlin.math.abs
 import kotlin.math.exp
 import kotlin.math.ln
-import kotlin.math.sign
 
 open class LogarithmApproximation : LinearApproximation() {
     override var a0: Double? = null
@@ -21,6 +19,7 @@ open class LogarithmApproximation : LinearApproximation() {
     override fun textView(): String {
         return "${a0?.pretty()} * ln(x) + ${a1?.pretty()}"
     }
+
     override val color: Color = Color.Random
 
     override val params: List<Double>
@@ -35,9 +34,12 @@ open class LogarithmApproximation : LinearApproximation() {
     override fun fit(x: DoubleArray, y: DoubleArray) {
         require(x.size == y.size) { "x and y arrays must have equal amount of elements" }
 
-        val lnx = DoubleArray(x.size) { sign(x[it]) * ln(abs(x[it])) }
+        val xy = x.zip(y).filter { it.first > 0 }
 
-        val solution = fitLinear(lnx, y)
+        val lnFilteredX = DoubleArray(xy.size) { ln(xy[it].first) }
+        val filteredY = DoubleArray(xy.size) { xy[it].second }
+
+        val solution = fitLinear(lnFilteredX, filteredY)
         a0 = exp(solution[0])
         a1 = solution[1]
     }

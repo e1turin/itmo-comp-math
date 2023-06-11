@@ -1,10 +1,12 @@
 package io.github.e1turin.shared.lib.std
 
 fun Float.pretty(): String =
-    String.format("%.04f", this)
+    if (!isNaN()) String.format("%.04f", this)
+    else "?"
 
 fun Double.pretty(): String =
-    String.format("%.04f", this)
+    if (!isNaN()) String.format("%.04f", this)
+    else "?"
 
 fun ClosedRange<Double>.prettyRange(): String =
     "[ ${start.pretty()} .. ${endInclusive.pretty()} ]"

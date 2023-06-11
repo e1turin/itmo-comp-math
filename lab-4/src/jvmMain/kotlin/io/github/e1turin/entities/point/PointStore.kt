@@ -34,7 +34,7 @@ object PointStore {
         }
     }
 
-    fun onPointDelete(id: Int, point: Point) {
+    fun onPointDelete(id: Int) {
         _points.value = buildList {
             addAll(_points.value.subList(0, id))
             addAll(_points.value.subList(id + 1, _points.value.size))

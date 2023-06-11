@@ -1,7 +1,8 @@
 package io.github.e1turin.pages.main
 
 import androidx.compose.runtime.getValue
-import io.github.e1turin.entities.approximation.*
+import io.github.e1turin.entities.approximation.Approximation
+import io.github.e1turin.entities.approximation.ApproximationsStore
 import io.github.e1turin.entities.point.PointStore
 import io.github.e1turin.entities.reposotory.JsonPointsRepository
 import io.github.e1turin.shared.config.definedApproximations
@@ -48,15 +49,18 @@ class MainActivity(private val scope: CoroutineScope) {
 
             val approximations = definedApproximations
 
+            val approximationsWithDeviance = mutableListOf<Pair<Approximation, Double>>()
             approximations.forEach { approximation ->
                 try {
                     approximation.fit(x, y)
+                    val deviance = approximation.std(x, y)
+                    approximationsWithDeviance.add(approximation to deviance)
                 } catch (e: Exception) {
                     println("[MainActivity]error: ${e.message}")
                 }
             }
 
-            ApproximationsStore.onAllApproximationsChange(approximations)
+            ApproximationsStore.onAllApproximationsChange(approximationsWithDeviance)
         }
     }
 }
