@@ -49,7 +49,7 @@ fun MainPageUI(model: MainActivity) {
             SelectFilePathButton(
                 Modifier,
                 onSelect = { filepath ->
-                    model.saveApproximationsPrintToFile(File(filepath))
+                    if (filepath != null) model.saveApproximationsPrintToFile(File(filepath))
                 }
             ) {
                 Text("Save")

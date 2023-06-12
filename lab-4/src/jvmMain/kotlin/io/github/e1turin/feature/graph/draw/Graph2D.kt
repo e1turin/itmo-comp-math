@@ -10,17 +10,21 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clipToBounds
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.drawscope.rotate
 import io.github.e1turin.entities.approximation.ApproximationsStore
 import io.github.e1turin.entities.point.Point
 import io.github.e1turin.entities.point.PointStore
+import io.github.e1turin.shared.lib.compose.Position
 import io.github.e1turin.shared.lib.compose.Random
+import io.github.e1turin.shared.lib.compose.drawText
+import io.github.e1turin.shared.lib.std.pretty
 import kotlin.math.max
 import kotlin.math.min
 
 
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
-fun Graph2D(modifier: Modifier = Modifier, step: Double = 0.01) {
+fun Graph2D(modifier: Modifier = Modifier, step: Float = 1F) {
     val approximations by ApproximationsStore.approximations
     val points by PointStore.points
 
@@ -68,6 +72,32 @@ fun Graph2D(modifier: Modifier = Modifier, step: Double = 0.01) {
                 return size.height - (((y - minY) * scale).toFloat() + padding)
             }
 
+            fun axes(color: Color) {
+                drawLine(
+                    color = color,
+                    start = Offset(
+                        x = padding / 2,
+                        y = size.height - padding / 2
+                    ),
+                    end = Offset(
+                        x = padding / 2,
+                        y = padding / 2
+                    )
+                )
+
+                drawLine(
+                    color = color,
+                    start = Offset(
+                        x = padding / 2,
+                        y = size.height - padding / 2
+                    ),
+                    end = Offset(
+                        x = size.width - padding / 2,
+                        y = size.height - padding / 2
+                    )
+                )
+            }
+
             fun scatter(points: List<Point>, color: Color = Color.Random) {
                 for (p in points) {
                     drawCircle(
@@ -78,18 +108,51 @@ fun Graph2D(modifier: Modifier = Modifier, step: Double = 0.01) {
                             y = calculateY(p.y)
                         )
                     )
+
+                    //label on horizontal
+                    rotate(
+                        degrees = 45F,
+                        pivot = Offset(
+                            x = calculateX(p.x),
+                            y = size.height - padding / 2
+                        )
+                    ) {
+                        drawText(
+                            text = p.x.pretty(),
+                            position = Position(
+                                x = calculateX(p.x),
+                                y = size.height - padding / 2 + 20F
+                            ),
+                            color = Color.Black
+                        )
+
+                    }
+
+                    //label on vertical
+                    drawText(
+                        text = p.y.pretty(),
+                        position = Position(
+                            x = 0F,
+                            y = calculateY(p.y) + 10F
+                        ),
+                        color = Color.Black
+                    )
                 }
             }
 
-            fun plot(function: (Double) -> Double, step: Double, color: Color = Color.Random) {
-                val intervals = ((greatestRangeLength) / step).toInt() + 1
+            fun plot(function: (Double) -> Double, step: Float, color: Color = Color.Random) {
+//                val intervals = ((greatestRangeLength) / step).toInt() + 1
+                val intervals = ((greatestDimension) / step).toInt() + 1
 
-                var current = minX
+//                var current = minX
+                var current = padding
 
                 repeat(intervals) {
                     val next = current + step
-                    val startY = calculateY(function(current))
-                    val endY = calculateY(function(next))
+//                    val startY = calculateY(function(current))
+                    val startY = calculateY(function((current - padding) / scale + minX))
+//                    val endY = calculateY(function(next))
+                    val endY = calculateY(function((next - padding) / scale + minX))
 
                     if (
                         padding <= startY && startY < size.height - padding &&
@@ -98,11 +161,13 @@ fun Graph2D(modifier: Modifier = Modifier, step: Double = 0.01) {
                         drawLine(
                             color,
                             start = Offset(
-                                x = calculateX(current),
+//                                x = calculateX(current),
+                                x = current,
                                 y = startY
                             ),
                             end = Offset(
-                                x = calculateX(next),
+//                                x = calculateX(next),
+                                x = next,
                                 y = endY
                             ),
                             strokeWidth = 2F
@@ -112,6 +177,8 @@ fun Graph2D(modifier: Modifier = Modifier, step: Double = 0.01) {
                     current = next
                 }
             }
+
+            axes(Color.Black)
 
             scatter(points)
 
