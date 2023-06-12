@@ -1,5 +1,6 @@
 package io.github.e1turin.shared.lib.compose
 
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.material.Button
 import androidx.compose.runtime.*
@@ -14,21 +15,23 @@ import com.darkrockstudios.libraries.mpfilepicker.FilePicker
 fun SelectFilePathButton(
     modifier: Modifier = Modifier,
     onSelect: (String?) -> Unit,
-    content: @Composable RowScope.()->Unit,
+    content: @Composable RowScope.() -> Unit,
 ) {
     var show by remember { mutableStateOf(false) }
 
-    Button(
-        modifier = modifier,
-        onClick = { show = true },
-        content = content
-    )
+    Box(modifier) {
+        Button(
+            modifier = Modifier,
+            onClick = { show = true },
+            content = content
+        )
 
-    FilePicker(
-        show = show,
-        onFileSelected = { file ->
-            onSelect(file?.path)
-            show = false
-        }
-    )
+        FilePicker(
+            show = show,
+            onFileSelected = { file ->
+                onSelect(file?.path)
+                show = false
+            }
+        )
+    }
 }
