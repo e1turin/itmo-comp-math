@@ -63,4 +63,21 @@ class MainActivity(private val scope: CoroutineScope) {
             ApproximationsStore.onAllApproximationsChange(approximationsWithDeviance)
         }
     }
+
+    fun saveApproximationsPrintToFile(file: File) {
+        scope.launch {
+            val approximations by ApproximationsStore.approximations
+            val text = buildString {
+                approximations.forEach {
+                    append(it.first.print())
+                    append("\n\n")
+                }
+            }
+            try {
+                file.writeText(text)
+            } catch (e: Exception) {
+                println("[MainActivity]error: ${e.message}")
+            }
+        }
+    }
 }

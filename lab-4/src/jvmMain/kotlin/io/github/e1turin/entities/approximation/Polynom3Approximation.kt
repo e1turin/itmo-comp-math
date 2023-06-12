@@ -5,13 +5,17 @@ import io.github.e1turin.entities.matrix.solveSLE
 import io.github.e1turin.entities.matrix.toMatrix
 import io.github.e1turin.shared.lib.compose.Random
 import io.github.e1turin.shared.lib.std.pretty
+import io.github.e1turin.shared.lib.std.prettyVector
 import kotlin.math.pow
 
-open class Polynom3Approximation : Approximation {
+open class Polynom3Approximation : Approximation() {
     private var a0: Double? = null
     private var a1: Double? = null
     private var a2: Double? = null
     private var a3: Double? = null
+
+    private var dataX: DoubleArray? = null
+    private var dataY: DoubleArray? = null
 
     override val function: (Double) -> Double
         get() {
@@ -22,6 +26,17 @@ open class Polynom3Approximation : Approximation {
     override fun textView(): String {
         return "${a0?.pretty()} + ${a1?.pretty()} * x + ${a2?.pretty()} * x^2 + ${a3?.pretty()} * x^3"
     }
+
+    override fun print(): String {
+        return """
+        Polynomial 3rd degree approximation (${textView()})
+        X    =  ${dataX?.prettyVector()}
+        Y    =  ${dataY?.prettyVector()}
+        f(X) =  ${prediction?.prettyVector()}
+        eps  =  ${deviance?.pretty()}    
+        """.trimIndent()
+    }
+
     override val color: Color = Color.Random
 
     override val params: List<Double>
@@ -62,6 +77,9 @@ open class Polynom3Approximation : Approximation {
         a1 = solution[1]
         a2 = solution[2]
         a3 = solution[3]
+
+        dataX = x
+        dataY = y
     }
 
     private fun checkState() =

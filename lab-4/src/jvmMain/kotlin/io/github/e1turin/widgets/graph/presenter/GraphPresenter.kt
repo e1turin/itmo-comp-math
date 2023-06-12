@@ -5,7 +5,6 @@ import androidx.compose.foundation.text.selection.SelectionContainer
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import io.github.e1turin.entities.approximation.ApproximationsStore
 import io.github.e1turin.feature.graph.draw.Graph2D
@@ -17,12 +16,9 @@ fun GraphPresenter(
 ) {
     val approximations by ApproximationsStore.approximations
 
-    Box(
+    Column(
         modifier = modifier,
-        contentAlignment = Alignment.TopEnd
     ) {
-        Graph2D(Modifier)
-
         if (approximations.isNotEmpty()) {
             SelectionContainer {
                 Column(Modifier.width(IntrinsicSize.Max)) {
@@ -48,5 +44,7 @@ fun GraphPresenter(
                 }
             }
         }
+
+        Graph2D(Modifier.fillMaxSize())
     }
 }

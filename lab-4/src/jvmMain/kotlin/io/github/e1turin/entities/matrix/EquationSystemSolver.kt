@@ -5,7 +5,7 @@ import kotlin.math.pow
 
 
 fun Double.approx(double: Double): Boolean {
-    return (this - double).absoluteValue < 1e-6
+    return (this - double).absoluteValue < 1e-8
 }
 
 /**

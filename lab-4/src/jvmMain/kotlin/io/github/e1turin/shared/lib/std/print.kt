@@ -8,6 +8,9 @@ fun Double.pretty(): String =
     if (!isNaN()) String.format("%.04f", this)
     else "?"
 
+fun DoubleArray.prettyVector(): String =
+    joinToString(prefix = "[", separator = " ", postfix = "]") { it.pretty() }
+
 fun ClosedRange<Double>.prettyRange(): String =
     "[ ${start.pretty()} .. ${endInclusive.pretty()} ]"
 

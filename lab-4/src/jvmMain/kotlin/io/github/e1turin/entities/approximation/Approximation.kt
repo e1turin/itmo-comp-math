@@ -4,15 +4,21 @@ import androidx.compose.ui.graphics.Color
 import kotlin.math.pow
 import kotlin.math.sqrt
 
-interface Approximation {
-    val function: (Double) -> Double
-    val params: List<Double>
+abstract class Approximation {
+    abstract val function: (Double) -> Double
+    abstract val params: List<Double>
+    abstract val color: Color
+    protected var prediction: DoubleArray? = null
+    protected var deviance: Double? = null
 
-    fun fit(x: DoubleArray, y: DoubleArray)
+    abstract fun textView(): String
+    abstract fun print(): String
+
+    abstract fun fit(x: DoubleArray, y: DoubleArray)
 
     fun predict(x: DoubleArray): DoubleArray {
         val f = function
-        return DoubleArray(x.size) { f(x[it]) }
+        return DoubleArray(x.size) { f(x[it]) }.also { prediction = it }
     }
 
     fun std(x: DoubleArray, y: DoubleArray): Double {
@@ -29,9 +35,6 @@ interface Approximation {
             }
         }
 
-        return sqrt(acc / counter)
+        return sqrt(acc / counter).also { deviance = it }
     }
-
-    fun textView(): String
-    val color: Color
 }

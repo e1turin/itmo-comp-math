@@ -53,8 +53,8 @@ fun Graph2D(modifier: Modifier = Modifier, step: Double = 0.01) {
 
             val padding = 80F
 
-            val dx = maxX - minX
-            val dy = maxY - minY
+            val dx = (maxX - minX).let { if (it == 0.0) 1.0 else it }
+            val dy = (maxY - minY).let { if (it == 0.0) 1.0 else it }
 
             val greatestDimension = if (dx > dy) size.width else size.height
             val greatestRangeLength = max(dx, dy)
@@ -117,7 +117,6 @@ fun Graph2D(modifier: Modifier = Modifier, step: Double = 0.01) {
 
             approximations.forEach {
                 val approximation = it.first
-                println(approximation.textView())
                 plot(approximation.function, step, approximation.color)
             }
         }
