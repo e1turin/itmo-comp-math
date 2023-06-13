@@ -2,6 +2,7 @@ package io.github.e1turin.widgets.data.presenter
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.Button
 import androidx.compose.material.Text
@@ -28,14 +29,16 @@ fun PointsPresenter(modifier: Modifier = Modifier) {
             onPointDelete = { id -> PointStore.onPointDelete(id) }
         )
         Spacer(Modifier.size(10.dp))
-        AddPoint(Modifier)
+        AddPoint(Modifier.padding(10.dp))
 
-        Button(onClick = {
-            if (changes.isNotEmpty()) {
-                PointStore.onAllPointsEdit(changes)
-                changes.clear()
-            }
-        }) {
+        Button(
+            modifier = Modifier,
+            onClick = {
+                if (changes.isNotEmpty()) {
+                    PointStore.onAllPointsEdit(changes)
+                    changes.clear()
+                }
+            }) {
             Text("Submit")
         }
     }
