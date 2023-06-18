@@ -4,9 +4,16 @@ import androidx.compose.runtime.State
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import io.github.e1turin.entities.finiteDifference.FiniteDifferencesStore
+import io.github.e1turin.entities.interpolations.Interpolation
+import io.github.e1turin.entities.interpolations.InterpolationsStore
+import io.github.e1turin.entities.point.Point
 import io.github.e1turin.entities.point.PointsStore
 import io.github.e1turin.entities.repository.FDRepository
 import io.github.e1turin.entities.repository.JsonPointsRepository
+import io.github.e1turin.features.points.calculate.InputData
+import io.github.e1turin.shared.config.samples.availableFunctions
+import io.github.e1turin.shared.config.samples.availableInterpolations
+import io.github.e1turin.shared.lib.std.length
 import io.github.e1turin.shared.lib.std.pretty
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -30,7 +37,6 @@ class MainActivity(
         scope.launch {
             try {
                 val points = withContext(Dispatchers.IO) { JsonPointsRepository.loadFrom(file) }
-                PointsStore.onPointsClean()
                 PointsStore.onAllPointsAppend(points)
             } catch (e: Exception) {
                 _message.value = "Error while decoding file"
@@ -66,6 +72,18 @@ class MainActivity(
                 }
 
                 FiniteDifferencesStore.calculateNewFiniteDifferences(points)
+
+                val interpolations = mutableListOf<Interpolation>()
+                availableInterpolations.forEach {
+                    try {
+                        it.fit(points)
+                        interpolations.add(it)
+                    } catch (e: Exception) {
+                        println("[MainActivity.kt]error: ${e.message}")
+                    }
+                }
+
+                InterpolationsStore.onAllNewInterpolationsSet(interpolations)
             } catch (e: Exception) {
                 println("[MainActivity.kt]error: ${e.message}")
                 _message.value = "Error while computations"
@@ -85,5 +103,28 @@ class MainActivity(
         }
     }
 
+    fun generatePoints(inputData: InputData) {
+        scope.launch {
+            try {
+                val function = availableFunctions[inputData.functionLabel]
+                require(function != null) { "Function must not be null" }
+
+                val step = inputData.range.length / inputData.divisions
+
+                val points = mutableListOf<Point>()
+                var currX = inputData.range.start
+                repeat(inputData.divisions) {
+                    points.add(Point(currX, function(currX)))
+                    currX += step
+                }
+
+                PointsStore.onAllPointsAppend(points)
+            } catch (e: Exception) {
+                _message.value = "Error while computing points"
+                println("[MainActivity.kt]error: ${e.message}")
+            }
+        }
+
+    }
 
 }

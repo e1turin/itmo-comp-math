@@ -16,7 +16,7 @@ object PointsStore {
     val points: State<List<Point>> = _points
 
     fun onAllPointsAppend(points: List<Point>) {
-        _points.value = _points.value + points
+        _points.value = points
     }
 
     fun onAllPointsEdit(changes: Map<Int, Point>) {

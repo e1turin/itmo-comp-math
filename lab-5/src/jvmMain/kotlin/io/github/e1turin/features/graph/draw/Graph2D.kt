@@ -13,6 +13,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.drawscope.rotate
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import io.github.e1turin.entities.interpolations.InterpolationsStore
 import io.github.e1turin.entities.point.Point
 import io.github.e1turin.entities.point.PointsStore
 import io.github.e1turin.shared.lib.compose.Position
@@ -26,6 +27,7 @@ import kotlin.math.min
 @Composable
 fun Graph2D(modifier: Modifier = Modifier, step: Dp = 1.dp) {
     val points by PointsStore.points
+    val interpolations by InterpolationsStore.interpolation
 
     var maxX = 0.0
     var minX = 0.0
@@ -174,10 +176,9 @@ fun Graph2D(modifier: Modifier = Modifier, step: Dp = 1.dp) {
             fun drawScene() {
                 axes(Color.Black)
                 scatter(points)
-//                approximations.forEach {
-//                    val approximation = it.first
-//                    plot(approximation.function, step.toPx(), approximation.color)
-//                }
+                interpolations.forEach {
+                    plot(it.function!!, step.toPx(), it.color)
+                }
             }
 
             drawScene()
