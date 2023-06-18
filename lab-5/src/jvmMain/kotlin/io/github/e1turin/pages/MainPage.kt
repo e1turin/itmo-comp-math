@@ -26,7 +26,7 @@ fun MainPage(
 
     Row(modifier = modifier) {
         Column {
-            if(message.isNotBlank()) {
+            if (message.isNotBlank()) {
                 Text(message, color = Color.Black, fontSize = 20.0.sp, modifier = Modifier.background(Color.Red))
                 LaunchedEffect(message) {
                     delay(5.0.seconds).also { model.hideErrorMessage() }

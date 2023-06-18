@@ -5,7 +5,6 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clipToBounds
 import androidx.compose.ui.geometry.Offset
@@ -13,6 +12,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.drawscope.rotate
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import io.github.e1turin.entities.interpolations.InterpolationsStore
 import io.github.e1turin.entities.point.Point
 import io.github.e1turin.entities.point.PointsStore
 import io.github.e1turin.shared.lib.compose.Position
@@ -21,11 +21,13 @@ import io.github.e1turin.shared.lib.compose.drawText
 import io.github.e1turin.shared.lib.std.pretty
 import kotlin.math.max
 import kotlin.math.min
+import kotlin.random.Random
 
 
 @Composable
 fun Graph2D(modifier: Modifier = Modifier, step: Dp = 1.dp) {
     val points by PointsStore.points
+    val interpolations by InterpolationsStore.interpolations
 
     var maxX = 0.0
     var minX = 0.0
@@ -140,18 +142,20 @@ fun Graph2D(modifier: Modifier = Modifier, step: Dp = 1.dp) {
             }
 
             fun plot(function: (Double) -> Double, step: Float, color: Color = Color.Random) {
+                val yShift = Random.nextFloat() * 10
+
                 val intervals = ((greatestDimension) / step).toInt() + 1
 
-                var current = padding
+                var current = padding / 2
 
                 repeat(intervals) {
                     val next = current + step
-                    val startY = calculateY(function((current - padding) / scale + minX))
-                    val endY = calculateY(function((next - padding) / scale + minX))
+                    val startY = calculateY(function((current - padding) / scale + minX)) - yShift
+                    val endY = calculateY(function((next - padding) / scale + minX)) - yShift
 
                     if (
-                        padding <= startY && startY < size.height - padding &&
-                        padding < endY && endY < size.height - padding
+                        padding / 2 <= startY && startY < size.height - padding / 2 &&
+                        padding / 2 < endY && endY < size.height - padding / 2
                     ) {
                         drawLine(
                             color,
@@ -174,10 +178,9 @@ fun Graph2D(modifier: Modifier = Modifier, step: Dp = 1.dp) {
             fun drawScene() {
                 axes(Color.Black)
                 scatter(points)
-//                approximations.forEach {
-//                    val approximation = it.first
-//                    plot(approximation.function, step.toPx(), approximation.color)
-//                }
+                interpolations.forEach {
+                    plot(it.function!!, step.toPx(), it.color)
+                }
             }
 
             drawScene()

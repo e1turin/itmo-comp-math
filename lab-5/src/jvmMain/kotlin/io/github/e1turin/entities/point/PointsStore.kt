@@ -2,21 +2,23 @@ package io.github.e1turin.entities.point
 
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
-import io.github.e1turin.shared.lib.std.pretty
 
 object PointsStore {
     private val _points = mutableStateOf(listOf<Point>())
-//        listOf<Point>(
+
+    //        listOf<Point>(
 //        Point(-1.0, -1.0),
 //        Point(-2.0, -2.0),
 //        Point(1.0, 1.0),
 //        Point(0.0, -0.0)
 //    ))
-
     val points: State<List<Point>> = _points
 
+    private val _inspectingParam = mutableStateOf<Double>(0.0)
+    public val inspectingParam: State<Double> = _inspectingParam
+
     fun onAllPointsAppend(points: List<Point>) {
-        _points.value = _points.value + points
+        _points.value = points
     }
 
     fun onAllPointsEdit(changes: Map<Int, Point>) {
@@ -53,4 +55,7 @@ object PointsStore {
         _points.value = emptyList<Point>()
     }
 
+    fun onInspectingParamChange(newValue: Double) {
+        _inspectingParam.value = newValue
+    }
 }

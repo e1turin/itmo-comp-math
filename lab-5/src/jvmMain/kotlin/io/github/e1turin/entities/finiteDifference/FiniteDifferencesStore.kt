@@ -15,8 +15,8 @@ object FiniteDifferencesStore {
         val tmpFD = mutableListOf(points.map { it.y })
         for (newLayerSize in (points.size - 1) downTo 1) {
             val li = List<Double>(newLayerSize) { idx ->
-                (tmpFD[tmpFD.size - 1][idx + 1] - tmpFD[tmpFD.size - 1][idx]) /
-                        (points[idx + (points.size - newLayerSize)].x - points[idx].x)
+                (tmpFD[tmpFD.size - 1][idx + 1] - tmpFD[tmpFD.size - 1][idx])
+                // / (points[idx + (points.size - newLayerSize)].x - points[idx].x)
             }
             tmpFD.add(li)
         }
