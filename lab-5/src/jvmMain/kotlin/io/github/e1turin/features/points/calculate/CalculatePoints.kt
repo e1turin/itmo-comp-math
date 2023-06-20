@@ -6,7 +6,6 @@ import androidx.compose.material.Button
 import androidx.compose.material.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.semantics.Role.Companion.Button
 import androidx.compose.ui.window.Window
 import io.github.e1turin.shared.config.samples.availableFunctions
 import io.github.e1turin.shared.lib.compose.DoubleNumberInput
