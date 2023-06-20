@@ -142,7 +142,7 @@ fun Graph2D(modifier: Modifier = Modifier, step: Dp = 1.dp) {
             }
 
             fun plot(function: (Double) -> Double, step: Float, color: Color = Color.Random) {
-                val yShift = Random.nextFloat() * 10
+                val yShift = Random.nextFloat() * 5
 
                 val intervals = ((greatestDimension) / step).toInt() + 1
 

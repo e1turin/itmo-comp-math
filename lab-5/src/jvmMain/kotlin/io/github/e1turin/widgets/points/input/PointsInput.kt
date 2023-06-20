@@ -1,9 +1,6 @@
 package io.github.e1turin.widgets.points.input
 
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material.Button
@@ -35,7 +32,9 @@ fun PointsInput(
     Column(modifier) {
         Row(Modifier) {
             UploadPointsButton(Modifier, model)
+            Spacer(Modifier.size(5.dp))
             OffloadPointsButton(Modifier, model)
+            Spacer(Modifier.size(5.dp))
             Button(onClick = { generateOpen = true }) {
                 Text("Generate")
 

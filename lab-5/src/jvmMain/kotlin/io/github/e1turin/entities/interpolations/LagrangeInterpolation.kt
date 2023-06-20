@@ -2,7 +2,6 @@ package io.github.e1turin.entities.interpolations
 
 import androidx.compose.ui.graphics.Color
 import io.github.e1turin.entities.point.Point
-import io.github.e1turin.shared.lib.compose.Random
 
 class LagrangeInterpolation : Interpolation() {
     override fun print(): String {
@@ -27,5 +26,5 @@ class LagrangeInterpolation : Interpolation() {
 
     override var function: ((Double) -> Double)? = null
         private set
-    override val color: Color = Color.Random
+    override val color: Color = Color.Green
 }

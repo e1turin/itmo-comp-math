@@ -9,8 +9,10 @@ import io.github.e1turin.shared.lib.compose.Random
 import kotlin.math.abs
 
 class NewtonInterpolation : Interpolation() {
+    private var name: String = "Newton's interpolation polynomial"
+
     override fun print(): String {
-        return "Newton's interpolation polynomial"
+        return name
     }
 
     override fun fit(points: List<Point>) {
@@ -42,42 +44,41 @@ class NewtonInterpolation : Interpolation() {
             }
         */
 
-        function =
-            lambda@{ x ->
-                val inspectingParam by PointsStore.inspectingParam
-                if (inspectingParam < midX) {
-                    color = Color.Random
-                    val t = (x - xs[0]) / difference
+        val inspectingParam by PointsStore.inspectingParam
+        function = lambda@{ x ->
+            if (inspectingParam < midX) {
+                name = "Newton's left interpolation polynomial"
+                color = Color.Red
+                val t = (x - xs[0]) / difference
 
-                    var prod = 1.0
-                    var sum = finiteDifferences[0][0]
+                var prod = 1.0
+                var sum = finiteDifferences[0][0]
 
-                    for (i in 1 until finiteDifferences.size) {
-                        prod *= (t - i + 1) / i
+                for (i in 1 until finiteDifferences.size) {
+                    prod *= (t - i + 1) / i
 
-                        sum += prod * finiteDifferences[i][0]
-                    }
-
-                    return@lambda sum
-                } else {
-                    color = Color.Random
-
-                    val t = (x - xs[xs.size - 1]) / difference
-
-                    var prod = 1.0
-                    var sum = finiteDifferences[0][finiteDifferences.size - 1]
-
-                    for (i in 1 until finiteDifferences.size) {
-                        prod *= (t + i - 1) / i
-
-                        sum += prod * finiteDifferences[i][finiteDifferences.size - 1 - i]
-                    }
-
-                    return@lambda sum
+                    sum += prod * finiteDifferences[i][0]
                 }
 
-            }
+                return@lambda sum
+            } else {
+                name = "Newton's right interpolation polynomial"
+                color = Color.Blue
 
+                val t = (x - xs[xs.size - 1]) / difference
+
+                var prod = 1.0
+                var sum = finiteDifferences[0][finiteDifferences.size - 1]
+
+                for (i in 1 until finiteDifferences.size) {
+                    prod *= (t + i - 1) / i
+
+                    sum += prod * finiteDifferences[i][finiteDifferences.size - 1 - i]
+                }
+
+                return@lambda sum
+            }
+        }
     }
 
     private fun checkCondition(xs: List<Double>): Boolean {
